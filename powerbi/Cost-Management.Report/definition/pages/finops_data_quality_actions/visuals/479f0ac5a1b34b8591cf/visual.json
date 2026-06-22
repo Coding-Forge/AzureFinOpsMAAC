@@ -4,10 +4,10 @@
   "position": {
     "x": 980,
     "y": 8,
-    "z": 1010,
+    "z": 3000,
     "height": 64,
     "width": 220,
-    "tabOrder": 1010
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "slicer",
@@ -183,24 +183,6 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "abc002473010b7909210",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "datedim"
-              }
-            },
-            "Property": "Date"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   },
   "howCreated": "Copilot"
 }

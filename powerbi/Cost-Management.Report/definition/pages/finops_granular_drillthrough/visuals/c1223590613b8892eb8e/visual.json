@@ -4,10 +4,10 @@
   "position": {
     "x": 744.58911419423691,
     "y": 8.06830309498399,
-    "z": 3001,
+    "z": 13000,
     "height": 63.970117395944506,
     "width": 220.14941302027748,
-    "tabOrder": 3001
+    "tabOrder": 13000
   },
   "visual": {
     "visualType": "slicer",
@@ -154,7 +154,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Region'"
+                  "Value": "'Period'"
                 }
               }
             }

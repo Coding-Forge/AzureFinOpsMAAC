@@ -4,10 +4,10 @@
   "position": {
     "x": 1670,
     "y": 8,
-    "z": 1013,
+    "z": 6000,
     "height": 64,
     "width": 220,
-    "tabOrder": 1013
+    "tabOrder": 6000
   },
   "visual": {
     "visualType": "slicer",
@@ -72,24 +72,6 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "6e85749227c9de57160e",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "DimRetailMatch"
-              }
-            },
-            "Property": "RetailMatchStatus"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   },
   "howCreated": "Copilot"
 }

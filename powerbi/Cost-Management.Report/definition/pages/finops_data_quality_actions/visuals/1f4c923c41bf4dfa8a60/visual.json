@@ -4,10 +4,10 @@
   "position": {
     "x": 1440,
     "y": 8,
-    "z": 1012,
+    "z": 5000,
     "height": 64,
     "width": 220,
-    "tabOrder": 1012
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "slicer",
@@ -72,24 +72,6 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "96efaa0a07cd18a6c931",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "DimService"
-              }
-            },
-            "Property": "ServiceName"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   },
   "howCreated": "Copilot"
 }

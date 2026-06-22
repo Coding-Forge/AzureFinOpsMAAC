@@ -4,14 +4,13 @@
   "position": {
     "x": 1540,
     "y": 150,
-    "z": 2004,
+    "z": 11000,
     "height": 145,
     "width": 350,
-    "tabOrder": 2004
+    "tabOrder": 11000
   },
   "visual": {
     "visualType": "cardVisual",
-    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Data": {
@@ -101,7 +100,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "howCreated": "Copilot"
 }
