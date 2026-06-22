@@ -1,0 +1,177 @@
+table CostRetailFact
+	lineageTag: 8f900962-6227-469f-961e-9e452eb5a001
+
+	column Period
+		dataType: string
+		lineageTag: ad7c0301-2d91-4de6-b0e0-31713fd12d01
+		summarizeBy: none
+		sourceColumn: Period
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 509ca7c7-2bf9-4741-944f-c8e42496f731
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column Cost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c85aa44a-30eb-473b-a29e-d58461951b71
+		summarizeBy: sum
+		sourceColumn: Cost
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 13ca4206-864c-42a0-9660-ae1289e9e266
+		summarizeBy: none
+		sourceColumn: UsageDate
+
+	column UsageDateAsDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 286d23b1-10e0-4c6c-a44f-0cb1b615c8c7
+		summarizeBy: none
+		sourceColumn: UsageDateAsDate
+
+	column ServiceName
+		dataType: string
+		lineageTag: edfd878a-6c34-4d77-936b-dd607bb7ca9b
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 2fc61617-b9ce-4b44-b909-b55f12286ce7
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: dee6c574-2e8a-4cea-9ec0-78323ec5dc8b
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Meter
+		dataType: string
+		lineageTag: f1519e95-0296-4e9f-b578-799d3e976d76
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: 46a222eb-3da2-4be3-b10b-074ed2510d8c
+		summarizeBy: none
+		sourceColumn: Product
+
+	column PartNumber
+		dataType: string
+		lineageTag: e0ce4654-c4d3-4945-a0e3-df2a52ceb16a
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: a070754b-8aaa-4a8f-8fe8-f43ffdfb6d42
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+	column Currency
+		dataType: string
+		lineageTag: 74464762-4705-43a3-b36b-c776d673f3cf
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: 3a122cde-7ad7-4501-b493-0ed51b94c32a
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+	column RetailCandidateCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 653ae1e3-0a63-496f-a6f4-6470f7daeded
+		summarizeBy: sum
+		sourceColumn: RetailCandidateCount
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: 29c8d427-9f0b-411a-a46f-c47d2ba508bc
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: ae6bf78e-695a-4bea-90cb-d2cceb283744
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+	column RetailProductId
+		dataType: string
+		lineageTag: c7a9437b-c64b-4ffe-92d6-77bca7602ec9
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+	column RetailProductName
+		dataType: string
+		lineageTag: 0c6c791d-cd53-404d-853a-82e88248cef7
+		summarizeBy: none
+		sourceColumn: RetailProductName
+
+	column RetailSkuName
+		dataType: string
+		lineageTag: 245ee9d5-e7e6-4eb0-9061-a782453c1c9e
+		summarizeBy: none
+		sourceColumn: RetailSkuName
+
+	column RetailMeterName
+		dataType: string
+		lineageTag: cdbb58a6-4852-41d2-a040-7f917d57db8f
+		summarizeBy: none
+		sourceColumn: RetailMeterName
+
+	column RetailPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: cee1c400-f4b8-4900-bee6-6db4ccfe5ec2
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b21f0070-4079-4b15-a8ef-6e3c5c808b26
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c2e51520-5d70-4899-8402-b91435eb5527
+		summarizeBy: sum
+		sourceColumn: EstimatedSavings
+
+	partition CostRetailFact = m
+		mode: import
+		source =
+				let
+				  MtdSource = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\AzureFinOpsMaccRetailSolution\data\exports\mtd-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
+				  MtdPromoted = Table.PromoteHeaders(MtdSource, [PromoteAllScalars = true]),
+				  MtdPeriod = Table.AddColumn(MtdPromoted, "Period", each "MTD", type text),
+				  LastSource = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\AzureFinOpsMaccRetailSolution\data\exports\last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
+				  LastPromoted = Table.PromoteHeaders(LastSource, [PromoteAllScalars = true]),
+				  LastPeriod = Table.AddColumn(LastPromoted, "Period", each "Last Month", type text),
+				  Combined = Table.Combine({MtdPeriod, LastPeriod}),
+				  Typed = Table.TransformColumnTypes(Combined, {{"Period", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
+				  AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
+				  AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
+				  AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),
+				  AddSavings = Table.AddColumn(AddRetailEquivalent, "EstimatedSavings", each if [RetailEquivalentCost] = null then null else [RetailEquivalentCost] - [Cost], type number)
+				in
+				  AddSavings
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

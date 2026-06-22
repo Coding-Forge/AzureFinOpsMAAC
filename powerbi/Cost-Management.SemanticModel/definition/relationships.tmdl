@@ -1,0 +1,32 @@
+relationship 0d7607ca-9c60-4ce7-b8b5-9b0eed0cc740
+	joinOnDateBehavior: datePartOnly
+	fromColumn: AzureRetail.'Items.effectiveStartDate'
+	toColumn: LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be.Date
+
+relationship e93dfa69-84f9-47ef-8af6-4e626119d659
+	joinOnDateBehavior: datePartOnly
+	fromColumn: AzureRetail.'Items.effectiveEndDate'
+	toColumn: LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Date
+
+relationship 9b6dba4f-f2ca-417c-9ce1-f6e3ccd81064
+	joinOnDateBehavior: datePartOnly
+	fromColumn: datedim.Date
+	toColumn: LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Date
+
+relationship f33b1015-ea31-4a85-be80-09dadee7d07a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CostRetailFact.UsageDateAsDate
+	toColumn: datedim.Date
+
+relationship 9ccb68f6-7c38-44b8-9837-8b3c5075358f
+	fromColumn: CostRetailFact.ServiceName
+	toColumn: DimService.ServiceName
+
+relationship e0cdc8b1-0e2a-4625-8fff-47b44f5b741f
+	fromColumn: CostRetailFact.ArmRegionName
+	toColumn: DimRegion.ArmRegionName
+
+relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
+	fromColumn: CostRetailFact.RetailMatchStatus
+	toColumn: DimRetailMatch.RetailMatchStatus
+

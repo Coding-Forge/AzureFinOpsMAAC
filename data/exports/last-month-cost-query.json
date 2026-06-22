@@ -1,0 +1,47 @@
+{
+  "type": "ActualCost",
+  "timeframe": "Custom",
+  "dataset": {
+    "grouping": [
+      {
+        "type": "Dimension",
+        "name": "ServiceName"
+      },
+      {
+        "type": "Dimension",
+        "name": "ResourceLocation"
+      },
+      {
+        "type": "Dimension",
+        "name": "Meter"
+      },
+      {
+        "type": "Dimension",
+        "name": "Product"
+      },
+      {
+        "type": "Dimension",
+        "name": "PartNumber"
+      },
+      {
+        "type": "Dimension",
+        "name": "UnitOfMeasure"
+      }
+    ],
+    "granularity": "Daily",
+    "aggregation": {
+      "totalQuantity": {
+        "name": "UsageQuantity",
+        "function": "Sum"
+      },
+      "totalCost": {
+        "name": "Cost",
+        "function": "Sum"
+      }
+    }
+  },
+  "timePeriod": {
+    "from": "2026-05-01T04:00:00Z",
+    "to": "2026-06-01T03:59:59Z"
+  }
+}

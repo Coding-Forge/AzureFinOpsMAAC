@@ -1,0 +1,29 @@
+table DimRegion
+	lineageTag: 59900d69-512f-4b90-9272-d09dc1e2ccdd
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: ecb5d3e6-ac47-474d-8eff-a50fc53b56bb
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 3a278f9b-1903-4583-9b42-e6fe90f29844
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+	partition DimRegion = m
+		mode: import
+		source =
+				let
+				  Source = CostRetailFact,
+				  Keep = Table.SelectColumns(Source, {"ArmRegionName", "ResourceLocation"}),
+				  NonBlank = Table.SelectRows(Keep, each [ArmRegionName] <> null and Text.Trim(Text.From([ArmRegionName])) <> ""),
+				  GroupedRows = Table.Group(NonBlank, {"ArmRegionName"}, {{"ResourceLocation", each List.First(List.RemoveNulls([ResourceLocation])), type nullable text}}),
+				  SortedRows = Table.Sort(GroupedRows, {{"ArmRegionName", Order.Ascending}})
+				in
+				  SortedRows
+
+	annotation PBI_ResultType = Table
+

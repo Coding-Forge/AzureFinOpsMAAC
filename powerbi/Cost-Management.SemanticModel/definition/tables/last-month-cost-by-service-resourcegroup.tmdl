@@ -1,0 +1,70 @@
+table last-month-cost-by-service-resourcegroup
+	lineageTag: d640e4d2-9fa1-4de8-b8a6-85b1845756f5
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: f7dbab9c-3514-452c-b1a5-852f2c2b6e1b
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost
+		dataType: double
+		lineageTag: 55741d1b-dd5f-4d02-a3f3-517611784aff
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 68853187-1167-42ed-ac53-0485ab222386
+		summarizeBy: sum
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceName
+		dataType: string
+		lineageTag: e7fe0167-90c9-4068-a1ed-867fb88f2e8c
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: 1c890531-b6b3-4734-845d-263afaec0882
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Currency
+		dataType: string
+		lineageTag: 83f6443b-63a0-4c9c-b33d-8ff4795c71f4
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition last-month-cost-by-service-resourcegroup = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports\last-month-cost-by-service-resourcegroup.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
+				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

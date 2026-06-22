@@ -1,0 +1,102 @@
+table mtd-cost-by-retail-join
+	lineageTag: 5c0dbb80-6185-42a5-98c9-f7017e7f61f2
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 1310bafc-535c-457b-b122-51b409016852
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost
+		dataType: double
+		lineageTag: 9b1bc9e2-6f89-4590-b9b2-57862d6208de
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 577dc5fa-480d-49d7-9dc7-7f74c4e7f09a
+		summarizeBy: sum
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceName
+		dataType: string
+		lineageTag: 53ad7f7b-c9da-4a98-959e-d0f54e943289
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: cda6e044-a11e-4172-a11e-d8a09309b51c
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Meter
+		dataType: string
+		lineageTag: 7451ae1b-d488-4363-80b1-145f0841af16
+		summarizeBy: none
+		sourceColumn: Meter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: ab69c7ca-9105-4089-b7b0-48454764056b
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+	column PartNumber
+		dataType: string
+		lineageTag: 6450c681-5982-4f8b-96f6-3bd1a755a415
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: 7d1dc91b-a3dd-434d-a9fe-96c022aee303
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column Currency
+		dataType: string
+		lineageTag: d25186e1-aa2a-47e2-a904-2ae763648432
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition mtd-cost-by-retail-join = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports\mtd-cost-by-retail-join.csv"), [Delimiter = ",", Columns = 10, QuoteStyle = QuoteStyle.None]),
+				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

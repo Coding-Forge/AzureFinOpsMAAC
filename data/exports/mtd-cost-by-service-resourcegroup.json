@@ -1,0 +1,1479 @@
+{
+  "eTag": null,
+  "id": "subscriptions/c3454f9a-72a4-473e-b7ab-4e9b1107fd6d/providers/Microsoft.CostManagement/query/262c2532-92f8-40be-bb68-49fba3aab8ba",
+  "location": null,
+  "name": "262c2532-92f8-40be-bb68-49fba3aab8ba",
+  "properties": {
+    "columns": [
+      {
+        "name": "UsageQuantity",
+        "type": "Number"
+      },
+      {
+        "name": "Cost",
+        "type": "Number"
+      },
+      {
+        "name": "UsageDate",
+        "type": "Number"
+      },
+      {
+        "name": "ServiceName",
+        "type": "String"
+      },
+      {
+        "name": "ResourceGroupName",
+        "type": "String"
+      },
+      {
+        "name": "Currency",
+        "type": "String"
+      }
+    ],
+    "nextLink": null,
+    "rows": [
+      [
+        0.0002034,
+        4.6782e-06,
+        20260601,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.00064,
+        0.00256,
+        20260601,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260601,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260601,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260601,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260601,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.106872,
+        1.613207144,
+        20260601,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260601,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001356,
+        3.1188e-06,
+        20260602,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000692,
+        0.002768,
+        20260602,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260602,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260602,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260602,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260602,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260602,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0002486,
+        5.7178e-06,
+        20260603,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000734,
+        0.002936,
+        20260603,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324640645161,
+        1.14147496774194,
+        20260603,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        6e-06,
+        0.0,
+        20260603,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260603,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260603,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260603,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        5e-06,
+        20260603,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260603,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001356,
+        3.1188e-06,
+        20260604,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000577,
+        0.002308,
+        20260604,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0323600645161,
+        1.14147296774194,
+        20260604,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260604,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260604,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260604,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260604,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260604,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.000113,
+        2.599e-06,
+        20260605,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000708,
+        0.002832,
+        20260605,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260605,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260605,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260605,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260605,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260605,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260605,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.000226,
+        5.198e-06,
+        20260606,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000605,
+        0.00242,
+        20260606,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260606,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        3e-06,
+        0.0,
+        20260606,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260606,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260606,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260606,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        1.5e-06,
+        20260606,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260606,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001808,
+        4.1584e-06,
+        20260607,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000729,
+        0.002916,
+        20260607,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324610645161,
+        1.14147496774194,
+        20260607,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260607,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260607,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260607,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100372,
+        1.612938444,
+        20260607,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260607,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001356,
+        3.1188e-06,
+        20260608,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.00064,
+        0.00256,
+        20260608,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260608,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260608,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260608,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260608,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.106872,
+        1.613207144,
+        20260608,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260608,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001582,
+        3.6386e-06,
+        20260609,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000802,
+        0.003208,
+        20260609,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0323600645161,
+        1.14147296774194,
+        20260609,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        6e-06,
+        0.0,
+        20260609,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260609,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260609,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260609,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260609,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0004068,
+        9.3564e-06,
+        20260610,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000723,
+        0.002892,
+        20260610,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260610,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        4e-06,
+        0.0,
+        20260610,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260610,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260610,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260610,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        5e-06,
+        20260610,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260610,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001808,
+        4.1584e-06,
+        20260611,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.001773,
+        0.007092,
+        20260611,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260611,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260611,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        291.096893575617,
+        52.3972712836111,
+        20260611,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260611,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260611,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260611,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001582,
+        3.6386e-06,
+        20260612,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.001664,
+        0.006656,
+        20260612,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260612,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        4e-06,
+        0.0,
+        20260612,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        443.708351111111,
+        79.86733364,
+        20260612,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260612,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260612,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260612,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0002712,
+        6.2376e-06,
+        20260613,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000746,
+        0.002984,
+        20260613,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260613,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260613,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        359.628240725309,
+        64.7329137705556,
+        20260613,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260613,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260613,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260613,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001582,
+        3.6386e-06,
+        20260614,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000589,
+        0.002356,
+        20260614,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0323600645161,
+        1.14147296774194,
+        20260614,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        1e-06,
+        0.0,
+        20260614,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260614,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260614,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260614,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        1.5e-06,
+        20260614,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260614,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001582,
+        3.6386e-06,
+        20260615,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000744,
+        0.002976,
+        20260615,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324610645161,
+        1.14147496774194,
+        20260615,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        4e-06,
+        0.0,
+        20260615,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260615,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260615,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.106972,
+        1.613208644,
+        20260615,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260615,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0002486,
+        5.7178e-06,
+        20260616,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000615,
+        0.00246,
+        20260616,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260616,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260616,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260616,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260616,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260616,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260616,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0002712,
+        6.2376e-06,
+        20260617,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.001315,
+        0.00526,
+        20260617,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324600645161,
+        1.14147496774194,
+        20260617,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260617,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        363.534768888889,
+        65.43608884,
+        20260617,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260617,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260617,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        5e-06,
+        20260617,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260617,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001808,
+        4.1584e-06,
+        20260618,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.001041,
+        0.004164,
+        20260618,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        71.0324600645161,
+        1.12807496774194,
+        20260618,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260618,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        1020.97504002469,
+        183.775337644444,
+        20260618,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260618,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260618,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260618,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.000226,
+        5.198e-06,
+        20260619,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.001261,
+        0.005044,
+        20260619,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324200645161,
+        1.14147296774194,
+        20260619,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260619,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        582.191426666666,
+        104.79428724,
+        20260619,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260619,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.107072,
+        1.613019444,
+        20260619,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260619,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001356,
+        3.1188e-06,
+        20260620,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.00088,
+        0.00352,
+        20260620,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324620645161,
+        1.14147496774194,
+        20260620,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        2e-06,
+        0.0,
+        20260620,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        359.769653032407,
+        64.7583679858333,
+        20260620,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260620,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100472,
+        1.612937744,
+        20260620,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260620,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001808,
+        4.1584e-06,
+        20260621,
+        "Azure Databricks",
+        "dbx",
+        "USD"
+      ],
+      [
+        0.000638,
+        0.002552,
+        20260621,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        72.0324700645161,
+        1.14147496774194,
+        20260621,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        3e-06,
+        0.0,
+        20260621,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.00108,
+        2.484e-05,
+        20260621,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        48.3333333333333,
+        8.85101333333333,
+        20260621,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.100272,
+        1.612936944,
+        20260621,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.0001,
+        1.5e-06,
+        20260621,
+        "Storage",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        48.0,
+        0.24,
+        20260621,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        7.6e-05,
+        0.000304,
+        20260622,
+        "Microsoft Defender for Cloud",
+        "",
+        "USD"
+      ],
+      [
+        15.005377344086,
+        0.217645161290323,
+        20260622,
+        "Microsoft Defender for Cloud",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        4e-06,
+        0.0,
+        20260622,
+        "Microsoft Defender for Cloud",
+        "mcapsgovernance",
+        "USD"
+      ],
+      [
+        0.000225,
+        5.175e-06,
+        20260622,
+        "Microsoft Fabric",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        10.0555555555556,
+        1.84048888888889,
+        20260622,
+        "SQL Database",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        0.025168,
+        0.403235736,
+        20260622,
+        "Storage",
+        "fabricrg",
+        "USD"
+      ],
+      [
+        12.0,
+        0.06,
+        20260622,
+        "Virtual Network",
+        "fabricrg",
+        "USD"
+      ]
+    ]
+  },
+  "sku": null,
+  "type": "Microsoft.CostManagement/query"
+}

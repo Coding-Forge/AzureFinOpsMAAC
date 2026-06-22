@@ -1,0 +1,22 @@
+table DimService
+	lineageTag: f7d67a5d-a775-4f77-8d8e-dd4a97a5620e
+
+	column ServiceName
+		dataType: string
+		lineageTag: 8c356cfa-8231-4d09-8e93-1a430b9eaffc
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	partition DimService = m
+		mode: import
+		source =
+				let
+				  Source = CostRetailFact,
+				  Keep = Table.SelectColumns(Source, {"ServiceName"}),
+				  DistinctRows = Table.Distinct(Keep),
+				  SortedRows = Table.Sort(DistinctRows, {{"ServiceName", Order.Ascending}})
+				in
+				  SortedRows
+
+	annotation PBI_ResultType = Table
+

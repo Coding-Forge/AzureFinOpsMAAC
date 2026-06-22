@@ -1,0 +1,90 @@
+table _Measures
+	lineageTag: c753e8dd-8d93-42b8-a23a-38fe14ee5c25
+
+	measure 'MTD Cost' = CALCULATE(sum('mtd-cost-by-service-resourcegroup'[Cost]))
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 08b3bb46-e5ef-4e65-a825-e5288a90453b
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Last Months Cost' = CALCULATE(sum('last-month-cost-by-service-resourcegroup'[Cost]))
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: a515d70a-7899-43d3-b81f-554aced87e64
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Actual / MACC Cost' = SUM(CostRetailFact[Cost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: e1cd657e-355c-415c-b4e4-e8bc9158e9c8
+
+	measure 'Retail Equivalent Cost' = SUM(CostRetailFact[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 61747ef7-c33d-44fc-a3e5-35dffdb36f91
+
+	measure 'Estimated Savings' = [Retail Equivalent Cost] - [Actual / MACC Cost]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 31f395d4-8da8-4ccf-9a2b-a5f9e6ea64b6
+
+	measure 'Savings Rate' = DIVIDE([Estimated Savings], [Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: e92dbd7e-9a52-4b08-8939-e35dac6e28a3
+
+	measure 'Matched Actual Cost' = CALCULATE([Actual / MACC Cost], CostRetailFact[RetailMatchStatus] = "Matched")
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 735244a4-84b4-4981-852e-ad1648d22f7f
+
+	measure 'Retail Match Coverage' = DIVIDE([Matched Actual Cost], [Actual / MACC Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c829ae76-0bde-4aa1-9c5c-f1f7b163f892
+
+	measure 'Unmatched Actual Cost' = CALCULATE([Actual / MACC Cost], CostRetailFact[RetailMatchStatus] <> "Matched")
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 65912535-87a1-422e-a8ef-d89d76f288c3
+
+	measure 'Cost Rows' = COUNTROWS(CostRetailFact)
+		formatString: #,0
+		lineageTag: 47362b13-0239-4634-a053-243e180d0334
+
+	measure 'Matched Rows' = CALCULATE([Cost Rows], CostRetailFact[RetailMatchStatus] = "Matched")
+		formatString: #,0
+		lineageTag: cf397f57-8f7c-4f11-be2a-516db97adb09
+
+	measure 'Unmatched Rows' = CALCULATE([Cost Rows], CostRetailFact[RetailMatchStatus] <> "Matched")
+		formatString: #,0
+		lineageTag: b2672abc-66a3-42c9-83c0-3ff24fba2f0a
+
+	measure 'Retail Match Row Coverage' = DIVIDE([Matched Rows], [Cost Rows])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0818db4a-d437-402d-8df8-1baef3da05ea
+
+	measure 'Average Effective Unit Cost' = DIVIDE([Actual / MACC Cost], SUM(CostRetailFact[UsageQuantity]))
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 7fe31040-ada4-441c-9b05-0b4adc3b1962
+
+	measure 'Average Retail Unit Price' = AVERAGE(CostRetailFact[RetailPrice])
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 590bd8df-8916-4a74-a0e8-c324cacc301b
+
+	column Measures
+		dataType: string
+		isHidden
+		lineageTag: b3b5e30f-b16c-493a-a6e9-38969be92122
+		summarizeBy: none
+		sourceColumn: Measures
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				  Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Measures = _t])
+				in
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

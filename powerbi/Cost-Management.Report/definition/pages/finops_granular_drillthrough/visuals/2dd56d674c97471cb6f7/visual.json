@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "2dd56d674c97471cb6f7",
+  "position": {
+    "x": 40,
+    "y": 86,
+    "z": 1000,
+    "height": 48,
+    "width": 1780,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Inspect row-level cost, SKU, meter, and Retail Prices API matching data behind the summary. In Power BI Desktop, add ServiceName, ArmRegionName, and UsageDateAsDate to the Drill-through well if you want right-click drillthrough from the overview visuals.",
+                    "textStyle": {
+                      "fontWeight": "normal",
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}
