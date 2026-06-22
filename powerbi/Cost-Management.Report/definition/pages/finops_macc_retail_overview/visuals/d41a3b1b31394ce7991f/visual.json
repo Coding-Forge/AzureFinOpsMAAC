@@ -13,6 +13,24 @@
     "visualType": "clusteredColumnChart",
     "query": {
       "queryState": {
+        "Drillthrough": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "CostRetailFact.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            }
+          ]
+        },
         "Category": {
           "projections": [
             {

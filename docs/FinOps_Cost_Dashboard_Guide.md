@@ -12,8 +12,8 @@ This Power BI project helps customers compare their actual Azure cost from the F
 | `Cost-Management.Report` | Report layout pages and visuals. |
 | `Cost-Management.SemanticModel` | TMDL semantic model, tables, measures, relationships, and Power Query definitions. |
 | `FinOps_Cost_Dashboard_Guide.md` | This documentation file. |
-| `C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\Get-FdpoCostAnalysis.ps1` | Script that extracts Azure Cost Management data and enriches it with Azure Retail Prices API data. |
-| `C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports` | Output CSV/JSON files used by the Power BI model. |
+| `scripts\Get-FdpoCostAnalysis.ps1` | Script that extracts Azure Cost Management data and enriches it with Azure Retail Prices API data. |
+| `data\exports` | Output CSV/JSON files used by the Power BI model. |
 
 ## Data flow
 
@@ -31,26 +31,26 @@ This Power BI project helps customers compare their actual Azure cost from the F
 Script location:
 
 ```powershell
-C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\Get-FdpoCostAnalysis.ps1
+scripts\Get-FdpoCostAnalysis.ps1
 ```
 
 Typical run command:
 
 ```powershell
-cd "C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis"
-.\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
+cd "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution"
+.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
 ```
 
 Faster run without Retail Prices enrichment:
 
 ```powershell
-.\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d" -SkipRetailPriceLookup
+.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d" -SkipRetailPriceLookup
 ```
 
 Install Azure CLI automatically if needed:
 
 ```powershell
-.\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<subscription-id>" -InstallAzureCli
+.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<subscription-id>" -InstallAzureCli
 ```
 
 ## Script outputs
@@ -58,7 +58,7 @@ Install Azure CLI automatically if needed:
 The script writes output to:
 
 ```text
-C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports
+data\exports
 ```
 
 Important files:
@@ -181,7 +181,7 @@ Recommended cadence: daily, early morning, or shortly after expected Azure cost 
 Use Task Scheduler to run PowerShell daily:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File "C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\Get-FdpoCostAnalysis.ps1" -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
+powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-FdpoCostAnalysis.ps1" -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
 ```
 
 For unattended scheduling, configure the script or wrapper to authenticate with a service principal instead of relying on interactive `az login`.

@@ -58,7 +58,7 @@ table mtd-cost-by-service-resourcegroup
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports\mtd-cost-by-service-resourcegroup.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\data\exports\mtd-cost-by-service-resourcegroup.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}})
 				in

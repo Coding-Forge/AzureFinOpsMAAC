@@ -34,6 +34,21 @@
         }
       }
     },
+    "objects": {
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -57,6 +72,24 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "6e85749227c9de57160e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimRetailMatch"
+              }
+            },
+            "Property": "RetailMatchStatus"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   },
   "howCreated": "Copilot"
 }

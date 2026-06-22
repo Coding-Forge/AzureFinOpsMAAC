@@ -34,6 +34,21 @@
         }
       }
     },
+    "objects": {
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -57,6 +72,24 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "917662ddb0860be58095",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimRegion"
+              }
+            },
+            "Property": "ArmRegionName"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   },
   "howCreated": "Copilot"
 }

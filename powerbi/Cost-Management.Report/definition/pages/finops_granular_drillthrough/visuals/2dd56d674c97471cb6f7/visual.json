@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Inspect row-level cost, SKU, meter, and Retail Prices API matching data behind the summary. In Power BI Desktop, add ServiceName, ArmRegionName, and UsageDateAsDate to the Drill-through well if you want right-click drillthrough from the overview visuals.",
+                    "value": "Inspect row-level cost, SKU, meter, and Retail Prices API matching data behind the summary. Right-click any ServiceName or ArmRegionName data point on the FinOps MACC vs Retail Overview page and choose Drill through → Granular Detail / Drillthrough to land here filtered to that service or region.",
                     "textStyle": {
                       "fontWeight": "normal",
                       "fontFamily": "Segoe UI",

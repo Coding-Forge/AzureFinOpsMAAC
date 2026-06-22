@@ -2,9 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
     "finops_macc_retail_overview",
-    "61be5ce04b83da461104",
     "finops_granular_drillthrough",
     "finops_data_quality_actions"
   ],
-  "activePageName": "61be5ce04b83da461104"
+  "activePageName": "finops_macc_retail_overview"
 }

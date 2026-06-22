@@ -21,7 +21,6 @@
                   {
                     "value": "Customer-facing FinOps view of actual agreement/MACC costs compared with Azure Retail Prices. Filter by date, region, service, and retail match status to identify savings and mapping gaps.",
                     "textStyle": {
-                      "fontWeight": "normal",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt"
                     }

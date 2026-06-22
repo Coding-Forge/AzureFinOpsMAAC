@@ -98,7 +98,7 @@ table mtd-cost-by-retail-join-with-arm-region
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports\mtd-cost-by-retail-join-with-arm-region.csv"), [Delimiter = ",", Columns = 11, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\data\exports\mtd-cost-by-retail-join-with-arm-region.csv"), [Delimiter = ",", Columns = 11, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}})
 				in

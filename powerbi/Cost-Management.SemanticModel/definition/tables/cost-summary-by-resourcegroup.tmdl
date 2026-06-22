@@ -39,7 +39,7 @@ table cost-summary-by-resourcegroup
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\Users\brcampb\OneDrive - Microsoft\Documents\Clawpilot\Scratchpad\fdpo-cost-analysis\exports\cost-summary-by-resourcegroup.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\data\exports\cost-summary-by-resourcegroup.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ResourceGroupName", type text}, {"Cost", type number}, {"Currency", type text}})
 				in

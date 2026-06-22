@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "58b2237dd2494dd79ca4",
   "position": {
-    "x": 980,
-    "y": 8,
+    "x": 953.21237993596583,
+    "y": 8.06830309498399,
     "z": 1010,
-    "height": 64,
-    "width": 220,
+    "height": 63.970117395944506,
+    "width": 246.65955176093917,
     "tabOrder": 1010
   },
   "visual": {
@@ -38,10 +38,17 @@
       "data": [
         {
           "properties": {
+            "startDate": {
+              "expr": {
+                "Literal": {
+                  "Value": "datetime'2026-05-01T00:00:00'"
+                }
+              }
+            },
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Basic'"
+                  "Value": "'Between'"
                 }
               }
             }
@@ -59,6 +66,87 @@
               }
             },
             "singleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dateRange": [
+        {
+          "properties": {
+            "includeToday": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "c",
+                    "Entity": "CostRetailFact",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "Comparison": {
+                        "ComparisonKind": 2,
+                        "Left": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "c"
+                              }
+                            },
+                            "Property": "UsageDateAsDate"
+                          }
+                        },
+                        "Right": {
+                          "Literal": {
+                            "Value": "datetime'2026-05-01T00:00:00'"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "slider": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "false"

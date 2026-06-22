@@ -41,7 +41,7 @@
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Basic'"
+                  "Value": "'Dropdown'"
                 }
               }
             }
@@ -66,6 +66,24 @@
               }
             }
           }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
         }
       ]
     },

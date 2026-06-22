@@ -5,6 +5,152 @@
   "displayOption": "FitToPage",
   "height": 1080,
   "width": 1920,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "DrillFilterServiceName",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CostRetailFact"
+              }
+            },
+            "Property": "ServiceName"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "c",
+              "Entity": "CostRetailFact",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "c"
+                          }
+                        },
+                        "Property": "ServiceName"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'SQL Database'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "DrillFilterArmRegionName",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CostRetailFact"
+              }
+            },
+            "Property": "ArmRegionName"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "c",
+              "Entity": "CostRetailFact",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "c"
+                          }
+                        },
+                        "Property": "ArmRegionName"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'westus3'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "finops_granular_drillthrough_binding",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "DrillServiceName",
+        "boundFilter": "DrillFilterServiceName",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CostRetailFact"
+              }
+            },
+            "Property": "ServiceName"
+          }
+        }
+      },
+      {
+        "name": "DrillArmRegionName",
+        "boundFilter": "DrillFilterArmRegionName",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CostRetailFact"
+              }
+            },
+            "Property": "ArmRegionName"
+          }
+        }
+      }
+    ]
+  },
   "objects": {
     "background": [
       {
