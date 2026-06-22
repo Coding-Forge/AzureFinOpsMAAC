@@ -1,0 +1,117 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "70707070707070707070",
+  "position": {
+    "x": 980,
+    "y": 640,
+    "z": 3003,
+    "height": 360,
+    "width": 900,
+    "tabOrder": 3003
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Date",
+              "nativeQueryRef": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Year",
+              "nativeQueryRef": "Year"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                    }
+                  },
+                  "Property": "Month"
+                }
+              },
+              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Month",
+              "nativeQueryRef": "Month"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                    }
+                  },
+                  "Property": "Quarter"
+                }
+              },
+              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Quarter",
+              "nativeQueryRef": "Quarter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                    }
+                  },
+                  "Property": "Day"
+                }
+              },
+              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Day",
+              "nativeQueryRef": "Day"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'LocalDateTable_90c0...'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

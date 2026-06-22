@@ -5,13 +5,12 @@
     "x": 0,
     "y": 0,
     "z": 0,
-    "height": 80,
+    "height": 80.050156739811911,
     "width": 1920,
     "tabOrder": 0
   },
   "visual": {
     "visualType": "shape",
-    "drillFilterOtherVisuals": true,
     "objects": {
       "shape": [
         {
@@ -63,7 +62,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "howCreated": "Copilot"
 }

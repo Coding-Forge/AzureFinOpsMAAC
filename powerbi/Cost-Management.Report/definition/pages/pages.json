@@ -1,9 +1,14 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
+    "finops_report_landing",
     "finops_macc_retail_overview",
-    "finops_granular_drillthrough",
-    "finops_data_quality_actions"
+    "finops_azure_retail_reference",
+    "finops_cost_export_validation",
+    "finops_pipeline_diagnostics",
+    "finops_data_quality_actions",
+    "finops_model_technical_tables",
+    "finops_granular_drillthrough"
   ],
-  "activePageName": "finops_granular_drillthrough"
+  "activePageName": "finops_report_landing"
 }
