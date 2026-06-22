@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This Power BI project helps customers compare their actual Azure cost from the FDPO tenant against the estimated public Azure retail cost for the same usage. The goal is to show where agreement/MACC pricing appears to save money versus list retail prices and to identify data-quality gaps where usage could not be matched to a Retail Prices API SKU or meter.
+This Power BI project helps customers compare their actual Azure cost from the target tenant against the estimated public Azure retail cost for the same usage. The goal is to show where agreement/MACC pricing appears to save money versus list retail prices and to identify data-quality gaps where usage could not be matched to a Retail Prices API SKU or meter.
 
 ## Primary files
 
@@ -12,12 +12,12 @@ This Power BI project helps customers compare their actual Azure cost from the F
 | `Cost-Management.Report` | Report layout pages and visuals. |
 | `Cost-Management.SemanticModel` | TMDL semantic model, tables, measures, relationships, and Power Query definitions. |
 | `FinOps_Cost_Dashboard_Guide.md` | This documentation file. |
-| `scripts\Get-FdpoCostAnalysis.ps1` | Script that extracts Azure Cost Management data and enriches it with Azure Retail Prices API data. |
+| `scripts\Get-CostAnalysis.ps1` | Script that extracts Azure Cost Management data and enriches it with Azure Retail Prices API data. |
 | `data\exports` | Output CSV/JSON files used by the Power BI model. |
 
 ## Data flow
 
-1. `Get-FdpoCostAnalysis.ps1` signs into Azure using Azure CLI if needed.
+1. `Get-CostAnalysis.ps1` signs into Azure using Azure CLI if needed.
 2. The script queries Azure Cost Management for actual cost data.
 3. It exports month-to-date and last-month cost data to CSV and JSON.
 4. It creates retail-join exports with fields such as service, region, meter, product, unit of measure, and usage quantity.
@@ -31,26 +31,26 @@ This Power BI project helps customers compare their actual Azure cost from the F
 Script location:
 
 ```powershell
-scripts\Get-FdpoCostAnalysis.ps1
+scripts\Get-CostAnalysis.ps1
 ```
 
 Typical run command:
 
 ```powershell
 cd "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution"
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
 ```
 
 Faster run without Retail Prices enrichment:
 
 ```powershell
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d" -SkipRetailPriceLookup
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d" -SkipRetailPriceLookup
 ```
 
 Install Azure CLI automatically if needed:
 
 ```powershell
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<subscription-id>" -InstallAzureCli
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<subscription-id>" -InstallAzureCli
 ```
 
 ## Script outputs
@@ -181,7 +181,7 @@ Recommended cadence: daily, early morning, or shortly after expected Azure cost 
 Use Task Scheduler to run PowerShell daily:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-FdpoCostAnalysis.ps1" -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
+powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-CostAnalysis.ps1" -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
 ```
 
 For unattended scheduling, configure the script or wrapper to authenticate with a service principal instead of relying on interactive `az login`.

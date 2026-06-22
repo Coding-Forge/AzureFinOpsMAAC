@@ -33,7 +33,7 @@ The project includes:
 
 ```powershell
 cd C:\Projects\Fabric\AzureFinOpsMaccRetailSolution
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<your-subscription-id>"
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<your-subscription-id>"
 ```
 
 3. Open `powerbi/Cost-Management.pbip` in Power BI Desktop.
@@ -46,19 +46,19 @@ cd C:\Projects\Fabric\AzureFinOpsMaccRetailSolution
 ## Using The Scripts
 
 Primary script:
-- `scripts/Get-FdpoCostAnalysis.ps1`
+- `scripts/Get-CostAnalysis.ps1`
 
 Common examples:
 
 ```powershell
 # Standard run
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<your-subscription-id>"
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<your-subscription-id>"
 
 # Skip Retail Prices enrichment for faster execution
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<your-subscription-id>" -SkipRetailPriceLookup
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<your-subscription-id>" -SkipRetailPriceLookup
 
 # Install Azure CLI if missing
-.\scripts\Get-FdpoCostAnalysis.ps1 -SubscriptionId "<your-subscription-id>" -InstallAzureCli
+.\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<your-subscription-id>" -InstallAzureCli
 ```
 
 Script output location:
@@ -84,7 +84,7 @@ For regular refreshes, run the script on a schedule (for example Windows Task Sc
 Example scheduled command:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-FdpoCostAnalysis.ps1" -SubscriptionId "<your-subscription-id>"
+powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-CostAnalysis.ps1" -SubscriptionId "<your-subscription-id>"
 ```
 
 ## Disclaimer

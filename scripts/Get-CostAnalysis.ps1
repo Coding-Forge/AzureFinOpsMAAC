@@ -11,17 +11,23 @@ This script reproduces the cost-analysis pull performed from this machine:
 - exports raw JSON, detailed CSV, summary CSV files, and Retail Prices join/enrichment files
 
 .EXAMPLE
-.\Get-FdpoCostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
+.\Get-CostAnalysis.ps1 -SubscriptionId "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d"
 
 .EXAMPLE
-.\Get-FdpoCostAnalysis.ps1 -TenantId "<tenant-id>" -SubscriptionId "<subscription-id>" -InstallAzureCli
+.\Get-CostAnalysis.ps1
+
+.EXAMPLE
+.\Get-CostAnalysis.ps1 -SubscriptionId "<sub-id-1>","<sub-id-2>"
+
+.EXAMPLE
+.\Get-CostAnalysis.ps1 -TenantId "<tenant-id>" -SubscriptionId "<subscription-id>" -InstallAzureCli
 #>
 
 [CmdletBinding()]
 param(
     [string]$TenantId,
 
-    [string]$SubscriptionId,
+    [string[]]$SubscriptionId,
 
     [string]$OutputDir = (Join-Path $PSScriptRoot "exports"),
 
@@ -81,25 +87,85 @@ function Ensure-AzureLogin {
     az @loginArgs | Out-Null
 }
 
-function Set-AzureContext {
-    if ($TenantId -and -not $SubscriptionId) {
-        Write-Host "TenantId was provided without SubscriptionId. Logging into tenant and using the default visible subscription."
-        az login --tenant $TenantId --use-device-code --allow-no-subscriptions --output json | Out-Null
+function Get-TargetSubscriptions {
+    param(
+        [string]$TenantId,
+        [string[]]$RequestedSubscriptionIds
+    )
+
+    $allSubscriptions = @(az account list --all --output json | ConvertFrom-Json)
+    if (-not $allSubscriptions -or $allSubscriptions.Count -eq 0) {
+        throw "No Azure subscriptions are visible for the current identity."
     }
 
-    if ($SubscriptionId) {
-        Write-Host "Setting Azure subscription context to $SubscriptionId..."
-        az account set --subscription $SubscriptionId
+    $enabledSubscriptions = @($allSubscriptions | Where-Object { $_.state -eq "Enabled" })
+    if ($TenantId) {
+        $enabledSubscriptions = @($enabledSubscriptions | Where-Object { $_.tenantId -eq $TenantId })
     }
 
-    $account = az account show --output json | ConvertFrom-Json
-    if (-not $account.id) {
-        throw "No active Azure subscription is selected. Run 'az account list --all --output table' and rerun with -SubscriptionId."
+    if (-not $enabledSubscriptions -or $enabledSubscriptions.Count -eq 0) {
+        if ($TenantId) {
+            throw "No enabled subscriptions were found for tenant '$TenantId'."
+        }
+        throw "No enabled subscriptions were found for the current identity."
     }
 
-    Write-Host "Using tenant: $($account.tenantId)"
-    Write-Host "Using subscription: $($account.name) ($($account.id))"
-    return $account
+    $selectedSubscriptions = @()
+    if ($RequestedSubscriptionIds -and $RequestedSubscriptionIds.Count -gt 0) {
+        $requestedSet = @{}
+        foreach ($id in $RequestedSubscriptionIds) {
+            if (-not [string]::IsNullOrWhiteSpace($id)) {
+                $requestedSet[$id.Trim().ToLowerInvariant()] = $true
+            }
+        }
+
+        $selectedSubscriptions = @(
+            $enabledSubscriptions | Where-Object {
+                $requestedSet.ContainsKey(([string]$_.id).ToLowerInvariant())
+            }
+        )
+
+        $foundSet = @{}
+        foreach ($sub in $selectedSubscriptions) {
+            $foundSet[([string]$sub.id).ToLowerInvariant()] = $true
+        }
+
+        $missing = @(
+            $requestedSet.Keys | Where-Object { -not $foundSet.ContainsKey($_) }
+        )
+
+        if ($missing.Count -gt 0) {
+            throw "These subscription IDs were not found or are not enabled/accessible: $($missing -join ', ')"
+        }
+    }
+    else {
+        $selectedSubscriptions = $enabledSubscriptions
+    }
+
+    if (-not $selectedSubscriptions -or $selectedSubscriptions.Count -eq 0) {
+        throw "No target subscriptions were selected."
+    }
+
+    Write-Host "Target subscriptions ($($selectedSubscriptions.Count)):"
+    $selectedSubscriptions |
+        Sort-Object name |
+        Select-Object @{ Name = "SubscriptionName"; Expression = { $_.name } },
+                      @{ Name = "SubscriptionId"; Expression = { $_.id } },
+                      @{ Name = "TenantId"; Expression = { $_.tenantId } } |
+        Format-Table -AutoSize |
+        Out-String -Width 240 |
+        Write-Host
+
+    return @($selectedSubscriptions)
+}
+
+function Set-AzureContextSubscription {
+    param(
+        [Parameter(Mandatory)]
+        [string]$SubscriptionId
+    )
+
+    az account set --subscription $SubscriptionId
 }
 
 function Convert-CostResponseToCsv {
@@ -426,6 +492,112 @@ function Invoke-CostQuery {
     }
 }
 
+function Invoke-CostQueryAcrossSubscriptions {
+    param(
+        [Parameter(Mandatory)]
+        [object[]]$Subscriptions,
+
+        [Parameter(Mandatory)]
+        [hashtable]$TimePeriod,
+
+        [Parameter(Mandatory)]
+        [string]$Prefix,
+
+        [Parameter(Mandatory)]
+        [string]$DestinationDir,
+
+        [object[]]$GroupingDimensions = @(
+            @{ type = "Dimension"; name = "ServiceName" },
+            @{ type = "Dimension"; name = "ResourceGroupName" }
+        ),
+
+        [string]$FileSuffix = "service-resourcegroup"
+    )
+
+    $subscriptionOutputRoot = Join-Path $DestinationDir "subscriptions"
+    New-Item -ItemType Directory -Path $subscriptionOutputRoot -Force | Out-Null
+
+    $combinedRows = @()
+    $perSubscriptionResults = @()
+
+    foreach ($sub in $Subscriptions) {
+        $subId = [string]$sub.id
+        $subName = [string]$sub.name
+        $subDestinationDir = Join-Path $subscriptionOutputRoot $subId
+        New-Item -ItemType Directory -Path $subDestinationDir -Force | Out-Null
+
+        Write-Host "Querying $Prefix costs for subscription: $subName ($subId)"
+        Set-AzureContextSubscription -SubscriptionId $subId
+
+        $subScope = "/subscriptions/$subId"
+        $subResult = Invoke-CostQuery `
+            -Scope $subScope `
+            -TimePeriod $TimePeriod `
+            -Prefix $Prefix `
+            -DestinationDir $subDestinationDir `
+            -GroupingDimensions $GroupingDimensions `
+            -FileSuffix $FileSuffix
+
+        $subRows = @(Import-Csv $subResult.Csv)
+        foreach ($row in $subRows) {
+            $row | Add-Member -NotePropertyName SubscriptionId -NotePropertyValue $subId -Force
+            $row | Add-Member -NotePropertyName SubscriptionName -NotePropertyValue $subName -Force
+            $combinedRows += $row
+        }
+
+        $perSubscriptionResults += [pscustomobject]@{
+            Prefix = $Prefix
+            SubscriptionName = $subName
+            SubscriptionId = $subId
+            RowCount = $subResult.RowCount
+            TotalCost = $subResult.TotalCost
+            Currency = $subResult.Currency
+        }
+    }
+
+    $combinedCsvPath = Join-Path $DestinationDir "$Prefix-cost-by-$FileSuffix.csv"
+    $combinedJsonPath = Join-Path $DestinationDir "$Prefix-cost-by-$FileSuffix.json"
+
+    if ($combinedRows.Count -gt 0) {
+        $combinedRows | Export-Csv -Path $combinedCsvPath -NoTypeInformation -Encoding UTF8
+    }
+    else {
+        @() | Export-Csv -Path $combinedCsvPath -NoTypeInformation -Encoding UTF8
+    }
+
+    $combinedJson = [ordered]@{
+        generatedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
+        prefix = $Prefix
+        fileSuffix = $FileSuffix
+        subscriptionCount = $Subscriptions.Count
+        rowCount = $combinedRows.Count
+        subscriptions = @($Subscriptions | ForEach-Object {
+            [ordered]@{
+                id = $_.id
+                name = $_.name
+                tenantId = $_.tenantId
+            }
+        })
+        rows = $combinedRows
+    }
+
+    $combinedJson | ConvertTo-Json -Depth 20 | Set-Content -Path $combinedJsonPath -Encoding UTF8
+
+    $total = if ($combinedRows.Count -gt 0) { ($combinedRows | Measure-Object -Property Cost -Sum).Sum } else { 0 }
+    $currency = if ($combinedRows.Count -gt 0) { $combinedRows[0].Currency } else { $null }
+
+    return [pscustomobject]@{
+        Prefix = $Prefix
+        Json = $combinedJsonPath
+        Csv = $combinedCsvPath
+        RowCount = $combinedRows.Count
+        TotalCost = [math]::Round($total, 4)
+        Currency = $currency
+        SubscriptionCount = $Subscriptions.Count
+        PerSubscription = $perSubscriptionResults
+    }
+}
+
 function New-CostSummaries {
     param(
         [Parameter(Mandatory)]
@@ -479,7 +651,8 @@ function New-CostSummaries {
 
 Ensure-AzureCli
 Ensure-AzureLogin
-$account = Set-AzureContext
+$targetSubscriptions = Get-TargetSubscriptions -TenantId $TenantId -RequestedSubscriptionIds $SubscriptionId
+Set-AzureContextSubscription -SubscriptionId $targetSubscriptions[0].id
 
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
@@ -505,9 +678,12 @@ $periods = @(
     }
 )
 
-$scope = "/subscriptions/$($account.id)"
 $results = foreach ($period in $periods) {
-    Invoke-CostQuery -Scope $scope -TimePeriod $period.TimePeriod -Prefix $period.Prefix -DestinationDir $OutputDir
+    Invoke-CostQueryAcrossSubscriptions `
+        -Subscriptions $targetSubscriptions `
+        -TimePeriod $period.TimePeriod `
+        -Prefix $period.Prefix `
+        -DestinationDir $OutputDir
 }
 
 $retailJoinGroupings = @(
@@ -520,8 +696,8 @@ $retailJoinGroupings = @(
 )
 
 $retailJoinResults = foreach ($period in $periods) {
-    Invoke-CostQuery `
-        -Scope $scope `
+    Invoke-CostQueryAcrossSubscriptions `
+        -Subscriptions $targetSubscriptions `
         -TimePeriod $period.TimePeriod `
         -Prefix $period.Prefix `
         -DestinationDir $OutputDir `
@@ -554,10 +730,20 @@ $summaries = New-CostSummaries -DestinationDir $OutputDir -Prefixes @("mtd", "la
 Write-Host ""
 Write-Host "Cost exports saved to: $OutputDir"
 Write-Host ""
+Write-Host "Processed subscriptions: $($targetSubscriptions.Count)"
+Write-Host ""
 Write-Host "Query results:"
-$results | Format-Table -AutoSize | Out-String -Width 240 | Write-Host
+$results |
+    Select-Object Prefix, SubscriptionCount, RowCount, TotalCost, Currency, Csv |
+    Format-Table -AutoSize |
+    Out-String -Width 240 |
+    Write-Host
 Write-Host "Retail join query results:"
-$retailJoinResults | Format-Table -AutoSize | Out-String -Width 240 | Write-Host
+$retailJoinResults |
+    Select-Object Prefix, SubscriptionCount, RowCount, TotalCost, Currency, Csv |
+    Format-Table -AutoSize |
+    Out-String -Width 240 |
+    Write-Host
 Write-Host "Summary by service: $($summaries.ServiceSummary)"
 Write-Host "Summary by resource group: $($summaries.ResourceGroupSummary)"
 Write-Host "Retail join CSVs: $(Join-Path $OutputDir '*-cost-by-retail-join-with-arm-region.csv')"
