@@ -208,7 +208,7 @@ table last-month-cost-by-retail-join-enriched
 		queryGroup: Exports
 		source =
 				let
-				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  SharePointSiteRoot = SharePointRoot,
 				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}})

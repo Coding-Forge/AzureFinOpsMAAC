@@ -39,7 +39,7 @@ table cost-summary-by-resourcegroup
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  SharePointSiteRoot = SharePointRoot,
 				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "cost-summary-by-resourcegroup.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ResourceGroupName", type text}, {"Cost", type number}, {"Currency", type text}})

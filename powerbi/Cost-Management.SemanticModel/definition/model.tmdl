@@ -3,6 +3,7 @@ model Model
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	sourceQueryCulture: en-US
 	dataAccessOptions
+		fastCombine
 		legacyRedirects
 		returnErrorValuesAsNull
 
@@ -12,7 +13,7 @@ queryGroup Exports
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","SharePointData"]
+annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","SharePointRoot"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -37,7 +38,6 @@ ref table DimService
 ref table DimRegion
 ref table DimRetailMatch
 ref table CostRetailFact
-ref table SharePointData
 
 ref cultureInfo en-US
 

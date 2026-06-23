@@ -1,0 +1,8 @@
+/// Root location of the SharePoint data
+expression SharePointRoot = "https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 02f91e0a-0e63-44e5-8615-c0b5cf5e003f
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

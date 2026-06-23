@@ -34,6 +34,8 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: UsageDateAsDate
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column ServiceName
 		dataType: string
 		lineageTag: edfd878a-6c34-4d77-936b-dd607bb7ca9b
@@ -152,11 +154,53 @@ table CostRetailFact
 		summarizeBy: sum
 		sourceColumn: EstimatedSavings
 
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: b359618d-5a2b-438a-b80e-ed6e520f5866
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: 4baa6ce4-9faa-4de8-a7f4-9b2bf954a735
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitPrice
+		dataType: double
+		lineageTag: 61ea4a74-be63-4e84-a30c-5010af6e40c4
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: df4af7ad-cfb7-4c85-8892-a3358e903234
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column UsageDateFormatted
+		dataType: string
+		lineageTag: e3909e55-3e1a-4484-9025-2a8b5a8369ba
+		summarizeBy: none
+		sourceColumn: UsageDateFormatted
+
+		annotation SummarizationSetBy = Automatic
+
 	partition CostRetailFact = m
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  SharePointSiteRoot = SharePointRoot,
 				  MtdSource = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
 				  MtdPromoted = Table.PromoteHeaders(MtdSource, [PromoteAllScalars = true]),
 				  MtdPeriod = Table.AddColumn(MtdPromoted, "Period", each "MTD", type text),

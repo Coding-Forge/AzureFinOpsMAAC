@@ -58,7 +58,7 @@ table mtd-cost-by-service-resourcegroup
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  SharePointSiteRoot = SharePointRoot,
 				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-service-resourcegroup.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}})
