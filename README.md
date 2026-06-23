@@ -7,17 +7,24 @@ This solution helps compare actual Azure costs (including negotiated pricing eff
 The project includes:
 - Power BI report and semantic model in PBIP format
 - PowerShell automation scripts for cost extraction and enrichment
-- Local CSV/JSON exports used by the semantic model
+- SharePoint-sourced data integration for dynamic cost feeds
 - Supporting documentation for dashboard interpretation and operations
 
 ## Repository Layout
 
 - `powerbi/` - PBIP report (`Cost-Management.pbip`), report pages, visuals, and semantic model tables/measures
 - `scripts/` - PowerShell scripts to extract and enrich cost data
-- `data/exports/` - Local data exports consumed by the model
 - `docs/` - Guidance and dashboard documentation
+- `pictures/` - Screenshot assets and visual references
 - `schedules/` - Scheduling assets and helpers (if used)
 - `tools/` - Utility helpers and local tooling
+
+## Data Source Configuration
+
+The semantic model sources all cost and retail pricing data from SharePoint:
+- **SharePointRoot parameter**: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+- CSV files are dynamically retrieved from the SharePoint location using `Web.Contents()` in Power Query
+- To change the data source location, update the `SharePointRoot` parameter value in the semantic model
 
 ## Prerequisites
 
@@ -61,10 +68,12 @@ Common examples:
 .\scripts\Get-CostAnalysis.ps1 -SubscriptionId "<your-subscription-id>" -InstallAzureCli
 ```
 
-Script output location:
-- `data/exports/`
+Script output workflow:
+- Scripts generate CSV outputs locally
+- Upload the following files to SharePoint: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+- The semantic model will automatically consume the updated files on next refresh
 
-Key outputs include:
+Key output files to upload:
 - `mtd-cost-by-retail-join-enriched.csv`
 - `last-month-cost-by-retail-join-enriched.csv`
 - `mtd-cost-by-service-resourcegroup.csv`
