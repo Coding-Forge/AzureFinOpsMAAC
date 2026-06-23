@@ -1,0 +1,52 @@
+table SharePointData
+	lineageTag: 568a683e-c48d-4483-aefa-e5d951d6185e
+
+	column Period
+		dataType: string
+		lineageTag: 9b28d233-b764-4a2d-b069-014a692297aa
+		summarizeBy: none
+		sourceColumn: Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: 4b1856d1-eed3-4549-83b1-b044822908e3
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cost
+		dataType: double
+		lineageTag: 47cc5bec-a42a-4e24-9ec8-dab8bb6bd270
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Currency
+		dataType: string
+		lineageTag: f604fda7-f55d-4f88-82d9-354eaadaec2b
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SharePointData = m
+		mode: import
+		source =
+				let
+				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "cost-summary-by-resourcegroup.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
+				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ResourceGroupName", type text}, {"Cost", type number}, {"Currency", type text}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

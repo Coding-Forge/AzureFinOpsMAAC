@@ -156,10 +156,11 @@ table CostRetailFact
 		mode: import
 		source =
 				let
-				  MtdSource = Csv.Document(File.Contents("C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\data\exports\mtd-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
+				  SharePointSiteRoot = SharePointParameters{0}[SharePointSiteRoot],
+				  MtdSource = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
 				  MtdPromoted = Table.PromoteHeaders(MtdSource, [PromoteAllScalars = true]),
 				  MtdPeriod = Table.AddColumn(MtdPromoted, "Period", each "MTD", type text),
-				  LastSource = Csv.Document(File.Contents("C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\data\exports\last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
+				  LastSource = Csv.Document(Web.Contents(SharePointSiteRoot & "last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
 				  LastPromoted = Table.PromoteHeaders(LastSource, [PromoteAllScalars = true]),
 				  LastPeriod = Table.AddColumn(LastPromoted, "Period", each "Last Month", type text),
 				  Combined = Table.Combine({MtdPeriod, LastPeriod}),

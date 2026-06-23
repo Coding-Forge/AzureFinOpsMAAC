@@ -1,0 +1,24 @@
+table SharePointParameters
+	isHidden
+	isPrivate
+	lineageTag: 6f8e7d5c-14a7-4f78-9a0d-11c4d2a3b6e1
+
+	column SharePointSiteRoot
+		dataType: string
+		lineageTag: 8d91e2c4-47d8-4e10-8a1d-2de7b3d9a0f4
+		summarizeBy: none
+		sourceColumn: SharePointSiteRoot
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SharePointParameters = m
+		mode: import
+		source =
+				let
+				  Source = #table(type table [SharePointSiteRoot = text], {{"https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/"}})
+				in
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
