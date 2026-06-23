@@ -13,18 +13,18 @@ This Power BI project helps customers compare their actual Azure cost from the t
 | `Cost-Management.SemanticModel` | TMDL semantic model, tables, measures, relationships, and Power Query definitions. |
 | `FinOps_Cost_Dashboard_Guide.md` | This documentation file. |
 | `scripts\Get-CostAnalysis.ps1` | Script that extracts Azure Cost Management data and enriches it with Azure Retail Prices API data. |
-| `data\exports` | Output CSV/JSON files used by the Power BI model. |
 
 ## Data flow
 
 1. `Get-CostAnalysis.ps1` signs into Azure using Azure CLI if needed.
 2. The script queries Azure Cost Management for actual cost data.
-3. It exports month-to-date and last-month cost data to CSV and JSON.
+3. It exports month-to-date and last-month cost data to CSV and JSON (stored locally).
 4. It creates retail-join exports with fields such as service, region, meter, product, unit of measure, and usage quantity.
 5. It calls the Azure Retail Prices API at `https://prices.azure.com/api/retail/prices` to enrich rows with retail SKU ID, retail meter ID, retail price, retail product name, and match status.
-6. Power BI imports the enriched CSVs into `CostRetailFact`.
-7. Power BI calculates retail equivalent cost as `UsageQuantity * RetailPrice`.
-8. Power BI measures compare actual/MACC cost against retail equivalent cost.
+6. **CSV files are uploaded to SharePoint**: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+7. Power BI retrieves the enriched CSVs from SharePoint and imports them into `CostRetailFact` using the centralized `SharePointRoot` parameter.
+8. Power BI calculates retail equivalent cost as `UsageQuantity * RetailPrice`.
+9. Power BI measures compare actual/MACC cost against retail equivalent cost.
 
 ## Main PowerShell script
 
@@ -55,13 +55,15 @@ Install Azure CLI automatically if needed:
 
 ## Script outputs
 
-The script writes output to:
+The script writes output locally as a temporary staging location:
 
 ```text
 data\exports
 ```
 
-Important files:
+**Next step**: Upload the CSV files from this folder to SharePoint at `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/` for the Power BI model to consume.
+
+Important files to upload:
 
 | File | Description |
 |---|---|
@@ -188,11 +190,11 @@ For unattended scheduling, configure the script or wrapper to authenticate with 
 
 ### Option 2: Azure Automation
 
-Use Azure Automation with a managed identity. Assign the managed identity Cost Management/Billing read permissions at the target scope. Store output in OneLake, Azure Storage, or SharePoint/OneDrive instead of a local path.
+Use Azure Automation with a managed identity. Assign the managed identity Cost Management/Billing read permissions at the target scope. Configure the automation to upload script outputs directly to SharePoint at the configured `SharePointRoot` location.
 
 ### Option 3: Power BI scheduled refresh
 
-The current PBIP reads local CSV files. For Power BI Service scheduled refresh, move the CSV outputs to a cloud-accessible location such as OneLake, SharePoint, OneDrive, or Azure Storage. If files remain local, configure an on-premises data gateway.
+The PBIP now reads from SharePoint using the `SharePointRoot` parameter. For Power BI Service scheduled refresh, ensure the CSV files are continuously available at the SharePoint location. The service will retrieve them automatically on each refresh with no additional gateway configuration needed.
 
 ## Customer review checklist
 
@@ -212,7 +214,7 @@ Before presenting to customers:
 - Some services return `global` or non-region-specific usage, which may not match cleanly to Retail Prices API rows.
 - Some rows have `MultipleCandidates`; these should be reviewed before customer-facing claims.
 - Cost Management data may lag behind actual usage.
-- The current model reads local CSV paths. Scheduled Power BI Service refresh requires cloud storage or a gateway.
+- CSV files must be uploaded to the SharePoint location (`SharePointRoot` parameter) for Power BI to access them on refresh.
 - MACC commitment/burn-down is not currently included because the script does not retrieve MACC commitment balance or billing account commitment data.
 
 ## Recommended next enhancements
