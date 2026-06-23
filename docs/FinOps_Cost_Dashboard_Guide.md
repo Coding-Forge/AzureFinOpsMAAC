@@ -21,7 +21,7 @@ This Power BI project helps customers compare their actual Azure cost from the t
 3. It exports month-to-date and last-month cost data to CSV and JSON (stored locally).
 4. It creates retail-join exports with fields such as service, region, meter, product, unit of measure, and usage quantity.
 5. It calls the Azure Retail Prices API at `https://prices.azure.com/api/retail/prices` to enrich rows with retail SKU ID, retail meter ID, retail price, retail product name, and match status.
-6. **CSV files are uploaded to SharePoint**: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+6. **CSV files are uploaded to SharePoint**: `https://<<your-sharepoint-tenant>>.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
 7. Power BI retrieves the enriched CSVs from SharePoint and imports them into `CostRetailFact` using the centralized `SharePointRoot` parameter.
 8. Power BI calculates retail equivalent cost as `UsageQuantity * RetailPrice`.
 9. Power BI measures compare actual/MACC cost against retail equivalent cost.
@@ -61,7 +61,7 @@ The script writes output locally as a temporary staging location:
 data\exports
 ```
 
-**Next step**: Upload the CSV files from this folder to SharePoint at `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/` for the Power BI model to consume.
+**Next step**: Upload the CSV files from this folder to SharePoint at `https://<<your-sharepoint-tenant>>.sharepoint.com/sites/FabricGitEssentials/Shared Documents/` for the Power BI model to consume.
 
 Important files to upload:
 

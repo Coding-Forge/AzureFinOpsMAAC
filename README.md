@@ -22,7 +22,7 @@ The project includes:
 ## Data Source Configuration
 
 The semantic model sources all cost and retail pricing data from SharePoint:
-- **SharePointRoot parameter**: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+- **SharePointRoot parameter**: `https://<<your-sharepoint-tenant>>.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
 - CSV files are dynamically retrieved from the SharePoint location using `Web.Contents()` in Power Query
 - To change the data source location, update the `SharePointRoot` parameter value in the semantic model
 
@@ -70,7 +70,7 @@ Common examples:
 
 Script output workflow:
 - Scripts generate CSV outputs locally
-- Upload the following files to SharePoint: `https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
+- Upload the following files to SharePoint: `https://<<your-sharepoint-tenant>>.sharepoint.com/sites/FabricGitEssentials/Shared Documents/`
 - The semantic model will automatically consume the updated files on next refresh
 
 Key output files to upload:
