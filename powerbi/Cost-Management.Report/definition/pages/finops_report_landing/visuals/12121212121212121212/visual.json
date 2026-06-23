@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "12121212121212121212",
   "position": {
-    "x": 55.373040752351095,
-    "y": 380.9905956112853,
-    "z": 1199,
+    "x": 57.060892664174,
+    "y": 296.41240134759437,
+    "z": 2000,
     "height": 610.307210031348,
     "width": 307.5611285266458,
-    "tabOrder": 1199
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "pageNavigator",
@@ -81,6 +81,20 @@
           },
           "selector": {
             "id": "finops_granular_drillthrough"
+          }
+        },
+        {
+          "properties": {
+            "showPage": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "finops_report_landing"
           }
         }
       ]

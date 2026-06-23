@@ -68,6 +68,11 @@
           "name": "Copilot_Theme6789678203051411.json",
           "path": "Copilot_Theme6789678203051411.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "FinOps-Icons6516085255748684.png",
+          "path": "FinOps-Icons6516085255748684.png",
+          "type": "Image"
         }
       ]
     }
