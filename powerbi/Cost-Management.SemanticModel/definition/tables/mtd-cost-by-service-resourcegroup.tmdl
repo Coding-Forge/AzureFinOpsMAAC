@@ -54,16 +54,31 @@ table mtd-cost-by-service-resourcegroup
 
 		annotation SummarizationSetBy = Automatic
 
+	column SubscriptionId
+		dataType: string
+		lineageTag: 7c472fcf-c9ec-4813-b7da-f5127004a355
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 1be4c1dc-e919-4494-998e-e11b5732ccb7
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
 	partition mtd-cost-by-service-resourcegroup = m
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-service-resourcegroup.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
-				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}})
+				Source = CsvFromSelectedStorage("mtd-cost-by-service-resourcegroup.csv", 6),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}})
 				in
-				  #"Changed column type"
+				#"Changed column type"
 
 	annotation PBI_NavigationStepName = Navigation
 

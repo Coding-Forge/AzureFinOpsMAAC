@@ -86,16 +86,31 @@ table last-month-cost-by-retail-join
 
 		annotation SummarizationSetBy = Automatic
 
+	column SubscriptionId
+		dataType: string
+		lineageTag: dd2a23dc-a41f-40f1-b2f1-efdfd3404288
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: a436652f-378d-4589-8812-5c16e2a6c63f
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
 	partition last-month-cost-by-retail-join = m
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "last-month-cost-by-retail-join.csv"), [Delimiter = ",", Columns = 10, QuoteStyle = QuoteStyle.None]),
-				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}})
+				Source = CsvFromSelectedStorage("last-month-cost-by-retail-join.csv", 10),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}})
 				in
-				  #"Changed column type"
+				#"Changed column type"
 
 	annotation PBI_NavigationStepName = Navigation
 

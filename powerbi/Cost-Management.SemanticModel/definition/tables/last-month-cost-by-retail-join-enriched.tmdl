@@ -203,17 +203,32 @@ table last-month-cost-by-retail-join-enriched
 
 		annotation SummarizationSetBy = Automatic
 
+	column SubscriptionId
+		dataType: string
+		lineageTag: 6c5f74e9-4c75-4b2b-b8fd-097fab260249
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 6436b79d-f9c1-4567-b801-9f580872d36c
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
 	partition last-month-cost-by-retail-join-enriched = m
 		mode: import
 		queryGroup: Exports
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
-				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}})
+				Source = CsvFromSelectedStorage("last-month-cost-by-retail-join-enriched.csv", 24),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}})
 				in
-				  #"Changed column type"
+				#"Changed column type"
 
 	annotation PBI_NavigationStepName = Navigation
 

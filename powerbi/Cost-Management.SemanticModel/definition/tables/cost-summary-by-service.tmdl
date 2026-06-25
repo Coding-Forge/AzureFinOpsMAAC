@@ -39,12 +39,11 @@ table cost-summary-by-service
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "cost-summary-by-service.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
-				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ServiceName", type text}, {"Cost", type number}, {"Currency", type text}})
+				Source = CsvFromSelectedStorage("cost-summary-by-service.csv", 4),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ServiceName", type text}, {"Cost", type number}, {"Currency", type text}})
 				in
-				  #"Changed column type"
+				#"Changed column type"
 
 	annotation PBI_NavigationStepName = Navigation
 

@@ -86,16 +86,31 @@ table mtd-cost-by-retail-join
 
 		annotation SummarizationSetBy = Automatic
 
+	column SubscriptionId
+		dataType: string
+		lineageTag: 29a034e3-de91-4161-bd47-a4dbca200a76
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 8106c99b-d359-4dd4-b85b-3eaedf125394
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
 	partition mtd-cost-by-retail-join = m
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  Source = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-retail-join.csv"), [Delimiter = ",", Columns = 10, QuoteStyle = QuoteStyle.None]),
-				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}})
+				Source = CsvFromSelectedStorage("mtd-cost-by-retail-join.csv", 10),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}})
 				in
-				  #"Changed column type"
+				#"Changed column type"
 
 	annotation PBI_NavigationStepName = Navigation
 

@@ -178,8 +178,6 @@ table CostRetailFact
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	column RetailCurrencyCode
 		dataType: string
 		lineageTag: df4af7ad-cfb7-4c85-8892-a3358e903234
@@ -196,27 +194,63 @@ table CostRetailFact
 
 		annotation SummarizationSetBy = Automatic
 
+	column HistoryMonth
+		dataType: string
+		lineageTag: 3d3267e5-c401-4fd8-a41f-496c51ef14c5
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column ExportRunId
+		dataType: string
+		lineageTag: ef9df22f-a33e-4af7-a765-832191d77b37
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 1795d549-2857-4604-bb46-33d704492405
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 4f3bfc7c-d623-4fe3-b234-1ed1b7c17abc
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 5f4eb662-cd62-42ca-929c-c76caa1f1b98
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
 	partition CostRetailFact = m
 		mode: import
 		source =
 				let
-				  SharePointSiteRoot = SharePointRoot,
-				  MtdSource = Csv.Document(Web.Contents(SharePointSiteRoot & "mtd-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
-				  MtdPromoted = Table.PromoteHeaders(MtdSource, [PromoteAllScalars = true]),
-				  MtdPeriod = Table.AddColumn(MtdPromoted, "Period", each "MTD", type text),
-				  LastSource = Csv.Document(Web.Contents(SharePointSiteRoot & "last-month-cost-by-retail-join-enriched.csv"), [Delimiter = ",", Columns = 24, QuoteStyle = QuoteStyle.None]),
-				  LastPromoted = Table.PromoteHeaders(LastSource, [PromoteAllScalars = true]),
-				  LastPeriod = Table.AddColumn(LastPromoted, "Period", each "Last Month", type text),
-				  Combined = Table.Combine({MtdPeriod, LastPeriod}),
-				  Typed = Table.TransformColumnTypes(Combined, {{"Period", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
-				  AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
-				  AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
-				  AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),
-				  AddSavings = Table.AddColumn(AddRetailEquivalent, "EstimatedSavings", each if [RetailEquivalentCost] = null then null else [RetailEquivalentCost] - [Cost], type number)
+				MtdSource = CsvFromSelectedStorage("mtd-cost-by-retail-join-enriched.csv", 24),
+				MtdPromoted = Table.PromoteHeaders(MtdSource, [PromoteAllScalars = true]),
+				MtdPeriod = Table.AddColumn(MtdPromoted, "Period", each "MTD", type text),
+				LastSource = CsvFromSelectedStorage("last-month-cost-by-retail-join-enriched.csv", 24),
+				LastPromoted = Table.PromoteHeaders(LastSource, [PromoteAllScalars = true]),
+				LastPeriod = Table.AddColumn(LastPromoted, "Period", each "Last Month", type text),
+				CurrentRows = Table.Combine({MtdPeriod, LastPeriod}),
+				HistorySource = CsvFromSelectedStorage("cost-retail-history.csv", 30),
+				HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
+				RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc", "Period", "SubscriptionName", "SubscriptionId"},
+				WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
+				AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
+				AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
+				AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),
+				AddSavings = Table.AddColumn(AddRetailEquivalent, "EstimatedSavings", each if [RetailEquivalentCost] = null then null else [RetailEquivalentCost] - [Cost], type number)
 				in
-				  AddSavings
+				AddSavings
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_FormatHint = {"isGeneralNumber":true}
 

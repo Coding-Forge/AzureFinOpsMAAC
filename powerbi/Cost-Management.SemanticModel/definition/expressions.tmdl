@@ -1,8 +1,56 @@
-/// Root location of the SharePoint data
-expression SharePointRoot = "https://mngenvmcap907283.sharepoint.com/sites/FabricGitEssentials/Shared Documents/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+/// Selects where generated CSV files are loaded from. Supported values: Local, AzureBlob, ADLSGen2, SharePoint.
+expression StorageLocation = "Local" meta [IsParameterQuery=true, List={"Local", "AzureBlob", "ADLSGen2", "SharePoint"}, DefaultValue="Local", Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 02f91e0a-0e63-44e5-8615-c0b5cf5e003f
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Text
+
+/// Selects the report load pattern. Current reads MTD and last-month files; History reads cost-retail-history.csv.
+expression AnalysisMode = "History" meta [IsParameterQuery=true, List={"Current", "History"}, DefaultValue="Current", Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b282eff2-c91c-40e7-96fc-b786c87e07ba
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Local folder that contains the generated CSV files. Include the trailing slash or backslash.
+expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260625-092543\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 977cdcb8-7cbf-4b71-b544-57e8d7a7bf85
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Azure Blob HTTPS base URL that contains the generated CSV files. Example: https://account.blob.core.windows.net/container/folder/
+expression BlobDataRoot = "https://account.blob.core.windows.net/container/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+	lineageTag: d58ad0e6-4823-455c-bfdb-588e89bc9731
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// ADLS Gen2 HTTPS base URL that contains the generated CSV files. Example: https://account.dfs.core.windows.net/filesystem/folder/
+expression AdlsDataRoot = "https://account.dfs.core.windows.net/filesystem/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+	lineageTag: 29012a85-d23d-48de-9c49-782a3c509b6a
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// SharePoint document library folder URL that contains the generated CSV files. Example: https://tenant.sharepoint.com/sites/site/Shared%20Documents/folder/
+expression SharePointDataRoot = "https://tenant.sharepoint.com/sites/site/Shared%20Documents/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+	lineageTag: 7a120929-0ce8-4b83-a4a8-28f8e5704b0d
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Loads a generated CSV file from the configured storage location.
+expression CsvFromSelectedStorage = (fileName as text, columnCount as number) as table => let SelectedRoot = if StorageLocation = "Local" then LocalDataRoot else if StorageLocation = "AzureBlob" then BlobDataRoot else if StorageLocation = "ADLSGen2" then AdlsDataRoot else if StorageLocation = "SharePoint" then SharePointDataRoot else error "Unsupported StorageLocation. Use Local, AzureBlob, ADLSGen2, or SharePoint.", TrimmedRoot = Text.Trim(SelectedRoot), RootWithSeparator = if StorageLocation = "Local" then if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\" else if Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "/", CsvBinary = if StorageLocation = "Local" then File.Contents(RootWithSeparator & fileName) else Web.Contents(RootWithSeparator & fileName), Source = Csv.Document(CsvBinary, [Delimiter = ",", QuoteStyle = QuoteStyle.None]) in Source
+	lineageTag: e193190f-bf4f-4a9a-bda8-435f2cf7f289
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
 
