@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "a4b5c6d7e8f901a2b3c4",
+  "position": {
+    "x": 980,
+    "y": 600,
+    "z": 7000,
+    "height": 410,
+    "width": 900,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-service-resourcegroup"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "last-month-cost-by-service-resourcegroup.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-service-resourcegroup"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "last-month-cost-by-service-resourcegroup.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-service-resourcegroup"
+                    }
+                  },
+                  "Property": "ResourceGroupName"
+                }
+              },
+              "queryRef": "last-month-cost-by-service-resourcegroup.ResourceGroupName",
+              "nativeQueryRef": "ResourceGroupName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-service-resourcegroup"
+                    }
+                  },
+                  "Property": "UsageQuantity"
+                }
+              },
+              "queryRef": "last-month-cost-by-service-resourcegroup.UsageQuantity",
+              "nativeQueryRef": "UsageQuantity"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-service-resourcegroup"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "last-month-cost-by-service-resourcegroup.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Last month service-resource group raw export'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

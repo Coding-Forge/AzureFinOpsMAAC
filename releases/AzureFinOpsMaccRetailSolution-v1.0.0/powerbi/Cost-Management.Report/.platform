@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "CostManagement_A"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2dbae019-7228-470e-8af9-02ac17da8c01"
+  }
+}

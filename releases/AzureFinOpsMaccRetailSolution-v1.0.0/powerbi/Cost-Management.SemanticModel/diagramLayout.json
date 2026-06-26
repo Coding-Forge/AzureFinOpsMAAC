@@ -1,0 +1,178 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 37.5
+          },
+          "nodeIndex": "AzureRetail",
+          "nodeLineageTag": "7ad6f92e-e5ae-4813-901c-de526fd001d0",
+          "size": {
+            "height": 823,
+            "width": 446
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1853,
+            "y": 820.5
+          },
+          "nodeIndex": "cost-summary-by-resourcegroup",
+          "nodeLineageTag": "800cb7ec-e826-4c58-9bd2-25dd5c8b36fa",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1083,
+            "y": 85.5
+          },
+          "nodeIndex": "cost-summary-by-service",
+          "nodeLineageTag": "772c4efa-80e5-415b-91ea-4dfd49419d8c",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1382,
+            "y": 1091.5
+          },
+          "nodeIndex": "last-month-cost-by-service-resourcegroup",
+          "nodeLineageTag": "4e4c71e6-9a65-4288-b3e7-1f2ea9b98808",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 694,
+            "y": 585.5
+          },
+          "nodeIndex": "mtd-cost-by-service-resourcegroup",
+          "nodeLineageTag": "0713199b-2567-4fcd-ae7b-843652400859",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1033,
+            "y": 803
+          },
+          "nodeIndex": "datedim",
+          "nodeLineageTag": "ed988f68-0ab6-4cfb-b783-eac0e0c48aee",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1998,
+            "y": 397
+          },
+          "nodeIndex": "AzureServices",
+          "nodeLineageTag": "8e11e0b9-0385-468f-9634-384808f62b03",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2412,
+            "y": 500.25
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "c753e8dd-8d93-42b8-a23a-38fe14ee5c25",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1428,
+            "y": 869.25
+          },
+          "nodeIndex": "ResourceGroups",
+          "nodeLineageTag": "3eaf4da2-0020-48ad-ae54-a45a513af456",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2661,
+            "y": 867.5
+          },
+          "nodeIndex": "azure-resource-groups-by-location",
+          "nodeLineageTag": "d31eff7e-036f-402c-9399-e11a6df2b6a5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2726,
+            "y": 211.5
+          },
+          "nodeIndex": "azure-resource-groups-location-summary",
+          "nodeLineageTag": "97b546fc-3ce3-486d-b09d-f5e2fd2abb34",
+          "size": {
+            "height": 248,
+            "width": 283
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2241,
+            "y": 643.5
+          },
+          "nodeIndex": "AzureRegionLocation",
+          "nodeLineageTag": "d7dfaf42-1136-421b-8908-7bf454993d7d",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

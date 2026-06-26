@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "defabcdefabcdefabcde",
+  "position": {
+    "x": 980,
+    "y": 440,
+    "z": 10000,
+    "height": 280,
+    "width": 900,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-with-arm-region.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-with-arm-region.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-with-arm-region.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-with-arm-region.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-with-arm-region.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Last-month normalized (arm region)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

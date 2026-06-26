@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "fabcdefabcdefabcdefa",
+  "position": {
+    "x": 980,
+    "y": 730,
+    "z": 13000,
+    "height": 280,
+    "width": 900,
+    "tabOrder": 13000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-enriched"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-enriched.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-enriched"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-enriched.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-enriched"
+                    }
+                  },
+                  "Property": "RetailMatchStatus"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-enriched.RetailMatchStatus",
+              "nativeQueryRef": "RetailMatchStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-enriched"
+                    }
+                  },
+                  "Property": "RetailSkuId"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-enriched.RetailSkuId",
+              "nativeQueryRef": "RetailSkuId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "last-month-cost-by-retail-join-enriched"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "last-month-cost-by-retail-join-enriched.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Last-month enriched retail match'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

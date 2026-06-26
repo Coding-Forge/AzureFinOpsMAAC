@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "99999999999999999999",
+  "position": {
+    "x": 1320,
+    "y": 20,
+    "z": 3000,
+    "height": 42,
+    "width": 560,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "pageNavigator",
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

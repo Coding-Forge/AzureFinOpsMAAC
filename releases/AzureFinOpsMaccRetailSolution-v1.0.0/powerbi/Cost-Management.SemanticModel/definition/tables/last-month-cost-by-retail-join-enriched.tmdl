@@ -1,0 +1,236 @@
+table last-month-cost-by-retail-join-enriched
+	lineageTag: 0f5e83fa-40ac-4dc0-adad-11093fc22272
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: cbeaa22d-47b6-4537-bae5-b6954cc3ded5
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost
+		dataType: double
+		lineageTag: 96d96ea3-4c85-414f-a064-cf894b8087da
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ce51579-e816-4e62-b1c2-ad5a380ed347
+		summarizeBy: sum
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceName
+		dataType: string
+		lineageTag: 14219100-c81e-4baa-8b2f-b52f31f8b88c
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 0d8ff172-d790-4152-857d-cb03649d7d32
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Meter
+		dataType: string
+		lineageTag: b83712e5-d9a3-4474-bd64-044277063b83
+		summarizeBy: none
+		sourceColumn: Meter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: 8f83f41a-6cd6-42b9-a0e8-8b4dc040b814
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+	column PartNumber
+		dataType: string
+		lineageTag: c5dbbc20-278a-4f15-8a1d-58f881dbe6d4
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: 5ec8effc-22af-40a8-b09d-8ef3e72af035
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column Currency
+		dataType: string
+		lineageTag: 7649ee31-ff7a-48be-ab00-b6e548c5741f
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 5bd958b7-d006-4edc-802e-dcdc58d7ff66
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: 4624bf74-19da-4e3f-8197-221d89dd9e53
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailCandidateCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 65542f52-994d-4087-9a0e-511507806dfb
+		summarizeBy: sum
+		sourceColumn: RetailCandidateCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: 3ed248da-7796-48db-9b31-5e9e95425277
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: e92b9524-f534-4fab-b1aa-be4083b6c661
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailProductId
+		dataType: string
+		lineageTag: c057f074-4007-45be-8a68-ebcb8eddd0fd
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailProductName
+		dataType: string
+		lineageTag: 476de89a-b488-419f-aeaa-19b27aeef50c
+		summarizeBy: none
+		sourceColumn: RetailProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailSkuName
+		dataType: string
+		lineageTag: e0f240a8-53da-4ac6-9cfa-9b42a9c45c86
+		summarizeBy: none
+		sourceColumn: RetailSkuName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailMeterName
+		dataType: string
+		lineageTag: 524ffa07-b7c4-4e42-8550-6bcc50eb502e
+		summarizeBy: none
+		sourceColumn: RetailMeterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: 792cdaab-e1d1-45dc-9a03-de1965b0f4c2
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: 23f82161-944c-40e0-bb21-38b7fbdc1bf0
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailPrice
+		dataType: double
+		lineageTag: d62fec49-6036-493a-a28e-0eb55a4be141
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RetailUnitPrice
+		dataType: double
+		lineageTag: abdfde75-363e-4ad3-a552-88c8d2454462
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: 362b9d9f-0963-4fe5-bc27-dcfcea5d0953
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 6c5f74e9-4c75-4b2b-b8fd-097fab260249
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 6436b79d-f9c1-4567-b801-9f580872d36c
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition last-month-cost-by-retail-join-enriched = m
+		mode: import
+		queryGroup: Exports
+		source =
+				let
+				Source = CsvFromSelectedStorage("last-month-cost-by-retail-join-enriched.csv", 24),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}})
+				in
+				#"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

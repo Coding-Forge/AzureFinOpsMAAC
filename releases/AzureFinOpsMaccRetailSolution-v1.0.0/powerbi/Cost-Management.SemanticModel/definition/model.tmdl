@@ -1,0 +1,43 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Exports
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","StorageLocation","AnalysisMode","LocalDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table AzureRetail
+ref table DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484
+ref table LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be
+ref table LocalDateTable_90c04e35-8470-4019-bd29-13831954d043
+ref table datedim
+ref table LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430
+ref table _Measures
+ref table last-month-cost-by-retail-join-enriched
+ref table cost-summary-by-service
+ref table last-month-cost-by-retail-join
+ref table last-month-cost-by-retail-join-with-arm-region
+ref table last-month-cost-by-service-resourcegroup
+ref table mtd-cost-by-retail-join
+ref table mtd-cost-by-retail-join-enriched
+ref table mtd-cost-by-retail-join-with-arm-region
+ref table mtd-cost-by-service-resourcegroup
+ref table cost-summary-by-resourcegroup
+ref table DimService
+ref table DimRegion
+ref table DimRetailMatch
+ref table CostRetailFact
+
+ref cultureInfo en-US
+

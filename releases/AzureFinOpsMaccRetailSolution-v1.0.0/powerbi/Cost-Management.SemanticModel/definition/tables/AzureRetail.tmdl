@@ -1,0 +1,255 @@
+table AzureRetail
+	lineageTag: 7ad6f92e-e5ae-4813-901c-de526fd001d0
+
+	column BillingCurrency
+		dataType: string
+		lineageTag: 34c3e5c7-db6f-48e5-bdf9-322ca971a5bc
+		summarizeBy: none
+		sourceColumn: BillingCurrency
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerEntityId
+		dataType: string
+		lineageTag: 46d8c9f9-5db2-4297-a48c-9e2595ec6dd5
+		summarizeBy: none
+		sourceColumn: CustomerEntityId
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerEntityType
+		dataType: string
+		lineageTag: 4c95c78f-ffeb-43ca-a8e2-9bf39ce70e27
+		summarizeBy: none
+		sourceColumn: CustomerEntityType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.currencyCode'
+		dataType: string
+		lineageTag: f43f9210-6c9d-4bfe-a6f1-1a12513b76a1
+		summarizeBy: none
+		sourceColumn: Items.currencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.tierMinimumUnits'
+		dataType: int64
+		formatString: 0
+		lineageTag: fb1bef06-e4db-465a-bdbf-0f069bf2f607
+		summarizeBy: sum
+		sourceColumn: Items.tierMinimumUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.reservationTerm'
+		dataType: string
+		lineageTag: 015a35c9-3056-474b-95ac-6df31a45b9bb
+		summarizeBy: none
+		sourceColumn: Items.reservationTerm
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.retailPrice'
+		dataType: double
+		lineageTag: bd07c936-2953-4d0d-bd96-a520a3dab7d5
+		summarizeBy: sum
+		sourceColumn: Items.retailPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Items.unitPrice'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: fc32f917-5f29-4ce7-b75e-6d998437925f
+		summarizeBy: sum
+		sourceColumn: Items.unitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Items.armRegionName'
+		dataType: string
+		lineageTag: da20b988-8b1d-408c-86f2-2e8bf93e1af3
+		summarizeBy: none
+		sourceColumn: Items.armRegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.location'
+		dataType: string
+		lineageTag: 6686d4b8-0a4e-401e-a07d-969cfeab38ee
+		summarizeBy: none
+		sourceColumn: Items.location
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.effectiveStartDate'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 391a848b-a508-4caf-8d58-c7591c1c6271
+		summarizeBy: none
+		sourceColumn: Items.effectiveStartDate
+
+		variation Variation
+			isDefault
+			relationship: 0d7607ca-9c60-4ce7-b8b5-9b0eed0cc740
+			defaultHierarchy: LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.effectiveEndDate'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 66a7e133-85e1-45c1-afcb-2e4b47e2cbff
+		summarizeBy: none
+		sourceColumn: Items.effectiveEndDate
+
+		variation Variation
+			isDefault
+			relationship: e93dfa69-84f9-47ef-8af6-4e626119d659
+			defaultHierarchy: LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.meterId'
+		dataType: string
+		lineageTag: 03c9fa7a-f475-4cd2-8128-07da5722aa0e
+		summarizeBy: none
+		sourceColumn: Items.meterId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.meterName'
+		dataType: string
+		lineageTag: dfedaba0-2850-4497-8d37-7ea07b7d59f2
+		summarizeBy: none
+		sourceColumn: Items.meterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.productId'
+		dataType: string
+		lineageTag: 65ac14a4-32b3-40cb-b8f3-dca3b5a577b1
+		summarizeBy: none
+		sourceColumn: Items.productId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.skuId'
+		dataType: string
+		lineageTag: 61550cdb-6b0c-461d-9795-04e4fd68cb3b
+		summarizeBy: none
+		sourceColumn: Items.skuId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.productName'
+		dataType: string
+		lineageTag: acaa3a13-d3c5-4f4d-98f7-91edb644c443
+		summarizeBy: none
+		sourceColumn: Items.productName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.skuName'
+		dataType: string
+		lineageTag: 387fc9f8-e253-4201-a0c0-b79ad0b9abde
+		summarizeBy: none
+		sourceColumn: Items.skuName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.serviceName'
+		dataType: string
+		lineageTag: df783d62-9ddc-433c-b1ed-e936c7bd8319
+		summarizeBy: none
+		sourceColumn: Items.serviceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.serviceId'
+		dataType: string
+		lineageTag: ec3d3b13-5725-491a-a2da-d8f258418694
+		summarizeBy: none
+		sourceColumn: Items.serviceId
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.serviceFamily'
+		dataType: string
+		lineageTag: 2552df26-c669-45ac-b66d-d4e68298c142
+		summarizeBy: none
+		sourceColumn: Items.serviceFamily
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.unitOfMeasure'
+		dataType: string
+		lineageTag: bd585974-9cbb-490b-b8b2-50808a9c138c
+		summarizeBy: none
+		sourceColumn: Items.unitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.type'
+		dataType: string
+		lineageTag: f35ca758-83e4-41d7-88bc-c157bbf2f1dd
+		summarizeBy: none
+		sourceColumn: Items.type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.isPrimaryMeterRegion'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 35a738c5-b29d-4bad-bf45-6efd84a378f0
+		summarizeBy: none
+		sourceColumn: Items.isPrimaryMeterRegion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Items.armSkuName'
+		dataType: string
+		lineageTag: 77bfa5eb-c809-4435-840d-3369bef10031
+		summarizeBy: none
+		sourceColumn: Items.armSkuName
+
+		annotation SummarizationSetBy = Automatic
+
+	column NextPageLink
+		dataType: string
+		lineageTag: a74a1b66-260d-4066-af6a-b33bf6944a43
+		summarizeBy: none
+		sourceColumn: NextPageLink
+
+		annotation SummarizationSetBy = Automatic
+
+	column Count
+		dataType: int64
+		formatString: 0
+		lineageTag: f5c78913-b2dd-482a-956a-3a80a83ee07b
+		summarizeBy: sum
+		sourceColumn: Count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AzureRetail = m
+		mode: import
+		source =
+				let
+				  Source = Json.Document(Web.Contents("https://prices.azure.com/api/retail/prices")),
+				  #"Converted to table" = Table.FromRecords({Source}),
+				  #"Expanded Items" = Table.ExpandListColumn(#"Converted to table", "Items"),
+				  #"Expanded Items1" = Table.ExpandRecordColumn(#"Expanded Items", "Items", {"currencyCode", "tierMinimumUnits", "reservationTerm", "retailPrice", "unitPrice", "armRegionName", "location", "effectiveStartDate", "effectiveEndDate", "meterId", "meterName", "productId", "skuId", "productName", "skuName", "serviceName", "serviceId", "serviceFamily", "unitOfMeasure", "type", "isPrimaryMeterRegion", "armSkuName"}, {"Items.currencyCode", "Items.tierMinimumUnits", "Items.reservationTerm", "Items.retailPrice", "Items.unitPrice", "Items.armRegionName", "Items.location", "Items.effectiveStartDate", "Items.effectiveEndDate", "Items.meterId", "Items.meterName", "Items.productId", "Items.skuId", "Items.productName", "Items.skuName", "Items.serviceName", "Items.serviceId", "Items.serviceFamily", "Items.unitOfMeasure", "Items.type", "Items.isPrimaryMeterRegion", "Items.armSkuName"}),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Expanded Items1",{{"BillingCurrency", type text}, {"CustomerEntityId", type text}, {"CustomerEntityType", type text}, {"Items.currencyCode", type text}, {"Items.tierMinimumUnits", Int64.Type}, {"Items.reservationTerm", type text}, {"Items.retailPrice", type number}, {"Items.unitPrice", Currency.Type}, {"Items.armRegionName", type text}, {"Items.location", type text}, {"Items.effectiveStartDate", type datetime}, {"Items.effectiveEndDate", type datetime}, {"Items.meterId", type text}, {"Items.meterName", type text}, {"Items.productId", type text}, {"Items.skuId", type text}, {"Items.productName", type text}, {"Items.skuName", type text}, {"Items.serviceName", type text}, {"Items.serviceId", type text}, {"Items.serviceFamily", type text}, {"Items.unitOfMeasure", type text}, {"Items.type", type text}, {"Items.isPrimaryMeterRegion", type logical}, {"Items.armSkuName", type text}, {"NextPageLink", type text}, {"Count", Int64.Type}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

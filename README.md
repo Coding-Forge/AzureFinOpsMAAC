@@ -18,6 +18,7 @@ The project includes:
 - `pictures/` - Screenshot assets and visual references
 - `schedules/` - Scheduling assets and helpers (if used)
 - `tools/` - Utility helpers and local tooling
+- `build-release.ps1` - Builds versioned release folders and zip files under `releases/`
 
 ## Data Source Configuration
 
@@ -147,6 +148,17 @@ Example scheduled command:
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -File "C:\Projects\Fabric\AzureFinOpsMaccRetailSolution\scripts\Get-CostAnalysis.ps1" -SubscriptionId "<your-subscription-id>"
 ```
+
+## Building a Release Zip
+
+Create a distributable release folder and zip from the solution root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0
+```
+
+Release outputs are written to `releases/`. See `docs/Release_Process.md` for
+the full release, validation, and Git tagging workflow.
 
 ## Disclaimer
 

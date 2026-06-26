@@ -1,0 +1,160 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "c6d7e8f9011223344556",
+  "position": {
+    "x": 980,
+    "y": 150,
+    "z": 7000,
+    "height": 420,
+    "width": 900,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "ResourceLocation"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.ResourceLocation",
+              "nativeQueryRef": "ResourceLocation"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "Product"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.Product",
+              "nativeQueryRef": "Product"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mtd-cost-by-retail-join-with-arm-region"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "mtd-cost-by-retail-join-with-arm-region.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MTD normalized rows (ArmRegionName applied)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

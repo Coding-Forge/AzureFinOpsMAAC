@@ -1,0 +1,21 @@
+﻿{
+    "solutionName":  "AzureFinOpsMaccRetailSolution",
+    "version":  "1.0.0",
+    "releaseName":  "AzureFinOpsMaccRetailSolution-v1.0.0",
+    "createdUtc":  "2026-06-26T15:56:12.0344406Z",
+    "sourceRoot":  "C:\\Projects\\Fabric\\AzureFinOpsMaccRetailSolution",
+    "gitBranch":  "main",
+    "gitCommit":  "e2ae4cd35b7e2c9c18620790349d0a4499146b43",
+    "gitHasUncommittedChanges":  true,
+    "fileCount":  165,
+    "excluded":  [
+                     ".git",
+                     "releases",
+                     "scripts/exports",
+                     "powerbi/*.Report/.pbi",
+                     "powerbi/*.SemanticModel/.pbi",
+                     "*.zip",
+                     "*.tmp",
+                     "*.log"
+                 ]
+}

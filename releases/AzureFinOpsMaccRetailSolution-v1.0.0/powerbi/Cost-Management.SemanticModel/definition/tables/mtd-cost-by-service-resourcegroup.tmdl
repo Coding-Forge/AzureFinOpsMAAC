@@ -1,0 +1,86 @@
+table mtd-cost-by-service-resourcegroup
+	lineageTag: cfb55f0e-e6c4-4663-a2ea-5ed05fa666da
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 7b79f4a1-922f-4395-b4c2-efbafa4193ed
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost
+		dataType: double
+		lineageTag: 1644706b-2681-4214-b10f-3e60b193705f
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: b778eb22-b482-4a14-8804-9bc443e65bcf
+		summarizeBy: sum
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceName
+		dataType: string
+		lineageTag: ecaece17-1d65-464f-a17b-672725efb268
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: bc627765-fb78-43b0-88e3-feb216a0480d
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Currency
+		dataType: string
+		lineageTag: 0a31a1de-9759-4e6e-a4d4-bd3049c9c7ec
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 7c472fcf-c9ec-4813-b7da-f5127004a355
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 1be4c1dc-e919-4494-998e-e11b5732ccb7
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition mtd-cost-by-service-resourcegroup = m
+		mode: import
+		source =
+				let
+				Source = CsvFromSelectedStorage("mtd-cost-by-service-resourcegroup.csv", 6),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceGroupName", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}})
+				in
+				#"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
