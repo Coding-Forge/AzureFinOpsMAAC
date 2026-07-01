@@ -14,7 +14,12 @@
     "macc_benefit_ledger",
     "macc_price_audit",
     "macc_coverage_exceptions",
-    "macc_billing_ownership"
+    "macc_billing_ownership",
+    "ea_savings_overview",
+    "reservation_savings_plan_coverage",
+    "azure_hybrid_benefit_opportunities",
+    "spot_pricing_opportunities",
+    "devtest_pricing_opportunities"
   ],
-  "activePageName": "macc_commitment_overview"
+  "activePageName": "finops_report_landing"
 }

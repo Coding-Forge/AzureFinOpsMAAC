@@ -82,6 +82,11 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 4. Open `powerbi/Cost-Management.pbip` in Power BI Desktop and refresh the model.
 5. Review pages:
 - `FinOps MACC vs Retail Overview`
+- `Enterprise Agreement Savings`
+- `Reservation and Savings Plan Coverage`
+- `Azure Hybrid Benefit Opportunities`
+- `Spot Pricing Opportunities`
+- `Dev/Test Pricing Opportunities`
 - `MACC Commitment Overview`
 - `MACC Benefit Ledger`
 - `Agreement Price Audit`

@@ -1,0 +1,258 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "ahb_opportunities",
+  "position": {
+    "x": 40,
+    "y": 240,
+    "z": 0,
+    "height": 400,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "HistoryMonth"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.HistoryMonth",
+              "nativeQueryRef": "HistoryMonth"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "WorkloadType"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.WorkloadType",
+              "nativeQueryRef": "WorkloadType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "AHBEligibilityStatus"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.AHBEligibilityStatus",
+              "nativeQueryRef": "AHBEligibilityStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "LicenseSource"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.LicenseSource",
+              "nativeQueryRef": "LicenseSource"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "EstimatedRateSavings"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.EstimatedRateSavings",
+              "nativeQueryRef": "EstimatedRateSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "SavingsRate"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.SavingsRate",
+              "nativeQueryRef": "SavingsRate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "SourceConfidence"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.SourceConfidence",
+              "nativeQueryRef": "SourceConfidence"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitOpportunities"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "AzureHybridBenefitOpportunities.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Azure Hybrid Benefit Opportunity Review'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

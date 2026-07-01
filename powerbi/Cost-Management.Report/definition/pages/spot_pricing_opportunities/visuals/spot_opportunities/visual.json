@@ -1,0 +1,244 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "spot_opportunities",
+  "position": {
+    "x": 40,
+    "y": 240,
+    "z": 0,
+    "height": 400,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "HistoryMonth"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.HistoryMonth",
+              "nativeQueryRef": "HistoryMonth"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "SpotStatus"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.SpotStatus",
+              "nativeQueryRef": "SpotStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "SuitabilityStatus"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.SuitabilityStatus",
+              "nativeQueryRef": "SuitabilityStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "EstimatedRateSavings"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.EstimatedRateSavings",
+              "nativeQueryRef": "EstimatedRateSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "SavingsRate"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.SavingsRate",
+              "nativeQueryRef": "SavingsRate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "SourceConfidence"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.SourceConfidence",
+              "nativeQueryRef": "SourceConfidence"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SpotPricingOpportunities"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "SpotPricingOpportunities.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Spot Pricing Opportunity Review'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

@@ -1,0 +1,103 @@
+table AzureHybridBenefitInventory
+	lineageTag: 93e283e5-f365-4ce4-bd19-111111114002
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: faf5711b-5eab-48f7-8082-c7920e34bff3
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: 756630fa-83ad-4153-a41b-0db3ea7d0243
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+	column ResourceId
+		dataType: string
+		lineageTag: 6f15f71b-2455-4065-9df9-0dd17d39444c
+		summarizeBy: none
+		sourceColumn: ResourceId
+
+	column ResourceName
+		dataType: string
+		lineageTag: 65202fe3-a7d3-4a76-830a-4d4e8f6d4bd0
+		summarizeBy: none
+		sourceColumn: ResourceName
+
+	column ServiceName
+		dataType: string
+		lineageTag: e01b7b9c-d9f0-4cd0-87e1-0ea8020ece2c
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column WorkloadType
+		dataType: string
+		lineageTag: 1aea8c73-1475-4ced-823b-bc6e9fdf3ab7
+		summarizeBy: none
+		sourceColumn: WorkloadType
+
+	column OperatingSystem
+		dataType: string
+		lineageTag: 70566809-5c25-4d46-9f3b-ad8b646f5067
+		summarizeBy: none
+		sourceColumn: OperatingSystem
+
+	column SqlEdition
+		dataType: string
+		lineageTag: a34ab511-b730-4e5c-95b2-8063b36c8084
+		summarizeBy: none
+		sourceColumn: SqlEdition
+
+	column LicenseSource
+		dataType: string
+		lineageTag: 83b25607-0a45-41b1-bafe-e223c994206b
+		summarizeBy: none
+		sourceColumn: LicenseSource
+
+	column AHBEnabled
+		dataType: string
+		lineageTag: ad83a821-1f37-40a7-aba5-267295eb6450
+		summarizeBy: none
+		sourceColumn: AHBEnabled
+
+	column EligibleForAHB
+		dataType: string
+		lineageTag: 6073e7b0-8672-4c43-8b9e-c88529ae5f7e
+		summarizeBy: none
+		sourceColumn: EligibleForAHB
+
+	column Owner
+		dataType: string
+		lineageTag: b04b1e4a-bdc5-4fff-aab1-4dd7687a15e0
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: 98fac597-4443-43c7-b21d-367747098727
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Notes
+		dataType: string
+		lineageTag: 40ae46d5-c1f5-47f5-af55-92619aac02bc
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition AzureHybridBenefitInventory = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("azure-hybrid-benefit-inventory.csv", 14),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"SubscriptionId", "ResourceGroupName", "ResourceId", "ResourceName", "ServiceName", "WorkloadType", "OperatingSystem", "SqlEdition", "LicenseSource", "AHBEnabled", "EligibleForAHB", "Owner", "ReviewStatus", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"SubscriptionId", type text}, {"ResourceGroupName", type text}, {"ResourceId", type text}, {"ResourceName", type text}, {"ServiceName", type text}, {"WorkloadType", type text}, {"OperatingSystem", type text}, {"SqlEdition", type text}, {"LicenseSource", type text}, {"AHBEnabled", type text}, {"EligibleForAHB", type text}, {"Owner", type text}, {"ReviewStatus", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

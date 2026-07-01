@@ -28,8 +28,10 @@ table ExportRunManifest
 	column SubscriptionCount
 		dataType: int64
 		lineageTag: 31e904e6-bf53-45f9-8641-d7cd41bddf73
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: SubscriptionCount
+
+		annotation SummarizationSetBy = Automatic
 
 	column AgreementId
 		dataType: string
@@ -40,29 +42,37 @@ table ExportRunManifest
 	column FileCount
 		dataType: int64
 		lineageTag: 945af09f-1b30-4c10-a935-a12531f7af39
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: FileCount
+
+		annotation SummarizationSetBy = Automatic
 
 	column ActualCost
 		dataType: double
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: 8061f2e8-600c-4748-944e-592919a081c6
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: ActualCost
+
+		annotation SummarizationSetBy = Automatic
 
 	column RetailEquivalentCost
 		dataType: double
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: 4a7d807f-f8e2-4aea-9827-f56426225a17
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: RetailEquivalentCost
+
+		annotation SummarizationSetBy = Automatic
 
 	column EstimatedSavings
 		dataType: double
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: 8c4be613-ba19-4c81-8195-cb45a40398c7
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: EstimatedSavings
+
+		annotation SummarizationSetBy = Automatic
 
 	column CalculationVersion
 		dataType: string

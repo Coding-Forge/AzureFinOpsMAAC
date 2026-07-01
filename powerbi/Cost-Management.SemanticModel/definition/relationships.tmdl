@@ -60,17 +60,75 @@ relationship fe5baa46-dac2-41d7-9301-42b1e9b2fce4
 	fromColumn: MaccAgreementStatus.AsOfDate
 	toColumn: LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44.Date
 
-relationship AutoDetected_342b876e-f0ca-458c-8afe-b7983c5abb87
-	fromColumn: AgreementPriceAudit.ResourceLocation
-	toColumn: DimRegion.ResourceLocation
+relationship AutoDetected_46c761a4-1514-46a5-9be9-52245885e823
+	fromColumn: DevTestPricingOpportunities.ExportRunId
+	toColumn: DataQualitySnapshot.ExportRunId
 
-relationship AutoDetected_f7efbdb1-93c3-4f4f-ab0e-99ab7cd37267
-	fromColumn: RetailPriceSnapshot.ExportedUtc
-	toColumn: DataQualitySnapshot.ExportedUtc
+relationship AutoDetected_a31605cb-4bfc-4289-8e45-d9046315c23c
+	fromColumn: DevTestPricingOpportunities.ExportRunId
+	toColumn: ExportRunManifest.ExportRunId
 
-relationship AutoDetected_a46db12c-a32d-4cdf-8305-0b3f23d231ea
+relationship AutoDetected_72ca841a-6d57-41b6-a3ae-3032e9fcb53d
 	crossFilteringBehavior: bothDirections
 	fromCardinality: one
-	fromColumn: ExportRunManifest.ExportedUtc
-	toColumn: DataQualitySnapshot.ExportedUtc
+	fromColumn: SpotPricingOpportunities.ExportedUtc
+	toColumn: AgreementPriceAudit.ExportedUtc
+
+relationship AutoDetected_9890a443-d69e-4f17-a20f-02a6ca141d0c
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DevTestPricingOpportunities.ExportedUtc
+	toColumn: AgreementPriceAudit.ExportedUtc
+
+relationship AutoDetected_5aa6946f-ed48-4528-9fd8-90f29d36892b
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: SpotPricingOpportunities.ExportedUtc
+	toColumn: MaccBenefitLedger.ExportedUtc
+
+relationship AutoDetected_16d52283-29ff-475a-a126-9fed0e2b217e
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DevTestPricingOpportunities.ExportedUtc
+	toColumn: MaccBenefitLedger.ExportedUtc
+
+relationship AutoDetected_3da3e972-607f-455c-a6e0-1cee1a0697be
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: SpotPricingOpportunities.ExportedUtc
+	toColumn: EnterpriseAgreementSavings.ExportedUtc
+
+relationship AutoDetected_f9a3f38e-e31e-43f5-8102-cbe9acc1ea83
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DevTestPricingOpportunities.ExportedUtc
+	toColumn: EnterpriseAgreementSavings.ExportedUtc
+
+relationship AutoDetected_d64efa9a-d1b3-4458-bfca-3546e264350d
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: SpotPricingOpportunities.ExportedUtc
+	toColumn: ReservationSavingsPlanCoverage.ExportedUtc
+
+relationship AutoDetected_b03cf577-30d6-4da5-8f79-055a469903df
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DevTestPricingOpportunities.ExportedUtc
+	toColumn: ReservationSavingsPlanCoverage.ExportedUtc
+
+relationship AutoDetected_29a73fa4-e8d7-4671-a639-309c355b94eb
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: SpotPricingOpportunities.ExportedUtc
+	toColumn: AzureHybridBenefitOpportunities.ExportedUtc
+
+relationship AutoDetected_0c578dee-435c-4680-94c8-8f7fe0ee339e
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DevTestPricingOpportunities.ExportedUtc
+	toColumn: AzureHybridBenefitOpportunities.ExportedUtc
 

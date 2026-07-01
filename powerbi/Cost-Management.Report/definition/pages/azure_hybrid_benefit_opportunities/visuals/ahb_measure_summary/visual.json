@@ -1,0 +1,118 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "ahb_measure_summary",
+  "position": {
+    "x": 40,
+    "y": 40,
+    "z": 0,
+    "height": 160,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "AHB Opportunity Actual Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.AHB Opportunity Actual Cost",
+              "nativeQueryRef": "AHB Opportunity Actual Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "AHB Opportunity Retail Equivalent Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.AHB Opportunity Retail Equivalent Cost",
+              "nativeQueryRef": "AHB Opportunity Retail Equivalent Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Estimated AHB Rate Savings"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Estimated AHB Rate Savings",
+              "nativeQueryRef": "Estimated AHB Rate Savings"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "AHB Opportunity Savings Rate"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.AHB Opportunity Savings Rate",
+              "nativeQueryRef": "AHB Opportunity Savings Rate"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Azure Hybrid Benefit KPI Measures'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

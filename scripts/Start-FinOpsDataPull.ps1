@@ -508,6 +508,17 @@ function Set-TmdlExpressionDefault {
     })
 }
 
+function Assert-PowerBiDesktopClosed {
+    `$powerBiProcesses = @(Get-Process -ErrorAction SilentlyContinue | Where-Object {
+        `$_.ProcessName -like "PBIDesktop*"
+    })
+
+    if (`$powerBiProcesses.Count -gt 0) {
+        `$processList = (`$powerBiProcesses | ForEach-Object { "`$(`$_.ProcessName) (PID `$(`$_.Id))" }) -join ", "
+        throw "Power BI Desktop appears to be running: `$processList. Save and close the PBIP before this script updates Power BI project files."
+    }
+}
+
 function Update-PowerBiProjectParameters {
     param(
         [Parameter(Mandatory)]
@@ -523,6 +534,8 @@ function Update-PowerBiProjectParameters {
         Write-Warning "Power BI expressions file was not found: `$expressionsPath"
         return
     }
+
+    Assert-PowerBiDesktopClosed
 
     `$settings = Get-Content `$SettingsPath -Raw | ConvertFrom-Json
     `$content = Get-Content `$expressionsPath -Raw

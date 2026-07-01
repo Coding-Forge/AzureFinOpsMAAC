@@ -1,0 +1,151 @@
+table AzureHybridBenefitOpportunities
+	lineageTag: 93e283e5-f365-4ce4-bd19-111111114001
+
+	column AgreementId
+		dataType: string
+		lineageTag: 578db66a-7611-4676-955a-be882b7347ba
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 4d1bbf81-d97e-4fa6-bdfe-df7af83e06c0
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: b2f2b2ad-10b7-4222-a987-fef1b5221726
+		summarizeBy: none
+		sourceColumn: Period
+
+	column ExportRunId
+		dataType: string
+		lineageTag: e3ea2eff-f43b-41b8-9dba-8c5c9526a5c0
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 8fce6af2-16b0-45b0-8ee4-b8d8640ad60d
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 9c436286-eccf-4c0e-aa1d-38f02e5b3ae9
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: 771710a4-21b6-4357-a2b4-817036126eae
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: e3786487-c1cd-4a5e-ba92-92c7b2602217
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: 5c35e6ea-a15b-46dd-b207-7df52e7c5025
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column WorkloadType
+		dataType: string
+		lineageTag: a23203d2-4b71-4673-9c82-13817df77e3b
+		summarizeBy: none
+		sourceColumn: WorkloadType
+
+	column AHBEligibilityStatus
+		dataType: string
+		lineageTag: 71ddaa36-902a-4add-b8bb-1515bf70a79e
+		summarizeBy: none
+		sourceColumn: AHBEligibilityStatus
+
+	column LicenseSource
+		dataType: string
+		lineageTag: 31d6554c-aadb-452d-b18e-ad2140ded8cf
+		summarizeBy: none
+		sourceColumn: LicenseSource
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5f68323e-132c-45f8-bba5-5564f2341734
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 3c55bb20-d112-493c-ad10-58433f87b838
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedRateSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b825ab8a-b820-45ca-a7dc-6076ae7c7f02
+		summarizeBy: sum
+		sourceColumn: EstimatedRateSavings
+
+	column SavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c6486208-d784-4d68-b249-759a8e5cf4a3
+		summarizeBy: sum
+		sourceColumn: SavingsRate
+
+	column RowCount
+		dataType: int64
+		lineageTag: 8b312988-0aaa-45fd-b2d6-39ee9d6a8897
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+	column SourceConfidence
+		dataType: string
+		lineageTag: eb032999-d3fb-436b-8a03-f629eab8cdb4
+		summarizeBy: none
+		sourceColumn: SourceConfidence
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: b106778d-d3d7-496e-abdc-a265d13cb23b
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column Notes
+		dataType: string
+		lineageTag: 06c526d0-61e4-4fce-b177-eea4b99b6268
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: be0cf707-d81c-4ad3-bc84-26e078838a57
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AzureHybridBenefitOpportunities = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("azure-hybrid-benefit-opportunities.csv", 21),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"AgreementId", "HistoryMonth", "Period", "ExportRunId", "ExportedUtc", "SubscriptionName", "SubscriptionId", "ServiceName", "ArmRegionName", "Currency", "WorkloadType", "AHBEligibilityStatus", "LicenseSource", "ActualCost", "RetailEquivalentCost", "EstimatedRateSavings", "SavingsRate", "RowCount", "SourceConfidence", "CalculationVersion", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"WorkloadType", type text}, {"AHBEligibilityStatus", type text}, {"LicenseSource", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedRateSavings", type number}, {"SavingsRate", type number}, {"RowCount", Int64.Type}, {"SourceConfidence", type text}, {"CalculationVersion", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

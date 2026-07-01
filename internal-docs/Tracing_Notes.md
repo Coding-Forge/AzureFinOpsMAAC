@@ -94,3 +94,15 @@ Power BI reported missing columns such as `SubscriptionId`, `SubscriptionName`, 
 ## Launcher history root and audit argument fix
 
 The generated audit script call previously used line continuation in a here-string and produced broken parameter lines such as `-OutputRoot $outputRoot`, causing prompts and `-OutputRoot is not recognized` errors. The launcher now emits a splatted `$auditArgs` hashtable for `New-FinOpsAuditArtifacts.ps1`. The Local tab also has an editable `History root` field, saved as `HistoryRoot` in launcher settings. `New-RunScript` uses the saved history root when present and otherwise defaults to `<LocalOutputRoot>\history`.
+
+## Power BI Desktop closed-before-editing guard
+
+Power BI Desktop can overwrite PBIP report and semantic model files if the report is open while scripts or manual edits update TMDL/report JSON. Before repairing PBIP state, verified no `PBIDesktop*` processes were running. Restored committed MACC report pages and semantic model files from Git, re-applied the EA branch artifacts, and added `Assert-PowerBiDesktopClosed` to generated launcher run scripts before `Update-PowerBiProjectParameters` writes `expressions.tmdl`. Future run scripts should stop with a clear message if Power BI Desktop is running.
+
+## DataQualitySnapshot cyclic relationship fix
+
+Power BI refresh reported a cyclic reference starting at `DataQualitySnapshot`. Inspection showed auto-detected relationships from `RetailPriceSnapshot.ExportedUtc` and `ExportRunManifest.ExportedUtc` to `DataQualitySnapshot.ExportedUtc`, including a bidirectional relationship. These timestamp-based audit-table relationships are not required for reporting and can create dependency cycles. Removed the `DataQualitySnapshot.ExportedUtc` relationships from `relationships.tmdl`; report pages use independent audit tables instead of cross-filtering by exported timestamp.
+
+## CostRetailFact cyclic relationship fix
+
+Power BI refresh reported a cyclic reference starting at `CostRetailFact` after expanded savings tables were added. Inspection showed Power BI auto-detected multiple timestamp relationships across audit/expanded savings tables (`AgreementPriceAudit`, `MaccBenefitLedger`, `EnterpriseAgreementSavings`, `ReservationSavingsPlanCoverage`, `AzureHybridBenefitOpportunities`) using `ExportedUtc`, several with bidirectional filtering. These relationships are not needed for reporting and can create refresh cycles into the core fact model. Removed all `AutoDetected_*` relationships from `relationships.tmdl`, keeping only intentional date and dimension relationships.

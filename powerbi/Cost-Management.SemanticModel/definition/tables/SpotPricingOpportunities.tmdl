@@ -1,0 +1,150 @@
+table SpotPricingOpportunities
+	lineageTag: 64a4b42e-a4fa-4f1a-9d2d-111111115001
+
+	column AgreementId
+		dataType: string
+		lineageTag: 72756978-c918-4a28-8050-4fc5d7ee24dd
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: b331d838-fb2d-4492-9db0-4dc348780dbe
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: 776d861e-8866-4432-9271-d16f3775475a
+		summarizeBy: none
+		sourceColumn: Period
+
+	column ExportRunId
+		dataType: string
+		lineageTag: ca67f0a4-0684-4c0e-b35e-220a3524e929
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 8f491fde-8f77-4efa-988b-926bcbc2434a
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 9095ad35-b1d6-4e7a-9b67-601cad7aa849
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: b37d96c3-b187-48ee-83e9-666cc1e73705
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 876862e1-4602-404b-a9c3-824879b83ce0
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: fd748f0e-2022-4d89-9f82-8938282882da
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column SpotStatus
+		dataType: string
+		lineageTag: 041215ba-3dac-4e5d-9dd6-6eadbd2b82fd
+		summarizeBy: none
+		sourceColumn: SpotStatus
+
+	column SuitabilityStatus
+		dataType: string
+		lineageTag: 0ccd550d-6443-41d1-8a9d-8c2961633dee
+		summarizeBy: none
+		sourceColumn: SuitabilityStatus
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: fed3729a-da65-4048-a06d-43ca6dc975d6
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 94599a50-1258-4fe9-b5b2-ea251f63f358
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedRateSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 7eb9b9bb-5e56-4072-b949-84fa706efaca
+		summarizeBy: sum
+		sourceColumn: EstimatedRateSavings
+
+	column SavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: f8d81cd0-87b9-4d4e-a7d2-8154437e6ca0
+		summarizeBy: sum
+		sourceColumn: SavingsRate
+
+	column SourceConfidence
+		dataType: string
+		lineageTag: b5d3cecf-6f2e-4e70-a273-e8c21dc4bf56
+		summarizeBy: none
+		sourceColumn: SourceConfidence
+
+	column Notes
+		dataType: string
+		lineageTag: edf4fee8-2ee9-4638-89f8-d50d87758e0b
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 6163ebe6-bde6-43d5-9b68-123550cc604b
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column RowCount
+		dataType: int64
+		formatString: 0
+		lineageTag: fd67124d-7a8e-45dc-88ad-598675a79a4a
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: afd171c8-e783-4a00-97f0-da133fa8296e
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SpotPricingOpportunities = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("spot-pricing-opportunities.csv", 20),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"AgreementId", "HistoryMonth", "Period", "ExportRunId", "ExportedUtc", "SubscriptionName", "SubscriptionId", "ServiceName", "ArmRegionName", "Currency", "SpotStatus", "SuitabilityStatus", "ActualCost", "RetailEquivalentCost", "EstimatedRateSavings", "SavingsRate", "RowCount", "SourceConfidence", "CalculationVersion", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"SpotStatus", type text}, {"SuitabilityStatus", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedRateSavings", type number}, {"SavingsRate", type number}, {"RowCount", Int64.Type}, {"SourceConfidence", type text}, {"CalculationVersion", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

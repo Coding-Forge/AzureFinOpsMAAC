@@ -1,0 +1,258 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "risp_coverage",
+  "position": {
+    "x": 40,
+    "y": 240,
+    "z": 0,
+    "height": 400,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "HistoryMonth"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.HistoryMonth",
+              "nativeQueryRef": "HistoryMonth"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "BenefitType"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.BenefitType",
+              "nativeQueryRef": "BenefitType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "CoverageStatus"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.CoverageStatus",
+              "nativeQueryRef": "CoverageStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "EstimatedRateSavings"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.EstimatedRateSavings",
+              "nativeQueryRef": "EstimatedRateSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "SavingsRate"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.SavingsRate",
+              "nativeQueryRef": "SavingsRate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "RetailMatchCoverage"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.RetailMatchCoverage",
+              "nativeQueryRef": "RetailMatchCoverage"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "SourceConfidence"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.SourceConfidence",
+              "nativeQueryRef": "SourceConfidence"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanCoverage"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanCoverage.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Reservation and Savings Plan Coverage / Opportunity Review'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "ea_measure_summary",
+  "position": {
+    "x": 40,
+    "y": 40,
+    "z": 0,
+    "height": 160,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "EA Actual Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.EA Actual Cost",
+              "nativeQueryRef": "EA Actual Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "EA Retail Equivalent Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.EA Retail Equivalent Cost",
+              "nativeQueryRef": "EA Retail Equivalent Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Estimated EA Savings"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Estimated EA Savings",
+              "nativeQueryRef": "Estimated EA Savings"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "EA Savings Rate"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.EA Savings Rate",
+              "nativeQueryRef": "EA Savings Rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "EA Match Coverage"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.EA Match Coverage",
+              "nativeQueryRef": "EA Match Coverage"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'EA Savings KPI Measures'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

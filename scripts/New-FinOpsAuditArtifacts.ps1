@@ -392,6 +392,229 @@ $qualityRows = $costRows |
     }
 Export-FinOpsCsv -Path (Join-Path $OutputRoot "data-quality-snapshot.csv") -Columns @("AgreementId","ExportRunId","ExportedUtc","Period","Currency","RowCount","ActualCost","MatchedActualCost","UnmatchedActualCost","RetailMatchCoverage","UnmatchedRowCount","MultipleCandidateRowCount","ReviewEligibilityCost","CalculationVersion") -Rows @($qualityRows)
 
+$eaSavingsRows = $ledgerRowsForRun | ForEach-Object {
+    [pscustomobject][ordered]@{
+        SavingsMechanism = "Enterprise Agreement / negotiated pricing estimate"
+        AgreementId = $_.AgreementId
+        HistoryMonth = $_.HistoryMonth
+        Period = $_.Period
+        ExportRunId = $_.ExportRunId
+        ExportedUtc = $_.ExportedUtc
+        SubscriptionName = $_.SubscriptionName
+        SubscriptionId = $_.SubscriptionId
+        ServiceName = $_.ServiceName
+        ArmRegionName = $_.ArmRegionName
+        Currency = $_.Currency
+        ActualCost = $_.ActualCost
+        RetailEquivalentCost = $_.RetailEquivalentCost
+        EstimatedEaSavings = $_.EstimatedSavings
+        EaSavingsRate = $_.SavingsRate
+        EligibleSpend = $_.EligibleSpend
+        ReviewSpend = $_.ReviewSpend
+        RetailMatchCoverage = $_.RetailMatchCoverage
+        RowCount = $_.RowCount
+        CalculationVersion = "2026.07-ea-v1"
+        Notes = "Estimated EA/negotiated savings calculated as retail equivalent cost minus actual Cost Management cost. This is not an official EA price sheet reconciliation."
+    }
+}
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "enterprise-agreement-savings.csv") -Columns @("SavingsMechanism","AgreementId","HistoryMonth","Period","ExportRunId","ExportedUtc","SubscriptionName","SubscriptionId","ServiceName","ArmRegionName","Currency","ActualCost","RetailEquivalentCost","EstimatedEaSavings","EaSavingsRate","EligibleSpend","ReviewSpend","RetailMatchCoverage","RowCount","CalculationVersion","Notes") -Rows @($eaSavingsRows)
+
+$reservationSavingsPlanRows = $costRows |
+    Group-Object AgreementId, HistoryMonth, Period, SubscriptionId, SubscriptionName, ServiceName, ArmRegionName, Currency |
+    ForEach-Object {
+        $groupRows = @($_.Group)
+        $first = $groupRows[0]
+        $actualCost = ($groupRows | Measure-Object -Property ActualCost -Sum).Sum
+        $retailEquivalent = ($groupRows | Measure-Object -Property RetailEquivalentCost -Sum).Sum
+        $estimatedSavings = ($groupRows | Measure-Object -Property EstimatedSavings -Sum).Sum
+        $matchedActual = ($groupRows | Where-Object { $_.RetailMatchStatus -eq "Matched" } | Measure-Object -Property ActualCost -Sum).Sum
+        $textToClassify = (($groupRows | ForEach-Object { "$($_.ServiceName) $($_.Product) $($_.Meter) $($_.RetailProductName) $($_.RetailSkuName)" }) -join " ")
+        $benefitType = "RI/SP opportunity review"
+        $coverageStatus = "Review for reservation or savings plan suitability"
+        $confidence = "Heuristic"
+
+        if ($textToClassify -match "(?i)reservation|reserved instance|reserved capacity") {
+            $benefitType = "Reservation / Reserved Instance"
+            $coverageStatus = "Potential reservation-related usage"
+        }
+        elseif ($textToClassify -match "(?i)savings plan") {
+            $benefitType = "Savings Plan for Compute"
+            $coverageStatus = "Potential savings-plan-related usage"
+        }
+        elseif ($first.ServiceName -match "(?i)virtual machines|app service|container|kubernetes|sql|database|cosmos|synapse|redis") {
+            $coverageStatus = "Potential RI/SP candidate - validate with official utilization and coverage data"
+        }
+
+        [pscustomobject][ordered]@{
+            AgreementId = $first.AgreementId
+            HistoryMonth = $first.HistoryMonth
+            Period = $first.Period
+            ExportRunId = $first.RunId
+            ExportedUtc = $first.ExportedUtc
+            SubscriptionName = $first.SubscriptionName
+            SubscriptionId = $first.SubscriptionId
+            ServiceName = $first.ServiceName
+            ArmRegionName = $first.ArmRegionName
+            Currency = $first.Currency
+            BenefitType = $benefitType
+            PricingModel = "Unknown - current export does not include PricingModel"
+            ChargeType = "Unknown - current export does not include ChargeType"
+            BenefitId = ""
+            BenefitName = ""
+            CoverageStatus = $coverageStatus
+            ActualCost = [math]::Round([decimal]$actualCost, 4)
+            RetailEquivalentCost = [math]::Round([decimal]$retailEquivalent, 4)
+            EstimatedRateSavings = [math]::Round([decimal]$estimatedSavings, 4)
+            SavingsRate = if ($retailEquivalent -ne 0) { [math]::Round([decimal]($estimatedSavings / $retailEquivalent), 6) } else { 0 }
+            MatchedActualCost = [math]::Round([decimal]$matchedActual, 4)
+            RetailMatchCoverage = if ($actualCost -ne 0) { [math]::Round([decimal]($matchedActual / $actualCost), 6) } else { 0 }
+            RowCount = $groupRows.Count
+            SourceConfidence = $confidence
+            CalculationVersion = "2026.07-risp-v1"
+            Notes = "First-pass RI/SP view. Use official reservation and savings plan utilization/coverage exports before claiming confirmed benefit savings."
+        }
+    }
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "reservation-savings-plan-coverage.csv") -Columns @("AgreementId","HistoryMonth","Period","ExportRunId","ExportedUtc","SubscriptionName","SubscriptionId","ServiceName","ArmRegionName","Currency","BenefitType","PricingModel","ChargeType","BenefitId","BenefitName","CoverageStatus","ActualCost","RetailEquivalentCost","EstimatedRateSavings","SavingsRate","MatchedActualCost","RetailMatchCoverage","RowCount","SourceConfidence","CalculationVersion","Notes") -Rows @($reservationSavingsPlanRows)
+
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "reservation-savings-plan-inventory.csv") -Columns @("BenefitType","BenefitId","BenefitName","Scope","Region","ServiceName","SkuName","CommitmentTerm","CommitmentAmount","HourlyCommitment","Currency","StartDate","EndDate","UtilizationPercent","CoveragePercent","Owner","ReviewStatus","Notes") -Rows @()
+
+$azureHybridBenefitRows = $costRows |
+    Group-Object AgreementId, HistoryMonth, Period, SubscriptionId, SubscriptionName, ServiceName, ArmRegionName, Currency |
+    ForEach-Object {
+        $groupRows = @($_.Group)
+        $first = $groupRows[0]
+        $actualCost = ($groupRows | Measure-Object -Property ActualCost -Sum).Sum
+        $retailEquivalent = ($groupRows | Measure-Object -Property RetailEquivalentCost -Sum).Sum
+        $estimatedSavings = ($groupRows | Measure-Object -Property EstimatedSavings -Sum).Sum
+        $textToClassify = (($groupRows | ForEach-Object { "$($_.ServiceName) $($_.Product) $($_.Meter) $($_.RetailProductName) $($_.RetailSkuName)" }) -join " ")
+        $workloadType = "Unknown"
+        $eligibilityStatus = "Not classified as AHB candidate"
+        $confidence = "Heuristic"
+
+        if ($textToClassify -match "(?i)windows|sql server|windows server") {
+            $workloadType = if ($textToClassify -match "(?i)sql") { "SQL Server" } else { "Windows Server" }
+            $eligibilityStatus = "Potential AHB candidate - validate license entitlement and resource configuration"
+        }
+        elseif ($first.ServiceName -match "(?i)virtual machines|sql|database") {
+            $workloadType = "Potential Windows or SQL workload"
+            $eligibilityStatus = "Review workload for Azure Hybrid Benefit eligibility"
+        }
+
+        [pscustomobject][ordered]@{
+            AgreementId = $first.AgreementId
+            HistoryMonth = $first.HistoryMonth
+            Period = $first.Period
+            ExportRunId = $first.RunId
+            ExportedUtc = $first.ExportedUtc
+            SubscriptionName = $first.SubscriptionName
+            SubscriptionId = $first.SubscriptionId
+            ServiceName = $first.ServiceName
+            ArmRegionName = $first.ArmRegionName
+            Currency = $first.Currency
+            WorkloadType = $workloadType
+            AHBEligibilityStatus = $eligibilityStatus
+            LicenseSource = "Customer validation required"
+            ActualCost = [math]::Round([decimal]$actualCost, 4)
+            RetailEquivalentCost = [math]::Round([decimal]$retailEquivalent, 4)
+            EstimatedRateSavings = [math]::Round([decimal]$estimatedSavings, 4)
+            SavingsRate = if ($retailEquivalent -ne 0) { [math]::Round([decimal]($estimatedSavings / $retailEquivalent), 6) } else { 0 }
+            RowCount = $groupRows.Count
+            SourceConfidence = $confidence
+            CalculationVersion = "2026.07-ahb-v1"
+            Notes = "First-pass AHB opportunity view. Validate Windows Server or SQL Server license entitlement and resource AHB configuration before claiming missed or realized AHB savings."
+        }
+    }
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "azure-hybrid-benefit-opportunities.csv") -Columns @("AgreementId","HistoryMonth","Period","ExportRunId","ExportedUtc","SubscriptionName","SubscriptionId","ServiceName","ArmRegionName","Currency","WorkloadType","AHBEligibilityStatus","LicenseSource","ActualCost","RetailEquivalentCost","EstimatedRateSavings","SavingsRate","RowCount","SourceConfidence","CalculationVersion","Notes") -Rows @($azureHybridBenefitRows)
+
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "azure-hybrid-benefit-inventory.csv") -Columns @("SubscriptionId","ResourceGroupName","ResourceId","ResourceName","ServiceName","WorkloadType","OperatingSystem","SqlEdition","LicenseSource","AHBEnabled","EligibleForAHB","Owner","ReviewStatus","Notes") -Rows @()
+
+$spotPricingRows = $costRows |
+    Group-Object AgreementId, HistoryMonth, Period, SubscriptionId, SubscriptionName, ServiceName, ArmRegionName, Currency |
+    ForEach-Object {
+        $groupRows = @($_.Group)
+        $first = $groupRows[0]
+        $actualCost = ($groupRows | Measure-Object -Property ActualCost -Sum).Sum
+        $retailEquivalent = ($groupRows | Measure-Object -Property RetailEquivalentCost -Sum).Sum
+        $estimatedSavings = ($groupRows | Measure-Object -Property EstimatedSavings -Sum).Sum
+        $textToClassify = (($groupRows | ForEach-Object { "$($_.ServiceName) $($_.Product) $($_.Meter) $($_.RetailProductName) $($_.RetailSkuName)" }) -join " ")
+        $spotStatus = "Not classified as Spot usage"
+        $suitability = "Not reviewed"
+        if ($textToClassify -match "(?i)spot|low priority|preempt") {
+            $spotStatus = "Potential Spot-priced usage"
+            $suitability = "Validate workload interruption tolerance and VM configuration"
+        }
+        elseif ($first.ServiceName -match "(?i)virtual machines|container|kubernetes|batch") {
+            $spotStatus = "Potential Spot candidate"
+            $suitability = "Review for interruptible workload suitability"
+        }
+
+        [pscustomobject][ordered]@{
+            AgreementId = $first.AgreementId
+            HistoryMonth = $first.HistoryMonth
+            Period = $first.Period
+            ExportRunId = $first.RunId
+            ExportedUtc = $first.ExportedUtc
+            SubscriptionName = $first.SubscriptionName
+            SubscriptionId = $first.SubscriptionId
+            ServiceName = $first.ServiceName
+            ArmRegionName = $first.ArmRegionName
+            Currency = $first.Currency
+            SpotStatus = $spotStatus
+            SuitabilityStatus = $suitability
+            ActualCost = [math]::Round([decimal]$actualCost, 4)
+            RetailEquivalentCost = [math]::Round([decimal]$retailEquivalent, 4)
+            EstimatedRateSavings = [math]::Round([decimal]$estimatedSavings, 4)
+            SavingsRate = if ($retailEquivalent -ne 0) { [math]::Round([decimal]($estimatedSavings / $retailEquivalent), 6) } else { 0 }
+            RowCount = $groupRows.Count
+            SourceConfidence = "Heuristic"
+            CalculationVersion = "2026.07-spot-v1"
+            Notes = "First-pass Spot pricing view. Validate actual Spot VM/resource configuration, eviction tolerance, and workload suitability before claiming confirmed Spot savings."
+        }
+    }
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "spot-pricing-opportunities.csv") -Columns @("AgreementId","HistoryMonth","Period","ExportRunId","ExportedUtc","SubscriptionName","SubscriptionId","ServiceName","ArmRegionName","Currency","SpotStatus","SuitabilityStatus","ActualCost","RetailEquivalentCost","EstimatedRateSavings","SavingsRate","RowCount","SourceConfidence","CalculationVersion","Notes") -Rows @($spotPricingRows)
+
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "spot-workload-inventory.csv") -Columns @("SubscriptionId","ResourceGroupName","ResourceId","ResourceName","ServiceName","WorkloadName","Interruptible","MaxEvictionRate","SlaRequired","SpotEnabled","Owner","ReviewStatus","Notes") -Rows @()
+
+$devTestRows = $costRows |
+    Group-Object AgreementId, HistoryMonth, Period, SubscriptionId, SubscriptionName, ServiceName, ArmRegionName, Currency |
+    ForEach-Object {
+        $groupRows = @($_.Group)
+        $first = $groupRows[0]
+        $actualCost = ($groupRows | Measure-Object -Property ActualCost -Sum).Sum
+        $retailEquivalent = ($groupRows | Measure-Object -Property RetailEquivalentCost -Sum).Sum
+        $estimatedSavings = ($groupRows | Measure-Object -Property EstimatedSavings -Sum).Sum
+        $textToClassify = "$($first.SubscriptionName) " + (($groupRows | ForEach-Object { "$($_.ServiceName) $($_.Product) $($_.Meter)" }) -join " ")
+        $devTestStatus = "Not classified as Dev/Test"
+        if ($textToClassify -match "(?i)dev|test|sandbox|lab|visual studio") {
+            $devTestStatus = "Potential Dev/Test subscription or workload"
+        }
+
+        [pscustomobject][ordered]@{
+            AgreementId = $first.AgreementId
+            HistoryMonth = $first.HistoryMonth
+            Period = $first.Period
+            ExportRunId = $first.RunId
+            ExportedUtc = $first.ExportedUtc
+            SubscriptionName = $first.SubscriptionName
+            SubscriptionId = $first.SubscriptionId
+            ServiceName = $first.ServiceName
+            ArmRegionName = $first.ArmRegionName
+            Currency = $first.Currency
+            DevTestStatus = $devTestStatus
+            ActualCost = [math]::Round([decimal]$actualCost, 4)
+            RetailEquivalentCost = [math]::Round([decimal]$retailEquivalent, 4)
+            EstimatedRateSavings = [math]::Round([decimal]$estimatedSavings, 4)
+            SavingsRate = if ($retailEquivalent -ne 0) { [math]::Round([decimal]($estimatedSavings / $retailEquivalent), 6) } else { 0 }
+            RowCount = $groupRows.Count
+            SourceConfidence = "Heuristic"
+            CalculationVersion = "2026.07-devtest-v1"
+            Notes = "First-pass Dev/Test pricing view. Validate subscription offer/category and workload eligibility before claiming confirmed Dev/Test savings."
+        }
+    }
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "devtest-pricing-opportunities.csv") -Columns @("AgreementId","HistoryMonth","Period","ExportRunId","ExportedUtc","SubscriptionName","SubscriptionId","ServiceName","ArmRegionName","Currency","DevTestStatus","ActualCost","RetailEquivalentCost","EstimatedRateSavings","SavingsRate","RowCount","SourceConfidence","CalculationVersion","Notes") -Rows @($devTestRows)
+
+Export-FinOpsCsv -Path (Join-Path $OutputRoot "devtest-subscription-inventory.csv") -Columns @("SubscriptionId","SubscriptionName","OfferType","Environment","BusinessUnit","Owner","EligibleForDevTest","DevTestEnabled","ReviewStatus","Notes") -Rows @()
+
 $manifestRows = @(
     [pscustomobject][ordered]@{
         ExportRunId = $runId
@@ -441,6 +664,15 @@ Write-Host " - agreement-price-audit.csv"
 Write-Host " - retail-price-snapshot.csv"
 Write-Host " - retail-match-exceptions.csv"
 Write-Host " - data-quality-snapshot.csv"
+Write-Host " - enterprise-agreement-savings.csv"
+Write-Host " - reservation-savings-plan-coverage.csv"
+Write-Host " - reservation-savings-plan-inventory.csv"
+Write-Host " - azure-hybrid-benefit-opportunities.csv"
+Write-Host " - azure-hybrid-benefit-inventory.csv"
+Write-Host " - spot-pricing-opportunities.csv"
+Write-Host " - spot-workload-inventory.csv"
+Write-Host " - devtest-pricing-opportunities.csv"
+Write-Host " - devtest-subscription-inventory.csv"
 Write-Host " - export-run-manifest.csv/json"
 Write-Host " - billing-reconciliation.csv"
 Write-Host " - ownership-mapping.csv"

@@ -1,0 +1,118 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "devtest_measures",
+  "position": {
+    "x": 40,
+    "y": 40,
+    "z": 0,
+    "height": 160,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Dev/Test Opportunity Actual Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Dev/Test Opportunity Actual Cost",
+              "nativeQueryRef": "Dev/Test Opportunity Actual Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Dev/Test Retail Equivalent Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Dev/Test Retail Equivalent Cost",
+              "nativeQueryRef": "Dev/Test Retail Equivalent Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Estimated Dev/Test Rate Savings"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Estimated Dev/Test Rate Savings",
+              "nativeQueryRef": "Estimated Dev/Test Rate Savings"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Dev/Test Opportunity Savings Rate"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Dev/Test Opportunity Savings Rate",
+              "nativeQueryRef": "Dev/Test Opportunity Savings Rate"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dev/Test Pricing KPI Measures'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

@@ -1,0 +1,286 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "risp_inventory",
+  "position": {
+    "x": 40,
+    "y": 680,
+    "z": 0,
+    "height": 300,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "BenefitType"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.BenefitType",
+              "nativeQueryRef": "BenefitType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "BenefitId"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.BenefitId",
+              "nativeQueryRef": "BenefitId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "BenefitName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.BenefitName",
+              "nativeQueryRef": "BenefitName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "Scope"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.Scope",
+              "nativeQueryRef": "Scope"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "Region"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.Region",
+              "nativeQueryRef": "Region"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "SkuName"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.SkuName",
+              "nativeQueryRef": "SkuName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "CommitmentTerm"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.CommitmentTerm",
+              "nativeQueryRef": "CommitmentTerm"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "CommitmentAmount"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.CommitmentAmount",
+              "nativeQueryRef": "CommitmentAmount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "HourlyCommitment"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.HourlyCommitment",
+              "nativeQueryRef": "HourlyCommitment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "Currency"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.Currency",
+              "nativeQueryRef": "Currency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "UtilizationPercent"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.UtilizationPercent",
+              "nativeQueryRef": "UtilizationPercent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "CoveragePercent"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.CoveragePercent",
+              "nativeQueryRef": "CoveragePercent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "Owner"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.Owner",
+              "nativeQueryRef": "Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "ReviewStatus"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.ReviewStatus",
+              "nativeQueryRef": "ReviewStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ReservationSavingsPlanInventory"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "ReservationSavingsPlanInventory.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer-Maintained Reservation and Savings Plan Inventory'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}
