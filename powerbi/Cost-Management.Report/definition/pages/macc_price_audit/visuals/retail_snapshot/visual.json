@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "retail_snapshot",
   "position": {
     "x": 20,
     "y": 500,
-    "z": 0,
+    "z": 2000,
     "height": 170,
     "width": 1210,
-    "tabOrder": 0
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "tableEx",
@@ -143,8 +143,7 @@
             }
           ]
         }
-      },
-      "sortDefinition": {}
+      }
     },
     "visualContainerObjects": {
       "title": [

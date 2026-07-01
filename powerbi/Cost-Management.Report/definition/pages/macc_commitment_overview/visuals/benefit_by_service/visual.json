@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "benefit_by_service",
   "position": {
     "x": 650,
     "y": 80,
-    "z": 0,
+    "z": 1000,
     "height": 580,
     "width": 580,
-    "tabOrder": 0
+    "tabOrder": 1000
   },
   "visual": {
     "visualType": "tableEx",
@@ -157,8 +157,7 @@
             }
           ]
         }
-      },
-      "sortDefinition": {}
+      }
     },
     "visualContainerObjects": {
       "title": [

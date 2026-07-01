@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "ownership",
   "position": {
     "x": 640,
     "y": 300,
-    "z": 0,
+    "z": 2000,
     "height": 360,
     "width": 590,
-    "tabOrder": 0
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "tableEx",
@@ -143,8 +143,7 @@
             }
           ]
         }
-      },
-      "sortDefinition": {}
+      }
     },
     "visualContainerObjects": {
       "title": [
