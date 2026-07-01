@@ -48,6 +48,7 @@ function Test-ExcludedReleasePath {
     $excludePatterns = @(
         ".git/*",
         ".git",
+        "internal-docs/*",
         "releases/*",
         "scripts/exports/*",
         "powerbi/*.Report/.pbi/*",
@@ -152,6 +153,7 @@ $manifest = [ordered]@{
     fileCount = @($sourceFiles).Count
     excluded = @(
         ".git",
+        "internal-docs",
         "releases",
         "scripts/exports",
         "powerbi/*.Report/.pbi",

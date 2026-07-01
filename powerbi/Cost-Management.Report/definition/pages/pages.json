@@ -9,7 +9,12 @@
     "finops_pipeline_diagnostics",
     "finops_data_quality_actions",
     "finops_model_technical_tables",
-    "finops_granular_drillthrough"
+    "finops_granular_drillthrough",
+    "macc_commitment_overview",
+    "macc_benefit_ledger",
+    "macc_price_audit",
+    "macc_coverage_exceptions",
+    "macc_billing_ownership"
   ],
   "activePageName": "finops_report_landing"
 }

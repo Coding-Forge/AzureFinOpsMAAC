@@ -1,0 +1,118 @@
+table RetailPriceSnapshot
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111110
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 51c1cc55-2e1b-4e26-b7cf-35208e8ec951
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: cf90de21-7a56-4f34-a677-23155a25f4eb
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: b369cd9d-2fd7-4517-a232-b40e5dab1366
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+	column RetailProductName
+		dataType: string
+		lineageTag: 281d6420-b5bd-4539-9149-b5b44c424895
+		summarizeBy: none
+		sourceColumn: RetailProductName
+
+	column RetailSkuName
+		dataType: string
+		lineageTag: a6bd5359-1d68-413e-8e02-20d15c4e2578
+		summarizeBy: none
+		sourceColumn: RetailSkuName
+
+	column RetailMeterName
+		dataType: string
+		lineageTag: df501810-728c-49e2-8297-7af53bcc90a1
+		summarizeBy: none
+		sourceColumn: RetailMeterName
+
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: ce7ae5ad-8ccb-4426-81a7-b8824ed10104
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: b843c2f1-dbe7-493d-bfaa-9e97df315abe
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+	column RetailPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 2b697dad-7156-4ae0-83d0-68cfd5fa44be
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: 6bf9143d-7ef6-4de8-a069-b4285f76a220
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: eb6666af-3028-4a78-a1cb-04f67870b085
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 5fa32f44-2988-4481-a6a2-b4f275ed8460
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailProductId
+		dataType: string
+		lineageTag: 840de300-ebe7-4a02-95ca-8afdf9fec27b
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitPrice
+		dataType: double
+		lineageTag: 629e3f90-22df-4418-9aaf-68e59755172a
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Source
+		dataType: string
+		lineageTag: 1cc903dc-a1ec-4297-885e-a72a88688335
+		summarizeBy: none
+		sourceColumn: Source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition RetailPriceSnapshot = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("retail-price-snapshot.csv", 15),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ExportRunId", type text}, {"ExportedUtc", type text}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}, {"Source", type text}, {"CalculationVersion", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

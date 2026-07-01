@@ -1,0 +1,229 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "quality_snapshot",
+  "position": {
+    "x": 20,
+    "y": 80,
+    "z": 0,
+    "height": 580,
+    "width": 570,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "AgreementId"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.AgreementId",
+              "nativeQueryRef": "AgreementId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "ExportRunId"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.ExportRunId",
+              "nativeQueryRef": "ExportRunId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "Currency"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.Currency",
+              "nativeQueryRef": "Currency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "RowCount"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.RowCount",
+              "nativeQueryRef": "RowCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "MatchedActualCost"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.MatchedActualCost",
+              "nativeQueryRef": "MatchedActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "UnmatchedActualCost"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.UnmatchedActualCost",
+              "nativeQueryRef": "UnmatchedActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "RetailMatchCoverage"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.RetailMatchCoverage",
+              "nativeQueryRef": "RetailMatchCoverage"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "UnmatchedRowCount"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.UnmatchedRowCount",
+              "nativeQueryRef": "UnmatchedRowCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "MultipleCandidateRowCount"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.MultipleCandidateRowCount",
+              "nativeQueryRef": "MultipleCandidateRowCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "ReviewEligibilityCost"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.ReviewEligibilityCost",
+              "nativeQueryRef": "ReviewEligibilityCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DataQualitySnapshot"
+                    }
+                  },
+                  "Property": "CalculationVersion"
+                }
+              },
+              "queryRef": "DataQualitySnapshot.CalculationVersion",
+              "nativeQueryRef": "CalculationVersion"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {}
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Data Quality Snapshot'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

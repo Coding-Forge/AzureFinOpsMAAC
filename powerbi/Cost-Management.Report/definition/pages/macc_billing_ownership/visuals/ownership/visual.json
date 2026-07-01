@@ -1,0 +1,173 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "ownership",
+  "position": {
+    "x": 640,
+    "y": 300,
+    "z": 0,
+    "height": 360,
+    "width": 590,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "SubscriptionId"
+                }
+              },
+              "queryRef": "OwnershipMapping.SubscriptionId",
+              "nativeQueryRef": "SubscriptionId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "ResourceGroupName"
+                }
+              },
+              "queryRef": "OwnershipMapping.ResourceGroupName",
+              "nativeQueryRef": "ResourceGroupName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "OwnershipMapping.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "BusinessUnit"
+                }
+              },
+              "queryRef": "OwnershipMapping.BusinessUnit",
+              "nativeQueryRef": "BusinessUnit"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "Application"
+                }
+              },
+              "queryRef": "OwnershipMapping.Application",
+              "nativeQueryRef": "Application"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "Environment"
+                }
+              },
+              "queryRef": "OwnershipMapping.Environment",
+              "nativeQueryRef": "Environment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "Owner"
+                }
+              },
+              "queryRef": "OwnershipMapping.Owner",
+              "nativeQueryRef": "Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "CostCenter"
+                }
+              },
+              "queryRef": "OwnershipMapping.CostCenter",
+              "nativeQueryRef": "CostCenter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "OwnershipMapping"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "OwnershipMapping.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {}
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ownership Mapping'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

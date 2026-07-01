@@ -15,7 +15,7 @@ expression AnalysisMode = "History" meta [IsParameterQuery=true, List={"Current"
 	annotation PBI_ResultType = Text
 
 /// Local folder that contains the generated CSV files. Include the trailing slash or backslash.
-expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260625-092543\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260630-171906\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 977cdcb8-7cbf-4b71-b544-57e8d7a7bf85
 
 	annotation PBI_NavigationStepName = Navigation
@@ -23,7 +23,7 @@ expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260625-092543\" 
 	annotation PBI_ResultType = Text
 
 /// Azure Blob HTTPS base URL that contains the generated CSV files. Example: https://account.blob.core.windows.net/container/folder/
-expression BlobDataRoot = "https://account.blob.core.windows.net/container/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+expression BlobDataRoot = "" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
 	lineageTag: d58ad0e6-4823-455c-bfdb-588e89bc9731
 
 	annotation PBI_NavigationStepName = Navigation
@@ -31,7 +31,7 @@ expression BlobDataRoot = "https://account.blob.core.windows.net/container/finop
 	annotation PBI_ResultType = Text
 
 /// ADLS Gen2 HTTPS base URL that contains the generated CSV files. Example: https://account.dfs.core.windows.net/filesystem/folder/
-expression AdlsDataRoot = "https://account.dfs.core.windows.net/filesystem/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+expression AdlsDataRoot = "" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
 	lineageTag: 29012a85-d23d-48de-9c49-782a3c509b6a
 
 	annotation PBI_NavigationStepName = Navigation
@@ -39,16 +39,32 @@ expression AdlsDataRoot = "https://account.dfs.core.windows.net/filesystem/finop
 	annotation PBI_ResultType = Text
 
 /// SharePoint document library folder URL that contains the generated CSV files. Example: https://tenant.sharepoint.com/sites/site/Shared%20Documents/folder/
-expression SharePointDataRoot = "https://tenant.sharepoint.com/sites/site/Shared%20Documents/finops-cost-management/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+expression SharePointDataRoot = "" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
 	lineageTag: 7a120929-0ce8-4b83-a4a8-28f8e5704b0d
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Text
 
-/// Loads a generated CSV file from the configured storage location.
-expression CsvFromSelectedStorage = (fileName as text, columnCount as number) as table => let SelectedRoot = if StorageLocation = "Local" then LocalDataRoot else if StorageLocation = "AzureBlob" then BlobDataRoot else if StorageLocation = "ADLSGen2" then AdlsDataRoot else if StorageLocation = "SharePoint" then SharePointDataRoot else error "Unsupported StorageLocation. Use Local, AzureBlob, ADLSGen2, or SharePoint.", TrimmedRoot = Text.Trim(SelectedRoot), RootWithSeparator = if StorageLocation = "Local" then if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\" else if Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "/", CsvBinary = if StorageLocation = "Local" then File.Contents(RootWithSeparator & fileName) else Web.Contents(RootWithSeparator & fileName), Source = Csv.Document(CsvBinary, [Delimiter = ",", QuoteStyle = QuoteStyle.None]) in Source
+/// Loads a generated CSV file from the configured storage location. If the file is not present yet, returns a column-count-shaped empty CSV.
+expression CsvFromSelectedStorage = (fileName as text, columnCount as number) as table => let SelectedRoot = if StorageLocation = "Local" then LocalDataRoot else if StorageLocation = "AzureBlob" then BlobDataRoot else if StorageLocation = "ADLSGen2" then AdlsDataRoot else if StorageLocation = "SharePoint" then SharePointDataRoot else error "Unsupported StorageLocation. Use Local, AzureBlob, ADLSGen2, or SharePoint.", TrimmedRoot = Text.Trim(SelectedRoot), RootWithSeparator = if StorageLocation = "Local" then if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\" else if Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "/", SafeColumnCount = if columnCount < 1 then 1 else columnCount, EmptyCsvBinary = Text.ToBinary(Text.Combine(List.Transform({1..SafeColumnCount}, each "Column" & Text.From(_)), ",")), LoadedCsv = try (if StorageLocation = "Local" then File.Contents(RootWithSeparator & fileName) else Web.Contents(RootWithSeparator & fileName)), CsvBinary = if LoadedCsv[HasError] then EmptyCsvBinary else LoadedCsv[Value], Source = if LoadedCsv[HasError] then Csv.Document(CsvBinary, [Delimiter = ",", Columns = SafeColumnCount, Encoding = 65001, QuoteStyle = QuoteStyle.None]) else Csv.Document(CsvBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.None]) in Source
 	lineageTag: e193190f-bf4f-4a9a-bda8-435f2cf7f289
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+/// Folder that contains the durable historical cost file. Include the trailing slash or backslash.
+expression HistoryDataRoot = "C:\Projects\Fabric\AuditDumps\history\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=false]
+	lineageTag: b9d1e474-b00e-4d2f-99b2-c3c4e1b2e3f1
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Loads the durable historical CSV file from HistoryDataRoot. If the file is not present yet, returns a column-count-shaped empty CSV.
+expression CsvFromHistoryStorage = (fileName as text, columnCount as number) as table => let TrimmedRoot = Text.Trim(HistoryDataRoot), RootWithSeparator = if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\", SafeColumnCount = if columnCount < 1 then 1 else columnCount, EmptyCsvBinary = Text.ToBinary(Text.Combine(List.Transform({1..SafeColumnCount}, each "Column" & Text.From(_)), ",")), LoadedCsv = try File.Contents(RootWithSeparator & fileName), CsvBinary = if LoadedCsv[HasError] then EmptyCsvBinary else LoadedCsv[Value], Source = if LoadedCsv[HasError] then Csv.Document(CsvBinary, [Delimiter = ",", Columns = SafeColumnCount, Encoding = 65001, QuoteStyle = QuoteStyle.None]) else Csv.Document(CsvBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.None]) in Source
+	lineageTag: 77e4a29c-c189-4d3c-95fb-6e3674f3a9fd
 
 	annotation PBI_NavigationStepName = Navigation
 

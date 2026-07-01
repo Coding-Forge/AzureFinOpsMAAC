@@ -1,0 +1,183 @@
+table MaccBenefitLedger
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111103
+
+	column AgreementId
+		dataType: string
+		lineageTag: cb62a59e-dbf0-42a7-be8a-6765af8e7064
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 328c9d34-01dc-4592-825e-8a86552dfbf8
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: 7209fa0d-4858-4e73-9f23-055a8e2067f3
+		summarizeBy: none
+		sourceColumn: Period
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 7cd94544-576a-4bfa-b138-1415e51e4ab2
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 1c94a65f-d9f3-4a7f-b669-3e2b920181c5
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 0d12760e-77c0-4a80-a859-7a1d216ea5e1
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 119fa2a3-1e2d-4c39-a233-329758554e58
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: b208c493-91e0-403e-846b-df64d39e00e7
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 369eea88-bc3b-4617-98e6-861586645f08
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: 762ee79d-023f-426a-9d40-3155878d2b13
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a8159a50-7080-49d7-a843-465a43937ffe
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4f57cb8e-4fbb-4c58-b34f-1c3baa49ff2c
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: faf37984-690b-450f-87ad-3c1daabc4e31
+		summarizeBy: sum
+		sourceColumn: EstimatedSavings
+
+	column SavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ff171b44-3a24-4586-a6bf-00101240d4f2
+		summarizeBy: sum
+		sourceColumn: SavingsRate
+
+	column RetailMatchCoverage
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9f80aed3-418d-48f3-a49c-b228b03a336c
+		summarizeBy: sum
+		sourceColumn: RetailMatchCoverage
+
+	column RowCount
+		dataType: int64
+		lineageTag: 83024485-e074-45d6-ac1b-277f87a461e2
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+	column EligibleSpend
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 9c631b7f-f7ff-4efd-9ba5-55a8283c9d74
+		summarizeBy: sum
+		sourceColumn: EligibleSpend
+
+	column IneligibleSpend
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5d552a36-c94c-4880-a6ef-7caebbae9709
+		summarizeBy: sum
+		sourceColumn: IneligibleSpend
+
+	column ReviewSpend
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b1af4d76-56bb-4859-a4f2-f71d7c97d01a
+		summarizeBy: sum
+		sourceColumn: ReviewSpend
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 99614aba-e1ac-4847-8d88-ae5b49ef7640
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column MatchedActualCost
+		dataType: double
+		lineageTag: 4a18c6c5-603c-4135-8bd1-27759420ba15
+		summarizeBy: sum
+		sourceColumn: MatchedActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnmatchedActualCost
+		dataType: double
+		lineageTag: f0fc1f98-a282-47ad-985f-88f08cdba905
+		summarizeBy: sum
+		sourceColumn: UnmatchedActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MatchedRowCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 9872423e-e42a-4cbb-985c-c7786571055c
+		summarizeBy: sum
+		sourceColumn: MatchedRowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExceptionRowCount
+		dataType: int64
+		formatString: 0
+		lineageTag: bbf6ac05-fcdb-48d3-966f-94c3e2a912a1
+		summarizeBy: sum
+		sourceColumn: ExceptionRowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MaccBenefitLedger = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("macc-benefit-ledger.csv", 24),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedSavings", type number}, {"SavingsRate", type number}, {"MatchedActualCost", type number}, {"UnmatchedActualCost", type number}, {"RetailMatchCoverage", type number}, {"RowCount", Int64.Type}, {"MatchedRowCount", Int64.Type}, {"ExceptionRowCount", Int64.Type}, {"EligibleSpend", type number}, {"IneligibleSpend", type number}, {"ReviewSpend", type number}, {"CalculationVersion", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

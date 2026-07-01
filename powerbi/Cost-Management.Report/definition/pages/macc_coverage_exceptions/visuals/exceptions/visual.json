@@ -1,0 +1,257 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "exceptions",
+  "position": {
+    "x": 620,
+    "y": 80,
+    "z": 0,
+    "height": 580,
+    "width": 610,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "ExceptionId"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.ExceptionId",
+              "nativeQueryRef": "ExceptionId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "ReviewStatus"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.ReviewStatus",
+              "nativeQueryRef": "ReviewStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "Product"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.Product",
+              "nativeQueryRef": "Product"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "RetailMatchStatus"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.RetailMatchStatus",
+              "nativeQueryRef": "RetailMatchStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "RetailCandidateCount"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.RetailCandidateCount",
+              "nativeQueryRef": "RetailCandidateCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "IsMaccEligible"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.IsMaccEligible",
+              "nativeQueryRef": "IsMaccEligible"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "MaccEligibilityCategory"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.MaccEligibilityCategory",
+              "nativeQueryRef": "MaccEligibilityCategory"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "Owner"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.Owner",
+              "nativeQueryRef": "Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "Resolution"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.Resolution",
+              "nativeQueryRef": "Resolution"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailMatchExceptions"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "RetailMatchExceptions.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {}
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Retail Match and Eligibility Exceptions'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

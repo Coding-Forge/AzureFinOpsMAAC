@@ -1,0 +1,90 @@
+table BillingReconciliation
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111108
+
+	column AgreementId
+		dataType: string
+		lineageTag: f4d875e9-85d9-45bf-8537-67a271c8503d
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column BillingPeriod
+		dataType: string
+		lineageTag: 2587b378-cb2b-4ce4-889e-99abfb0c8322
+		summarizeBy: none
+		sourceColumn: BillingPeriod
+
+	column InvoiceId
+		dataType: string
+		lineageTag: 4cf2154d-6bf9-4351-b3a5-7a1015fead70
+		summarizeBy: none
+		sourceColumn: InvoiceId
+
+	column Currency
+		dataType: string
+		lineageTag: 3a87952e-a524-4580-8858-47ca87a8af48
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column InvoiceTotal
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 04820810-6d91-4d8d-a623-ff4012b13c34
+		summarizeBy: sum
+		sourceColumn: InvoiceTotal
+
+	column ExportActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1e9181b3-bd3e-4526-973f-673bd48b711e
+		summarizeBy: sum
+		sourceColumn: ExportActualCost
+
+	column Variance
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 66d77a47-0aa5-4825-86ac-bdd5827bfb12
+		summarizeBy: sum
+		sourceColumn: Variance
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: 53a1a106-3d3a-46a3-9d82-6ff91b743368
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Notes
+		dataType: string
+		lineageTag: a7e30668-47d9-4c7a-97dd-4680bb342a12
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column BillingAccount
+		dataType: string
+		lineageTag: 12b36e49-a886-44bf-9eac-821d035e32f4
+		summarizeBy: none
+		sourceColumn: BillingAccount
+
+		annotation SummarizationSetBy = Automatic
+
+	column BillingProfile
+		dataType: string
+		lineageTag: 8dcb3fca-df92-4fa2-bb3e-79e1f80de964
+		summarizeBy: none
+		sourceColumn: BillingProfile
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BillingReconciliation = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("billing-reconciliation.csv", 11),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"BillingPeriod", type text}, {"InvoiceId", type text}, {"BillingAccount", type text}, {"BillingProfile", type text}, {"Currency", type text}, {"InvoiceTotal", type number}, {"ExportActualCost", type number}, {"Variance", type number}, {"ReviewStatus", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,313 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "price_audit",
+  "position": {
+    "x": 20,
+    "y": 80,
+    "z": 0,
+    "height": 390,
+    "width": 1210,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "Product"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.Product",
+              "nativeQueryRef": "Product"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "Currency"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.Currency",
+              "nativeQueryRef": "Currency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "UsageQuantity"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.UsageQuantity",
+              "nativeQueryRef": "UsageQuantity"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "EffectiveUnitCost"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.EffectiveUnitCost",
+              "nativeQueryRef": "EffectiveUnitCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailPrice"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailPrice",
+              "nativeQueryRef": "RetailPrice"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "EstimatedSavings"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.EstimatedSavings",
+              "nativeQueryRef": "EstimatedSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailMatchStatus"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailMatchStatus",
+              "nativeQueryRef": "RetailMatchStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailCandidateCount"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailCandidateCount",
+              "nativeQueryRef": "RetailCandidateCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailSkuId"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailSkuId",
+              "nativeQueryRef": "RetailSkuId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "RetailMeterId"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.RetailMeterId",
+              "nativeQueryRef": "RetailMeterId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "IsMaccEligible"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.IsMaccEligible",
+              "nativeQueryRef": "IsMaccEligible"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AgreementPriceAudit"
+                    }
+                  },
+                  "Property": "MaccEligibilityCategory"
+                }
+              },
+              "queryRef": "AgreementPriceAudit.MaccEligibilityCategory",
+              "nativeQueryRef": "MaccEligibilityCategory"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {}
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Price Calculation Evidence'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

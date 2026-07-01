@@ -1,0 +1,124 @@
+table DataQualitySnapshot
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111106
+
+	column AgreementId
+		dataType: string
+		lineageTag: d873bbe1-da4c-4d16-aa32-c755c29ae5d2
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 086b089c-e725-448a-bf01-0f41050eadf8
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column Period
+		dataType: string
+		lineageTag: 1217467b-1677-4045-a50d-069c596df6b5
+		summarizeBy: none
+		sourceColumn: Period
+
+	column Currency
+		dataType: string
+		lineageTag: f818e2e4-7b75-403c-bde8-bfa168ddb5c1
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column RowCount
+		dataType: int64
+		lineageTag: e7049b8e-fe85-4893-9ea7-c91ce1af7658
+		summarizeBy: none
+		sourceColumn: RowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 514f43cc-53c1-4bec-8a93-193d279c197d
+		summarizeBy: none
+		sourceColumn: ActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column MatchedActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b33bf638-7dcc-4b3a-a5cc-914700dddf31
+		summarizeBy: none
+		sourceColumn: MatchedActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnmatchedActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: d48028cf-afba-4853-9320-6c2f9d2f775c
+		summarizeBy: none
+		sourceColumn: UnmatchedActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailMatchCoverage
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 8028014c-8b16-4b44-8236-695205b746ee
+		summarizeBy: none
+		sourceColumn: RetailMatchCoverage
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnmatchedRowCount
+		dataType: int64
+		lineageTag: 218cc3e9-12ae-4791-9ef8-d87276629dc9
+		summarizeBy: none
+		sourceColumn: UnmatchedRowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column MultipleCandidateRowCount
+		dataType: int64
+		lineageTag: 469093fb-f1d5-4a03-a068-119084801f45
+		summarizeBy: none
+		sourceColumn: MultipleCandidateRowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReviewEligibilityCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: cb6979ad-fc9d-4d67-8a20-239eff738760
+		summarizeBy: none
+		sourceColumn: ReviewEligibilityCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: f40a63a2-677f-477e-bd12-b9b05380a09d
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 526b9fdc-2c78-41a0-be9a-00d9c6644e67
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DataQualitySnapshot = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("data-quality-snapshot.csv", 14),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"Currency", type text}, {"RowCount", Int64.Type}, {"ActualCost", type number}, {"MatchedActualCost", type number}, {"UnmatchedActualCost", type number}, {"RetailMatchCoverage", type number}, {"UnmatchedRowCount", Int64.Type}, {"MultipleCandidateRowCount", Int64.Type}, {"ReviewEligibilityCost", type number}, {"CalculationVersion", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

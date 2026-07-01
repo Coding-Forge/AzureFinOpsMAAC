@@ -1,0 +1,126 @@
+table ExportRunManifest
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111107
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 5e0b251c-5b4c-4677-9ec7-6eab28d89402
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 4109ec4e-4cd5-4005-ae61-bfebb413458f
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column AnalysisMode
+		dataType: string
+		lineageTag: c27709f7-af6b-4f32-a1c1-037bb175b1c7
+		summarizeBy: none
+		sourceColumn: AnalysisMode
+
+	column StorageLocation
+		dataType: string
+		lineageTag: afb71116-154d-4de4-840d-35ecb2f445bc
+		summarizeBy: none
+		sourceColumn: StorageLocation
+
+	column SubscriptionCount
+		dataType: int64
+		lineageTag: 31e904e6-bf53-45f9-8641-d7cd41bddf73
+		summarizeBy: sum
+		sourceColumn: SubscriptionCount
+
+	column AgreementId
+		dataType: string
+		lineageTag: 0866dbea-6b2d-4b61-a1db-5c8535590a29
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column FileCount
+		dataType: int64
+		lineageTag: 945af09f-1b30-4c10-a935-a12531f7af39
+		summarizeBy: sum
+		sourceColumn: FileCount
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8061f2e8-600c-4748-944e-592919a081c6
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a7d807f-f8e2-4aea-9827-f56426225a17
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8c4be613-ba19-4c81-8195-cb45a40398c7
+		summarizeBy: sum
+		sourceColumn: EstimatedSavings
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 4016cbb7-73a0-4046-b669-8e6361427c36
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column TenantId
+		dataType: string
+		lineageTag: 5c8edf3d-2bce-4479-b1cb-11eaecca7d88
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
+	column AsOfDate
+		dataType: string
+		lineageTag: 8dcd20b3-189b-4a88-8826-d44982502ad4
+		summarizeBy: none
+		sourceColumn: AsOfDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column SettingsPath
+		dataType: string
+		lineageTag: 5d465625-b3d5-43a4-b6b8-ec9322ed11f6
+		summarizeBy: none
+		sourceColumn: SettingsPath
+
+		annotation SummarizationSetBy = Automatic
+
+	column OutputRoot
+		dataType: string
+		lineageTag: e4689c96-25c0-4ad0-b878-43c18823f59b
+		summarizeBy: none
+		sourceColumn: OutputRoot
+
+		annotation SummarizationSetBy = Automatic
+
+	column HistoryRoot
+		dataType: string
+		lineageTag: d668ff97-5c4a-421d-bccc-a9bce666a16a
+		summarizeBy: none
+		sourceColumn: HistoryRoot
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ExportRunManifest = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("export-run-manifest.csv", 16),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ExportRunId", type text}, {"ExportedUtc", type text}, {"AnalysisMode", type text}, {"StorageLocation", type text}, {"TenantId", type text}, {"SubscriptionCount", Int64.Type}, {"AsOfDate", type text}, {"AgreementId", type text}, {"SettingsPath", type text}, {"OutputRoot", type text}, {"HistoryRoot", type text}, {"FileCount", Int64.Type}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedSavings", type number}, {"CalculationVersion", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

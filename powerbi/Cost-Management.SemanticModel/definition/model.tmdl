@@ -13,7 +13,7 @@ queryGroup Exports
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","StorageLocation","AnalysisMode","LocalDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage"]
+annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","StorageLocation","AnalysisMode","LocalDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","HistoryDataRoot","CsvFromHistoryStorage","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","MaccAuditMeasures"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -38,6 +38,23 @@ ref table DimService
 ref table DimRegion
 ref table DimRetailMatch
 ref table CostRetailFact
+ref table MaccAgreementConfig
+ref table MaccAgreementStatus
+ref table MaccBenefitLedger
+ref table AgreementPriceAudit
+ref table RetailPriceSnapshot
+ref table RetailMatchExceptions
+ref table DataQualitySnapshot
+ref table ExportRunManifest
+ref table BillingReconciliation
+ref table OwnershipMapping
+ref table MaccAuditMeasures
+ref table LocalDateTable_6cc518f0-d1b7-4e50-bdb3-263d9ad289c9
+ref table LocalDateTable_351e8e34-f430-493c-806c-b117e34cb4c7
+ref table LocalDateTable_77a3edcc-d984-4804-ba0e-3186ad6c69ac
+ref table LocalDateTable_a8ba2e7a-cd17-491c-80b4-585317ca92ca
+ref table LocalDateTable_d2db135e-79a4-46cb-bb5b-6745a4296321
+ref table LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44
 
 ref cultureInfo en-US
 

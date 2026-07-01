@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Azure FinOps MACC Retail Solution Help</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+    }
+    a { color: var(--cp-link); }
+    code, pre { font-family: Consolas, "Courier New", Courier, monospace; }
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px;
+      background: var(--cp-bg-elevated);
+      border-right: 1px solid var(--cp-border);
+      overflow: auto;
+    }
+    main { padding: 32px; max-width: 1180px; }
+    .brand {
+      font-size: 14px;
+      color: var(--cp-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 36px; line-height: 1.1; margin: 0 0 16px; }
+    h2 { font-size: 24px; margin: 36px 0 12px; }
+    h3 { font-size: 18px; margin: 24px 0 8px; }
+    p { margin: 0 0 12px; }
+    .lead { font-size: 18px; color: var(--cp-text-muted); max-width: 860px; }
+    .nav-list { list-style: none; padding: 0; margin: 24px 0; }
+    .nav-list li { margin: 8px 0; }
+    .nav-list a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 0.625rem;
+      color: var(--cp-text);
+      text-decoration: none;
+    }
+    .nav-list a:hover { background: var(--cp-accent-soft); color: var(--cp-accent); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 6px 10px;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: 13px;
+      margin: 4px 4px 4px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+    .card {
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+      padding: 18px;
+    }
+    .card h3 { margin-top: 0; }
+    .callout {
+      border-left: 4px solid var(--cp-accent);
+      background: var(--cp-accent-soft);
+      border-radius: 0.625rem;
+      padding: 14px 16px;
+      margin: 18px 0;
+    }
+    .warning { border-left-color: var(--cp-warning); }
+    .success { border-left-color: var(--cp-success); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 12px;
+      border-bottom: 1px solid var(--cp-border);
+    }
+    th { background: var(--cp-surface-soft); color: var(--cp-text); }
+    tr:last-child td { border-bottom: 0; }
+    pre {
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 14px;
+      overflow: auto;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .num {
+      width: 32px;
+      height: 32px;
+      border-radius: 0.625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .footer {
+      margin-top: 48px;
+      color: var(--cp-text-muted);
+      border-top: 1px solid var(--cp-border);
+      padding-top: 18px;
+      font-size: 13px;
+    }
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; }
+      main { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav>
+      <div class="brand">Azure FinOps MACC Retail Solution</div>
+      <strong>Help Center</strong>
+      <ul class="nav-list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#launcher">Use the PowerShell launcher</a></li>
+        <li><a href="#settings">Configure settings</a></li>
+        <li><a href="#outputs">Understand generated files</a></li>
+        <li><a href="#powerbi">Use the Power BI report</a></li>
+        <li><a href="#monthly">Monthly review workflow</a></li>
+        <li><a href="report-pages.html">Report page explanations</a> | <a href="technical-security.html">Technical and security guide</a> | <a href="faq.html">FAQ and troubleshooting</a></li>
+      </ul>
+      <div class="callout">
+        Start with the launcher, produce a successful run folder, then refresh the PBIP from the generated settings file.
+      </div>
+    </nav>
+    <main>
+      <section id="overview">
+        <div class="brand">User Guide</div>
+        <h1>Use the Azure FinOps MACC Retail Solution</h1>
+        <p class="lead">This help page explains how to run the PowerShell UI, generate cost and retail comparison files, and use the Power BI report pages for MACC commitment tracking, savings validation, exceptions, and audit evidence.</p>
+        <div>
+          <span class="pill">PowerShell launcher</span>
+          <span class="pill">Azure Cost Management</span>
+          <span class="pill">Azure Retail Prices</span>
+          <span class="pill">Power BI PBIP</span>
+          <span class="pill">MACC audit ledger</span>
+        </div>
+      </section>
+
+      <section id="launcher">
+        <h2>Use the PowerShell launcher</h2>
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <h3>Start the launcher</h3>
+            <p>Run the launcher from the solution folder:</p>
+            <pre>powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1</pre>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <h3>Choose the analysis purpose</h3>
+            <p><strong>Current view</strong> produces month-to-date and last-month analysis. <strong>Running history</strong> also updates durable history files such as <code>cost-retail-history.csv</code> and <code>macc-benefit-ledger.csv</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <h3>Load and select subscriptions</h3>
+            <p>Use <strong>Load from tenant</strong>, sign in with Azure CLI if prompted, then select the subscriptions to include. The export uses the signed-in identity's Cost Management and Reader permissions.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div>
+            <h3>Run the export</h3>
+            <p>Keep <strong>Run Cost Management export</strong> and <strong>Retail Prices lookup</strong> enabled for the full report. The launcher opens a run-specific PowerShell window and writes a transcript log in the run folder.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings">
+        <h2>Configure settings</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Local tab</h3>
+            <p><strong>Local output root</strong> is where timestamped run folders are created. <strong>History root</strong> is the durable folder used across runs for history and ledger files.</p>
+          </div>
+          <div class="card">
+            <h3>Agreement tab</h3>
+            <p>Enter agreement ID, customer name, agreement dates, commitment amount, currency, and pacing thresholds. These values drive MACC burn-down and pacing outputs.</p>
+          </div>
+          <div class="card">
+            <h3>Cloud tabs</h3>
+            <p>Azure Blob and ADLS Gen2 upload the local run folder after export. SharePoint mode captures the target URL for Power BI, but files must be copied or synced to that location.</p>
+          </div>
+          <div class="card">
+            <h3>Settings tab</h3>
+            <p>Save settings to JSON to reuse tenant, subscription selections, output roots, cloud destinations, and agreement metadata.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="outputs">
+        <h2>Understand generated files</h2>
+        <table>
+          <thead><tr><th>File group</th><th>Examples</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Cost export</td><td><code>mtd-cost-*.csv</code>, <code>last-month-cost-*.csv</code></td><td>Raw and normalized Cost Management output.</td></tr>
+            <tr><td>Retail comparison</td><td><code>*-retail-join*.csv</code></td><td>Cost rows enriched with Azure Retail Prices matches.</td></tr>
+            <tr><td>History</td><td><code>cost-retail-history.csv</code>, <code>macc-benefit-ledger.csv</code></td><td>Durable cross-run monthly trend and benefit ledger data.</td></tr>
+            <tr><td>Audit evidence</td><td><code>agreement-price-audit.csv</code>, <code>retail-price-snapshot.csv</code>, <code>export-run-manifest.csv</code></td><td>Evidence for how savings estimates were calculated and when the run occurred.</td></tr>
+            <tr><td>Review templates</td><td><code>retail-match-exceptions.csv</code>, <code>billing-reconciliation.csv</code>, <code>ownership-mapping.csv</code></td><td>Customer-maintained review, reconciliation, and accountability inputs.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          If a run fails before data files are written, Power BI may load empty header-only files. Rerun the export successfully, then point Power BI to the completed run folder.
+        </div>
+      </section>
+
+      <section id="powerbi">
+        <h2>Use the Power BI report</h2>
+        <p>Open <code>powerbi\Cost-Management.pbip</code>. In Power BI Desktop, update parameters from the run folder's <code>powerbi-storage-settings.json</code>, then refresh.</p>
+        <table>
+          <thead><tr><th>Report page</th><th>Use it for</th></tr></thead>
+          <tbody>
+            <tr><td>MACC Retail Overview</td><td>Current actual cost versus public retail equivalent and savings summary.</td></tr>
+            <tr><td>MACC Commitment Overview</td><td>Agreement health, utilization, remaining commitment, expected burn, and pacing status.</td></tr>
+            <tr><td>MACC Benefit Ledger</td><td>Long-term actual cost, retail equivalent, estimated savings, eligibility buckets, and match coverage.</td></tr>
+            <tr><td>Agreement Price Audit</td><td>Row-level evidence for retail price matching and savings calculations.</td></tr>
+            <tr><td>Coverage and Exceptions</td><td>Unmatched rows, multiple-candidate rows, eligibility review, and data quality metrics.</td></tr>
+            <tr><td>Billing and Ownership</td><td>Run manifest, invoice reconciliation, and team/application ownership mapping.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="monthly">
+        <h2>Monthly review workflow</h2>
+        <div class="grid">
+          <div class="card"><h3>1. Run history mode</h3><p>Run after monthly billing data is stable. Use the same history root across runs.</p></div>
+          <div class="card"><h3>2. Refresh Power BI</h3><p>Apply the generated parameter values and refresh the PBIP.</p></div>
+          <div class="card"><h3>3. Review commitment</h3><p>Check utilization, remaining commitment, expected burn, and required monthly run rate.</p></div>
+          <div class="card"><h3>4. Validate evidence</h3><p>Review price audit and exceptions before sharing customer-facing savings claims.</p></div>
+          <div class="card"><h3>5. Reconcile billing</h3><p>Fill invoice totals in <code>billing-reconciliation.csv</code> and document variance explanations.</p></div>
+          <div class="card"><h3>6. Assign ownership</h3><p>Maintain <code>ownership-mapping.csv</code> for business unit, application, owner, and cost center accountability.</p></div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <p>Related help: <a href="report-pages.html">Report page explanations</a> | <a href="technical-security.html">Technical and security guide</a> | <a href="faq.html">FAQ and troubleshooting</a>. This file is customer-facing documentation and can be included in distribution releases.</p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

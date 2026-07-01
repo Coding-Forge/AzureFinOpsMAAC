@@ -4,10 +4,10 @@
   "position": {
     "x": 40,
     "y": 590,
-    "z": 2002,
+    "z": 5000,
     "height": 450,
     "width": 1840,
-    "tabOrder": 2002
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "decompositionTreeVisual",

@@ -1,0 +1,157 @@
+table MaccAgreementStatus
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111102
+
+	column AgreementId
+		dataType: string
+		lineageTag: e2167a5d-47c8-4eec-aca7-c8aba7f774aa
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column CustomerName
+		dataType: string
+		lineageTag: 164414d6-0916-4aa7-9dfc-7d7dba27f4b1
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+	column AgreementStartDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 8e188dcb-b197-4855-86b6-3df62fd9de19
+		summarizeBy: none
+		sourceColumn: AgreementStartDate
+
+		variation Variation
+			isDefault
+			relationship: 980d3de5-d54d-4367-b2a1-8228b9b94de2
+			defaultHierarchy: LocalDateTable_a8ba2e7a-cd17-491c-80b4-585317ca92ca.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AgreementEndDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: d4177220-05bf-478c-96af-5466f9c0490d
+		summarizeBy: none
+		sourceColumn: AgreementEndDate
+
+		variation Variation
+			isDefault
+			relationship: 5148782c-e115-4617-a350-76927ecccd9b
+			defaultHierarchy: LocalDateTable_d2db135e-79a4-46cb-bb5b-6745a4296321.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CommitmentAmount
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 2326e528-90ef-45bd-a5f5-f4bc0d8d2bcf
+		summarizeBy: sum
+		sourceColumn: CommitmentAmount
+
+	column CommitmentCurrency
+		dataType: string
+		lineageTag: c0a8866a-1967-4210-a392-98543e1294cc
+		summarizeBy: none
+		sourceColumn: CommitmentCurrency
+
+	column AsOfDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: d389ad9a-478b-4b8e-8fd0-b6bdd9479a12
+		summarizeBy: none
+		sourceColumn: AsOfDate
+
+		variation Variation
+			isDefault
+			relationship: fe5baa46-dac2-41d7-9301-42b1e9b2fce4
+			defaultHierarchy: LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column EligibleSpendToDate
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8d41f58f-825a-4da2-9fdc-d8e7f1ad0e02
+		summarizeBy: sum
+		sourceColumn: EligibleSpendToDate
+
+	column RemainingCommitment
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b6637acf-1377-44c4-8aee-210089b70243
+		summarizeBy: sum
+		sourceColumn: RemainingCommitment
+
+	column CommitmentUtilizationPercent
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ffc42592-f572-4f29-a83e-76aad18098b2
+		summarizeBy: sum
+		sourceColumn: CommitmentUtilizationPercent
+
+	column ExpectedBurnToDate
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 9f8f9651-3aa6-45a5-8d97-eb8b6445e6df
+		summarizeBy: sum
+		sourceColumn: ExpectedBurnToDate
+
+	column BurnVariance
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1818a42f-f62b-42f6-846d-4f267c7abdfd
+		summarizeBy: sum
+		sourceColumn: BurnVariance
+
+	column PacingVariancePercent
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4bdf5add-3e9b-4203-b105-c62f60ee5e0b
+		summarizeBy: sum
+		sourceColumn: PacingVariancePercent
+
+	column RequiredMonthlyRunRate
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a76e0485-4cd5-49df-8c0d-628986cd57c6
+		summarizeBy: sum
+		sourceColumn: RequiredMonthlyRunRate
+
+	column PacingStatus
+		dataType: string
+		lineageTag: 0df64fb2-810c-48e4-9f6b-c4273daa1d3a
+		summarizeBy: none
+		sourceColumn: PacingStatus
+
+	column PacingWarningPercent
+		dataType: double
+		lineageTag: c19830c3-7f88-4c36-94ae-e6f401160fe8
+		summarizeBy: sum
+		sourceColumn: PacingWarningPercent
+
+	column PacingCriticalPercent
+		dataType: double
+		lineageTag: c4b82145-5541-4122-9eb5-75a95bbf801e
+		summarizeBy: sum
+		sourceColumn: PacingCriticalPercent
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 39e0eb32-7a7a-462a-879e-5d7985c5e1cd
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	partition MaccAgreementStatus = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("macc-agreement-status.csv", 18),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"CustomerName", type text}, {"AgreementStartDate", type date}, {"AgreementEndDate", type date}, {"CommitmentAmount", type number}, {"CommitmentCurrency", type text}, {"AsOfDate", type date}, {"EligibleSpendToDate", type number}, {"RemainingCommitment", type number}, {"CommitmentUtilizationPercent", type number}, {"ExpectedBurnToDate", type number}, {"BurnVariance", type number}, {"PacingVariancePercent", type number}, {"RequiredMonthlyRunRate", type number}, {"PacingStatus", type text}, {"PacingWarningPercent", type number}, {"PacingCriticalPercent", type number}, {"CalculationVersion", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

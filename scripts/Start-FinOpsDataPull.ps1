@@ -18,6 +18,8 @@ Add-Type -AssemblyName System.Drawing
 
 $script:SolutionRoot = Split-Path -Parent $PSScriptRoot
 $script:DefaultOutputRoot = Join-Path $PSScriptRoot "exports"
+$script:DefaultLauncherSettingsPath = Join-Path $script:DefaultOutputRoot "finops-launcher-settings.json"
+$script:LauncherSettingsPath = $script:DefaultLauncherSettingsPath
 
 function New-Label {
     param(
@@ -143,7 +145,22 @@ function ConvertTo-PowerShellLiteral {
     return "'" + ($Value -replace "'", "''") + "'"
 }
 
+function Set-TextFileUtf8NoBom {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [AllowNull()]
+        [string]$Value
+    )
+
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    [System.IO.File]::WriteAllText($Path, $Value, $utf8NoBom)
+}
+
 function Show-AnalysisPurposeDialog {
+    param([ValidateSet("Current", "History")][string]$CurrentMode = "Current")
+
     $purposeForm = New-Object System.Windows.Forms.Form
     $purposeForm.Text = "Choose analysis purpose"
     $purposeForm.Size = New-Object System.Drawing.Size(650, 320)
@@ -160,7 +177,7 @@ function Show-AnalysisPurposeDialog {
     $currentRadio.Text = "Current view - analyze month-to-date and last month only"
     $currentRadio.Location = New-Object System.Drawing.Point(35, 65)
     $currentRadio.Size = New-Object System.Drawing.Size(560, 24)
-    $currentRadio.Checked = $true
+    $currentRadio.Checked = ($CurrentMode -ne "History")
     $purposeForm.Controls.Add($currentRadio)
 
     $currentDescription = New-Label "Best for a point-in-time review. Each run creates a new run folder, and Power BI reads the current MTD/last-month files." 58 92 540 44
@@ -170,6 +187,7 @@ function Show-AnalysisPurposeDialog {
     $historyRadio.Text = "Running history - build a MACC savings history for Power BI"
     $historyRadio.Location = New-Object System.Drawing.Point(35, 145)
     $historyRadio.Size = New-Object System.Drawing.Size(560, 24)
+    $historyRadio.Checked = ($CurrentMode -eq "History")
     $purposeForm.Controls.Add($historyRadio)
 
     $historyDescription = New-Label "Best for monthly operations. The launcher maintains cost-retail-history.csv so Power BI can trend actual cost, retail equivalent, and estimated MACC savings over time." 58 172 540 48
@@ -200,6 +218,72 @@ function Show-AnalysisPurposeDialog {
     }
 
     return "Current"
+}
+
+function Get-LauncherSettings {
+    if ($script:LauncherSettingsPath -eq $script:DefaultLauncherSettingsPath -and (Test-Path $script:DefaultLauncherSettingsPath)) {
+        try {
+            $defaultSettings = Get-Content -Path $script:DefaultLauncherSettingsPath -Raw | ConvertFrom-Json
+            if ($defaultSettings.SettingsFilePath -and (Test-Path ([string]$defaultSettings.SettingsFilePath))) {
+                $script:LauncherSettingsPath = [string]$defaultSettings.SettingsFilePath
+            }
+        }
+        catch {
+            Write-Warning "Could not read default launcher settings pointer from $script:DefaultLauncherSettingsPath."
+        }
+    }
+
+    if (-not (Test-Path $script:LauncherSettingsPath)) {
+        return [pscustomobject]@{
+            AnalysisMode = $null
+            SettingsFilePath = $script:LauncherSettingsPath
+        }
+    }
+
+    try {
+        $settings = Get-Content -Path $script:LauncherSettingsPath -Raw | ConvertFrom-Json
+        if (-not $settings.PSObject.Properties["SettingsFilePath"]) {
+            $settings | Add-Member -NotePropertyName SettingsFilePath -NotePropertyValue $script:LauncherSettingsPath -Force
+        }
+        return $settings
+    }
+    catch {
+        Write-Warning "Could not read launcher settings from $script:LauncherSettingsPath. The analysis purpose will be requested again."
+    }
+
+    return [pscustomobject]@{
+        AnalysisMode = $null
+        SettingsFilePath = $script:LauncherSettingsPath
+    }
+}
+
+function Save-LauncherSettings {
+    param([hashtable]$Updates)
+
+    New-Item -ItemType Directory -Path (Split-Path -Parent $script:LauncherSettingsPath) -Force | Out-Null
+    $settings = Get-LauncherSettings
+    $merged = [ordered]@{}
+    foreach ($property in $settings.PSObject.Properties) {
+        $merged[$property.Name] = $property.Value
+    }
+
+    if ($Updates) {
+        foreach ($key in $Updates.Keys) {
+            $merged[$key] = $Updates[$key]
+        }
+    }
+
+    $merged["SettingsFilePath"] = $script:LauncherSettingsPath
+    $merged["UpdatedUtc"] = (Get-Date).ToUniversalTime().ToString("o")
+    $merged | ConvertTo-Json -Depth 8 | Set-Content -Path $script:LauncherSettingsPath -Encoding UTF8
+
+    if ($script:LauncherSettingsPath -ne $script:DefaultLauncherSettingsPath) {
+        New-Item -ItemType Directory -Path (Split-Path -Parent $script:DefaultLauncherSettingsPath) -Force | Out-Null
+        [ordered]@{
+            SettingsFilePath = $script:LauncherSettingsPath
+            UpdatedUtc = (Get-Date).ToUniversalTime().ToString("o")
+        } | ConvertTo-Json -Depth 4 | Set-Content -Path $script:DefaultLauncherSettingsPath -Encoding UTF8
+    }
 }
 
 function Update-PathFromRegistry {
@@ -287,7 +371,12 @@ function New-RunScript {
 
     $runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $runRoot = Join-Path $Config.OutputRoot "run-$runStamp"
-    $historyRoot = Join-Path $Config.OutputRoot "history"
+    $historyRoot = if ([string]::IsNullOrWhiteSpace([string]$Config.HistoryRoot)) {
+        Join-Path $Config.OutputRoot "history"
+    }
+    else {
+        [string]$Config.HistoryRoot
+    }
     $historyPath = Join-Path $historyRoot "cost-retail-history.csv"
     New-Item -ItemType Directory -Path $runRoot -Force | Out-Null
 
@@ -295,6 +384,7 @@ function New-RunScript {
         AnalysisMode = $Config.AnalysisMode
         StorageLocation = $Config.StorageLocation
         LocalDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $runRoot
+        HistoryDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $historyRoot
         BlobDataRoot = if ($Config.StorageLocation -eq "AzureBlob") {
             ConvertTo-BaseUrl -StorageLocation "AzureBlob" -StorageAccount $Config.StorageAccount -ContainerOrFileSystem $Config.ContainerOrFileSystem -Prefix $Config.Prefix
         }
@@ -315,6 +405,14 @@ function New-RunScript {
         }
         OutputFolder = $runRoot
         HistoryFile = $historyPath
+        AgreementId = $Config.AgreementId
+        CustomerName = $Config.CustomerName
+        AgreementStartDate = $Config.AgreementStartDate.ToString("yyyy-MM-dd")
+        AgreementEndDate = $Config.AgreementEndDate.ToString("yyyy-MM-dd")
+        CommitmentAmount = $Config.CommitmentAmount
+        CommitmentCurrency = $Config.CommitmentCurrency
+        PacingWarningPercent = $Config.PacingWarningPercent
+        PacingCriticalPercent = $Config.PacingCriticalPercent
         CreatedUtc = (Get-Date).ToUniversalTime().ToString("o")
     }
 
@@ -336,6 +434,15 @@ function New-RunScript {
     $asOfDateLiteral = ConvertTo-PowerShellLiteral $Config.AsOfDate.ToString("yyyy-MM-dd")
     $analysisModeLiteral = ConvertTo-PowerShellLiteral $Config.AnalysisMode
     $historyPathLiteral = ConvertTo-PowerShellLiteral $historyPath
+    $historyRootLiteral = ConvertTo-PowerShellLiteral $historyRoot
+    $agreementIdLiteral = ConvertTo-PowerShellLiteral $Config.AgreementId
+    $customerNameLiteral = ConvertTo-PowerShellLiteral $Config.CustomerName
+    $agreementStartDateLiteral = ConvertTo-PowerShellLiteral $Config.AgreementStartDate.ToString("yyyy-MM-dd")
+    $agreementEndDateLiteral = ConvertTo-PowerShellLiteral $Config.AgreementEndDate.ToString("yyyy-MM-dd")
+    $commitmentAmountLiteral = ConvertTo-PowerShellLiteral $Config.CommitmentAmount
+    $commitmentCurrencyLiteral = ConvertTo-PowerShellLiteral $Config.CommitmentCurrency
+    $pacingWarningLiteral = ConvertTo-PowerShellLiteral $Config.PacingWarningPercent
+    $pacingCriticalLiteral = ConvertTo-PowerShellLiteral $Config.PacingCriticalPercent
 
     $installAzureCli = if ($Config.InstallAzureCli) { '$true' } else { '$false' }
     $skipRetail = if ($Config.SkipRetailPriceLookup) { '$true' } else { '$false' }
@@ -360,7 +467,16 @@ function New-RunScript {
 `$containerOrFileSystem = $containerLiteral
 `$prefix = $prefixLiteral
 `$historyPath = $historyPathLiteral
+`$historyRoot = $historyRootLiteral
 `$settingsPath = $settingsPathLiteral
+`$agreementId = $agreementIdLiteral
+`$customerName = $customerNameLiteral
+`$agreementStartDate = [datetime]$agreementStartDateLiteral
+`$agreementEndDate = [datetime]$agreementEndDateLiteral
+`$commitmentAmount = [decimal]$commitmentAmountLiteral
+`$commitmentCurrency = $commitmentCurrencyLiteral
+`$pacingWarningPercent = [decimal]$pacingWarningLiteral
+`$pacingCriticalPercent = [decimal]$pacingCriticalLiteral
 
 function ConvertTo-TmdlStringLiteral {
     param([AllowNull()][string]`$Value)
@@ -413,10 +529,12 @@ function Update-PowerBiProjectParameters {
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "AnalysisMode" -Value `$settings.AnalysisMode
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "StorageLocation" -Value `$settings.StorageLocation
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "LocalDataRoot" -Value `$settings.LocalDataRoot
+    `$content = Set-TmdlExpressionDefault -Content `$content -Name "HistoryDataRoot" -Value `$settings.HistoryDataRoot
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "BlobDataRoot" -Value `$settings.BlobDataRoot
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "AdlsDataRoot" -Value `$settings.AdlsDataRoot
     `$content = Set-TmdlExpressionDefault -Content `$content -Name "SharePointDataRoot" -Value `$settings.SharePointDataRoot
-    Set-Content -Path `$expressionsPath -Value `$content -Encoding UTF8
+    `$utf8NoBom = [System.Text.UTF8Encoding]::new(`$false)
+    [System.IO.File]::WriteAllText(`$expressionsPath, `$content, `$utf8NoBom)
     Write-Host "Updated Power BI parameter defaults: `$expressionsPath"
 }
 
@@ -561,6 +679,32 @@ try {
         Update-FinOpsCostHistory -OutputRoot `$outputRoot -HistoryPath `$historyPath
     }
 
+    if (`$runCostAnalysis -and -not `$skipRetailPriceLookup) {
+        `$auditArgs = @{
+            OutputRoot = `$outputRoot
+            HistoryRoot = `$historyRoot
+            AnalysisMode = `$analysisMode
+            TenantId = `$tenantId
+            SubscriptionIds = `$subscriptionIds
+            AsOfDate = `$asOfDate
+            StorageLocation = `$storageLocation
+            SettingsPath = `$settingsPath
+            AgreementId = `$agreementId
+            CustomerName = `$customerName
+            AgreementStartDate = `$agreementStartDate
+            AgreementEndDate = `$agreementEndDate
+            CommitmentAmount = `$commitmentAmount
+            CommitmentCurrency = `$commitmentCurrency
+            PacingWarningPercent = `$pacingWarningPercent
+            PacingCriticalPercent = `$pacingCriticalPercent
+        }
+
+        & (Join-Path `$scriptRoot "New-FinOpsAuditArtifacts.ps1") @auditArgs
+    }
+    elseif (`$runCostAnalysis) {
+        Write-Warning "MACC audit artifacts require Retail Prices enrichment. Clear 'Skip Retail Prices lookup' to generate agreement, ledger, exception, and price evidence files."
+    }
+
     if (`$storageLocation -eq "AzureBlob") {
         Write-Host "Uploading output to Azure Blob Storage..."
         `$uploadArgs = @(
@@ -637,6 +781,14 @@ $tabs.TabPages.Add($adlsTab)
 $sharePointTab = New-Object System.Windows.Forms.TabPage
 $sharePointTab.Text = "SharePoint"
 $tabs.TabPages.Add($sharePointTab)
+
+$agreementTab = New-Object System.Windows.Forms.TabPage
+$agreementTab.Text = "Agreement"
+$tabs.TabPages.Add($agreementTab)
+
+$settingsTab = New-Object System.Windows.Forms.TabPage
+$settingsTab.Text = "Settings"
+$tabs.TabPages.Add($settingsTab)
 
 $instructionsTab = New-Object System.Windows.Forms.TabPage
 $instructionsTab.Text = "Instructions"
@@ -718,6 +870,24 @@ $openOutputButton.Location = New-Object System.Drawing.Point(165, 555)
 $openOutputButton.Size = New-Object System.Drawing.Size(140, 34)
 $runTab.Controls.Add($openOutputButton)
 
+$changePurposeButton = New-Object System.Windows.Forms.Button
+$changePurposeButton.Text = "Change purpose"
+$changePurposeButton.Location = New-Object System.Drawing.Point(320, 555)
+$changePurposeButton.Size = New-Object System.Drawing.Size(145, 34)
+$runTab.Controls.Add($changePurposeButton)
+
+$saveSettingsButton = New-Object System.Windows.Forms.Button
+$saveSettingsButton.Text = "Save settings"
+$saveSettingsButton.Location = New-Object System.Drawing.Point(480, 555)
+$saveSettingsButton.Size = New-Object System.Drawing.Size(130, 34)
+$runTab.Controls.Add($saveSettingsButton)
+
+$loadSettingsButton = New-Object System.Windows.Forms.Button
+$loadSettingsButton.Text = "Load settings"
+$loadSettingsButton.Location = New-Object System.Drawing.Point(625, 555)
+$loadSettingsButton.Size = New-Object System.Drawing.Size(130, 34)
+$runTab.Controls.Add($loadSettingsButton)
+
 $localTab.Controls.Add((New-Label "Local output root" 20 30))
 $localOutputTextBox = New-TextBox 190 27 560 $script:DefaultOutputRoot
 $browseButton = New-Object System.Windows.Forms.Button
@@ -726,8 +896,16 @@ $browseButton.Location = New-Object System.Drawing.Point(765, 25)
 $browseButton.Size = New-Object System.Drawing.Size(80, 28)
 $localTab.Controls.AddRange(@($localOutputTextBox, $browseButton))
 
+$localTab.Controls.Add((New-Label "History root" 20 70))
+$historyRootTextBox = New-TextBox 190 67 560 (Join-Path $script:DefaultOutputRoot "history")
+$historyBrowseButton = New-Object System.Windows.Forms.Button
+$historyBrowseButton.Text = "Browse"
+$historyBrowseButton.Location = New-Object System.Drawing.Point(765, 65)
+$historyBrowseButton.Size = New-Object System.Drawing.Size(80, 28)
+$localTab.Controls.AddRange(@($historyRootTextBox, $historyBrowseButton))
+
 $localInfo = New-Object System.Windows.Forms.TextBox
-$localInfo.Location = New-Object System.Drawing.Point(20, 80)
+$localInfo.Location = New-Object System.Drawing.Point(20, 115)
 $localInfo.Size = New-Object System.Drawing.Size(825, 220)
 $localInfo.Multiline = $true
 $localInfo.ReadOnly = $true
@@ -735,6 +913,8 @@ $localInfo.Text = @"
 Local mode writes directly under the selected output root.
 
 Each run creates a timestamped run-* folder. Use that folder as the Power BI LocalDataRoot parameter value. The launcher also writes powerbi-storage-settings.json in the run folder with the exact parameter values.
+
+History root stores durable files such as cost-retail-history.csv and macc-benefit-ledger.csv across runs. If settings are loaded, the saved history location is reused.
 "@
 $localTab.Controls.Add($localInfo)
 
@@ -811,6 +991,96 @@ Power BI will prompt for organizational account credentials for the SharePoint H
 "@
 $sharePointTab.Controls.Add($sharePointInfo)
 
+$agreementTab.Controls.Add((New-Label "Agreement ID" 20 30 160))
+$agreementIdTextBox = New-TextBox 220 27 260 "MACC-Agreement"
+$agreementTab.Controls.Add($agreementIdTextBox)
+
+$agreementTab.Controls.Add((New-Label "Customer name" 20 70 160))
+$customerNameTextBox = New-TextBox 220 67 420
+$agreementTab.Controls.Add($customerNameTextBox)
+
+$agreementTab.Controls.Add((New-Label "Agreement start" 20 110 160))
+$agreementStartDatePicker = New-Object System.Windows.Forms.DateTimePicker
+$agreementStartDatePicker.Format = [System.Windows.Forms.DateTimePickerFormat]::Short
+$agreementStartDatePicker.Location = New-Object System.Drawing.Point(220, 106)
+$agreementStartDatePicker.Size = New-Object System.Drawing.Size(180, 24)
+$agreementStartDatePicker.Value = (Get-Date -Day 1)
+$agreementTab.Controls.Add($agreementStartDatePicker)
+
+$agreementTab.Controls.Add((New-Label "Agreement end" 430 110 130))
+$agreementEndDatePicker = New-Object System.Windows.Forms.DateTimePicker
+$agreementEndDatePicker.Format = [System.Windows.Forms.DateTimePickerFormat]::Short
+$agreementEndDatePicker.Location = New-Object System.Drawing.Point(570, 106)
+$agreementEndDatePicker.Size = New-Object System.Drawing.Size(180, 24)
+$agreementEndDatePicker.Value = (Get-Date -Day 1).AddYears(1).AddDays(-1)
+$agreementTab.Controls.Add($agreementEndDatePicker)
+
+$agreementTab.Controls.Add((New-Label "Commitment amount" 20 150 170))
+$commitmentAmountTextBox = New-TextBox 220 147 180 "0"
+$agreementTab.Controls.Add($commitmentAmountTextBox)
+
+$agreementTab.Controls.Add((New-Label "Currency" 430 150 120))
+$commitmentCurrencyTextBox = New-TextBox 570 147 100 "USD"
+$agreementTab.Controls.Add($commitmentCurrencyTextBox)
+
+$agreementTab.Controls.Add((New-Label "Watch threshold %" 20 190 170))
+$pacingWarningTextBox = New-TextBox 220 187 100 "10"
+$agreementTab.Controls.Add($pacingWarningTextBox)
+
+$agreementTab.Controls.Add((New-Label "At-risk threshold %" 430 190 140))
+$pacingCriticalTextBox = New-TextBox 570 187 100 "20"
+$agreementTab.Controls.Add($pacingCriticalTextBox)
+
+$agreementInfo = New-Object System.Windows.Forms.TextBox
+$agreementInfo.Location = New-Object System.Drawing.Point(20, 235)
+$agreementInfo.Size = New-Object System.Drawing.Size(825, 260)
+$agreementInfo.Multiline = $true
+$agreementInfo.ReadOnly = $true
+$agreementInfo.ScrollBars = "Vertical"
+$agreementInfo.Text = @"
+Agreement settings drive MACC burn-down, pacing, and audit outputs.
+
+Each run writes agreement-config.csv, macc-agreement-status.csv, macc-benefit-ledger.csv, agreement-price-audit.csv, retail-match-exceptions.csv, retail-price-snapshot.csv, data-quality-snapshot.csv, export-run-manifest.csv/json, billing-reconciliation.csv, and ownership-mapping.csv.
+
+Use the commitment amount and dates from the customer's MACC agreement. The watch and at-risk thresholds compare eligible spend to expected burn as of the run date.
+
+Keep agreement metadata generic if the output will be shared broadly. Do not put secrets or tenant credentials in these fields.
+"@
+$agreementTab.Controls.Add($agreementInfo)
+
+$settingsTab.Controls.Add((New-Label "Settings JSON file" 20 30 170))
+$settingsPathTextBox = New-TextBox 190 27 560 $script:LauncherSettingsPath
+$settingsTab.Controls.Add($settingsPathTextBox)
+
+$browseSettingsButton = New-Object System.Windows.Forms.Button
+$browseSettingsButton.Text = "Browse"
+$browseSettingsButton.Location = New-Object System.Drawing.Point(765, 25)
+$browseSettingsButton.Size = New-Object System.Drawing.Size(80, 28)
+$settingsTab.Controls.Add($browseSettingsButton)
+
+$settingsInfo = New-Object System.Windows.Forms.TextBox
+$settingsInfo.Location = New-Object System.Drawing.Point(20, 80)
+$settingsInfo.Size = New-Object System.Drawing.Size(825, 260)
+$settingsInfo.Multiline = $true
+$settingsInfo.ReadOnly = $true
+$settingsInfo.Text = @"
+Choose where launcher settings are saved and loaded from.
+
+The settings JSON stores:
+- analysis purpose
+- tenant ID
+- selected subscription IDs
+- export options
+- output root
+- storage destination fields
+- agreement and MACC pacing fields
+
+Use Browse to pick an existing settings JSON or choose a new JSON file location. Save Settings and Load Settings on the Run export tab use this file.
+
+If you choose a custom settings file, the launcher stores a pointer in the default settings file so the same custom file is used next time.
+"@
+$settingsTab.Controls.Add($settingsInfo)
+
 $instructionsTextBox = New-Object System.Windows.Forms.TextBox
 $instructionsTextBox.Dock = [System.Windows.Forms.DockStyle]::Fill
 $instructionsTextBox.Multiline = $true
@@ -824,20 +1094,35 @@ Operating flow
 
 2. On Run export, enter an optional tenant ID, click Load from tenant, and check the subscriptions to include.
 
-3. Choose Local, AzureBlob, ADLSGen2, or SharePoint. Configure the matching tab before running.
+3. On Agreement, enter the customer's MACC agreement ID, term, commitment amount, currency, and pacing thresholds.
 
-4. Click Run export. A separate PowerShell window runs the data pull. Keep it open until it reports Done.
+4. Choose Local, AzureBlob, ADLSGen2, or SharePoint. Configure the matching tab before running.
 
-5. Open the generated powerbi-storage-settings.json from the run folder and copy the values into Power BI Desktop parameters:
+5. Click Run export. A separate PowerShell window runs the data pull. Keep it open until it reports Done.
+
+6. Open the generated powerbi-storage-settings.json from the run folder and copy the values into Power BI Desktop parameters:
    StorageLocation
    LocalDataRoot
+   HistoryDataRoot
    BlobDataRoot
    AdlsDataRoot
    SharePointDataRoot
 
-6. If SharePoint was selected, copy or sync the generated CSV files from the run folder to the configured SharePoint document library folder.
+7. If SharePoint was selected, copy or sync the generated CSV files from the run folder to the configured SharePoint document library folder.
 
-7. Refresh the PBIP model.
+8. Refresh the PBIP model.
+
+9. Review MACC audit files:
+   agreement-config.csv
+   macc-agreement-status.csv
+   macc-benefit-ledger.csv
+   agreement-price-audit.csv
+   retail-match-exceptions.csv
+   retail-price-snapshot.csv
+   data-quality-snapshot.csv
+   export-run-manifest.csv/json
+   billing-reconciliation.csv
+   ownership-mapping.csv
 
 Notes
 
@@ -853,7 +1138,50 @@ $browseButton.Add_Click({
     $dialog.SelectedPath = $localOutputTextBox.Text
     if ($dialog.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
         $localOutputTextBox.Text = $dialog.SelectedPath
+        if ([string]::IsNullOrWhiteSpace($historyRootTextBox.Text)) {
+            $historyRootTextBox.Text = Join-Path $dialog.SelectedPath "history"
+        }
     }
+})
+
+$historyBrowseButton.Add_Click({
+    $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+    $dialog.Description = "Choose durable history root"
+    $dialog.SelectedPath = $historyRootTextBox.Text
+    if ($dialog.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
+        $historyRootTextBox.Text = $dialog.SelectedPath
+    }
+})
+
+function Sync-LauncherSettingsPathFromForm {
+    if (-not [string]::IsNullOrWhiteSpace($settingsPathTextBox.Text)) {
+        $script:LauncherSettingsPath = $settingsPathTextBox.Text.Trim()
+    }
+}
+
+function Select-LauncherSettingsPath {
+    param([string]$Title = "Choose launcher settings JSON file")
+
+    $dialog = New-Object System.Windows.Forms.SaveFileDialog
+    $dialog.Title = $Title
+    $dialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
+    $dialog.FileName = Split-Path -Leaf $settingsPathTextBox.Text
+    $currentDirectory = Split-Path -Parent $settingsPathTextBox.Text
+    if (-not [string]::IsNullOrWhiteSpace($currentDirectory) -and (Test-Path $currentDirectory)) {
+        $dialog.InitialDirectory = $currentDirectory
+    }
+
+    if ($dialog.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
+        $settingsPathTextBox.Text = $dialog.FileName
+        Sync-LauncherSettingsPathFromForm
+        return $true
+    }
+
+    return $false
+}
+
+$browseSettingsButton.Add_Click({
+    [void](Select-LauncherSettingsPath)
 })
 
 $openOutputButton.Add_Click({
@@ -864,6 +1192,119 @@ $openOutputButton.Add_Click({
         [System.Windows.Forms.MessageBox]::Show("Output root does not exist yet: $($localOutputTextBox.Text)", "Output root", "OK", "Information") | Out-Null
     }
 })
+
+function Get-SelectedSubscriptionIds {
+    return @($subscriptionListBox.CheckedItems | ForEach-Object { $_.SubscriptionId })
+}
+
+function Set-CheckedSubscriptionsById {
+    param([string[]]$SubscriptionIds)
+
+    if (-not $SubscriptionIds) {
+        return
+    }
+
+    $selected = @{}
+    foreach ($id in $SubscriptionIds) {
+        if (-not [string]::IsNullOrWhiteSpace($id)) {
+            $selected[$id.Trim().ToLowerInvariant()] = $true
+        }
+    }
+
+    for ($i = 0; $i -lt $subscriptionListBox.Items.Count; $i++) {
+        $item = $subscriptionListBox.Items[$i]
+        $isChecked = $selected.ContainsKey(([string]$item.SubscriptionId).ToLowerInvariant())
+        $subscriptionListBox.SetItemChecked($i, $isChecked)
+    }
+}
+
+function Get-LauncherSettingsFromForm {
+    return @{
+        AnalysisMode = $script:AnalysisMode
+        TenantId = $tenantTextBox.Text.Trim()
+        SelectedSubscriptionIds = @(Get-SelectedSubscriptionIds)
+        AsOfDate = $asOfDatePicker.Value.ToString("yyyy-MM-dd")
+        RunCostAnalysis = $runCostCheckBox.Checked
+        RunResourceGroups = $runResourceGroupsCheckBox.Checked
+        InstallAzureCli = $installCliCheckBox.Checked
+        SkipRetailPriceLookup = $skipRetailCheckBox.Checked
+        StorageLocation = [string]$destinationComboBox.SelectedItem
+        LocalOutputRoot = $localOutputTextBox.Text.Trim()
+        HistoryRoot = $historyRootTextBox.Text.Trim()
+        BlobStorageAccount = $blobAccountTextBox.Text.Trim()
+        BlobContainer = $blobContainerTextBox.Text.Trim()
+        BlobPrefix = $blobPrefixTextBox.Text.Trim()
+        AdlsStorageAccount = $adlsAccountTextBox.Text.Trim()
+        AdlsFileSystem = $adlsFileSystemTextBox.Text.Trim()
+        AdlsPath = $adlsPrefixTextBox.Text.Trim()
+        SharePointDataRoot = $sharePointRootTextBox.Text.Trim()
+        AgreementId = $agreementIdTextBox.Text.Trim()
+        CustomerName = $customerNameTextBox.Text.Trim()
+        AgreementStartDate = $agreementStartDatePicker.Value.ToString("yyyy-MM-dd")
+        AgreementEndDate = $agreementEndDatePicker.Value.ToString("yyyy-MM-dd")
+        CommitmentAmount = $commitmentAmountTextBox.Text.Trim()
+        CommitmentCurrency = $commitmentCurrencyTextBox.Text.Trim()
+        PacingWarningPercent = $pacingWarningTextBox.Text.Trim()
+        PacingCriticalPercent = $pacingCriticalTextBox.Text.Trim()
+    }
+}
+
+function Apply-LauncherSettingsToForm {
+    param([Parameter(Mandatory)]$Settings)
+
+    if ($Settings.AnalysisMode -in @("Current", "History")) {
+        Set-AnalysisMode -AnalysisMode $Settings.AnalysisMode
+    }
+    if ($null -ne $Settings.TenantId) { $tenantTextBox.Text = [string]$Settings.TenantId }
+    if ($Settings.AsOfDate) {
+        $parsedDate = [datetime]::MinValue
+        if ([datetime]::TryParse([string]$Settings.AsOfDate, [ref]$parsedDate)) {
+            $asOfDatePicker.Value = $parsedDate
+        }
+    }
+    if ($null -ne $Settings.RunCostAnalysis) { $runCostCheckBox.Checked = [bool]$Settings.RunCostAnalysis }
+    if ($null -ne $Settings.RunResourceGroups) { $runResourceGroupsCheckBox.Checked = [bool]$Settings.RunResourceGroups }
+    if ($null -ne $Settings.InstallAzureCli) { $installCliCheckBox.Checked = [bool]$Settings.InstallAzureCli }
+    if ($null -ne $Settings.SkipRetailPriceLookup) { $skipRetailCheckBox.Checked = [bool]$Settings.SkipRetailPriceLookup }
+    if ($Settings.StorageLocation -in @("Local", "AzureBlob", "ADLSGen2", "SharePoint")) {
+        $destinationComboBox.SelectedItem = [string]$Settings.StorageLocation
+    }
+    if ($null -ne $Settings.LocalOutputRoot) { $localOutputTextBox.Text = [string]$Settings.LocalOutputRoot }
+    if ($null -ne $Settings.HistoryRoot) {
+        $historyRootTextBox.Text = [string]$Settings.HistoryRoot
+    }
+    elseif ($null -ne $Settings.LocalOutputRoot -and -not [string]::IsNullOrWhiteSpace([string]$Settings.LocalOutputRoot)) {
+        $historyRootTextBox.Text = Join-Path ([string]$Settings.LocalOutputRoot) "history"
+    }
+    if ($null -ne $Settings.BlobStorageAccount) { $blobAccountTextBox.Text = [string]$Settings.BlobStorageAccount }
+    if ($null -ne $Settings.BlobContainer) { $blobContainerTextBox.Text = [string]$Settings.BlobContainer }
+    if ($null -ne $Settings.BlobPrefix) { $blobPrefixTextBox.Text = [string]$Settings.BlobPrefix }
+    if ($null -ne $Settings.AdlsStorageAccount) { $adlsAccountTextBox.Text = [string]$Settings.AdlsStorageAccount }
+    if ($null -ne $Settings.AdlsFileSystem) { $adlsFileSystemTextBox.Text = [string]$Settings.AdlsFileSystem }
+    if ($null -ne $Settings.AdlsPath) { $adlsPrefixTextBox.Text = [string]$Settings.AdlsPath }
+    if ($null -ne $Settings.SharePointDataRoot) { $sharePointRootTextBox.Text = [string]$Settings.SharePointDataRoot }
+    if ($null -ne $Settings.AgreementId) { $agreementIdTextBox.Text = [string]$Settings.AgreementId }
+    if ($null -ne $Settings.CustomerName) { $customerNameTextBox.Text = [string]$Settings.CustomerName }
+    if ($Settings.AgreementStartDate) {
+        $parsedStartDate = [datetime]::MinValue
+        if ([datetime]::TryParse([string]$Settings.AgreementStartDate, [ref]$parsedStartDate)) {
+            $agreementStartDatePicker.Value = $parsedStartDate
+        }
+    }
+    if ($Settings.AgreementEndDate) {
+        $parsedEndDate = [datetime]::MinValue
+        if ([datetime]::TryParse([string]$Settings.AgreementEndDate, [ref]$parsedEndDate)) {
+            $agreementEndDatePicker.Value = $parsedEndDate
+        }
+    }
+    if ($null -ne $Settings.CommitmentAmount) { $commitmentAmountTextBox.Text = [string]$Settings.CommitmentAmount }
+    if ($null -ne $Settings.CommitmentCurrency) { $commitmentCurrencyTextBox.Text = [string]$Settings.CommitmentCurrency }
+    if ($null -ne $Settings.PacingWarningPercent) { $pacingWarningTextBox.Text = [string]$Settings.PacingWarningPercent }
+    if ($null -ne $Settings.PacingCriticalPercent) { $pacingCriticalTextBox.Text = [string]$Settings.PacingCriticalPercent }
+    if ($Settings.SelectedSubscriptionIds) {
+        Set-CheckedSubscriptionsById -SubscriptionIds @($Settings.SelectedSubscriptionIds)
+    }
+}
 
 $loadSubscriptionsButton.Add_Click({
     try {
@@ -888,11 +1329,43 @@ $loadSubscriptionsButton.Add_Click({
             [void]$subscriptionListBox.Items.Add($item, $true)
         }
 
+        $settings = Get-LauncherSettings
+        if ($settings.SelectedSubscriptionIds) {
+            Set-CheckedSubscriptionsById -SubscriptionIds @($settings.SelectedSubscriptionIds)
+        }
+
         $subscriptionStatusLabel.Text = "Loaded $($subscriptions.Count) enabled subscription(s)."
     }
     catch {
         $subscriptionStatusLabel.Text = "Subscription load failed."
         [System.Windows.Forms.MessageBox]::Show($_.Exception.Message, "Cannot load subscriptions", "OK", "Error") | Out-Null
+    }
+})
+
+$saveSettingsButton.Add_Click({
+    try {
+        if (-not (Select-LauncherSettingsPath -Title "Save launcher settings as")) {
+            return
+        }
+        Sync-LauncherSettingsPathFromForm
+        Save-LauncherSettings -Updates (Get-LauncherSettingsFromForm)
+        [System.Windows.Forms.MessageBox]::Show("Settings saved to $script:LauncherSettingsPath.", "Settings saved", "OK", "Information") | Out-Null
+    }
+    catch {
+        [System.Windows.Forms.MessageBox]::Show($_.Exception.Message, "Cannot save settings", "OK", "Error") | Out-Null
+    }
+})
+
+$loadSettingsButton.Add_Click({
+    try {
+        Sync-LauncherSettingsPathFromForm
+        $settings = Get-LauncherSettings
+        $settingsPathTextBox.Text = $script:LauncherSettingsPath
+        Apply-LauncherSettingsToForm -Settings $settings
+        [System.Windows.Forms.MessageBox]::Show("Settings loaded from $script:LauncherSettingsPath. Load subscriptions to reapply saved subscription checks.", "Settings loaded", "OK", "Information") | Out-Null
+    }
+    catch {
+        [System.Windows.Forms.MessageBox]::Show($_.Exception.Message, "Cannot load settings", "OK", "Error") | Out-Null
     }
 })
 
@@ -905,6 +1378,43 @@ $selectAllSubscriptionsButton.Add_Click({
 $clearSubscriptionsButton.Add_Click({
     for ($i = 0; $i -lt $subscriptionListBox.Items.Count; $i++) {
         $subscriptionListBox.SetItemChecked($i, $false)
+    }
+})
+
+function Set-AnalysisMode {
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet("Current", "History")]
+        [string]$AnalysisMode,
+
+        [switch]$Persist
+    )
+
+    $script:AnalysisMode = $AnalysisMode
+    $analysisPurposeText = if ($script:AnalysisMode -eq "History") {
+        "Running history - build cost-retail-history.csv for historical MACC savings analysis"
+    }
+    else {
+        "Current view - analyze month-to-date and last month only"
+    }
+
+    $form.Text = "Azure FinOps MACC Retail Data Pull - $($script:AnalysisMode)"
+    $summaryTextBox.Text = "Analysis purpose: $analysisPurposeText`r`n`r`nChoose export and storage options, then click Run. A PowerShell window opens to execute the export and upload steps."
+
+    if ($script:AnalysisMode -eq "History") {
+        $skipRetailCheckBox.Checked = $false
+    }
+
+    if ($Persist) {
+        Save-LauncherSettings -Updates @{ AnalysisMode = $script:AnalysisMode }
+    }
+}
+
+$changePurposeButton.Add_Click({
+    $selectedMode = Show-AnalysisPurposeDialog -CurrentMode $script:AnalysisMode
+    if ($selectedMode) {
+        Set-AnalysisMode -AnalysisMode $selectedMode -Persist
+        [System.Windows.Forms.MessageBox]::Show("Analysis purpose saved as '$selectedMode'. The startup question will stay hidden unless you use Change purpose again.", "Analysis purpose saved", "OK", "Information") | Out-Null
     }
 })
 
@@ -965,12 +1475,36 @@ $runButton.Add_Click({
             throw "Local output root is required because cloud destinations are staged locally first."
         }
 
+        if ([string]::IsNullOrWhiteSpace($historyRootTextBox.Text)) {
+            $historyRootTextBox.Text = Join-Path $localOutputTextBox.Text.Trim() "history"
+        }
+
+        $commitmentAmount = 0D
+        if (-not [decimal]::TryParse($commitmentAmountTextBox.Text.Trim(), [System.Globalization.NumberStyles]::Any, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$commitmentAmount)) {
+            throw "Commitment amount must be a number."
+        }
+
+        $pacingWarningPercent = 10D
+        if (-not [decimal]::TryParse($pacingWarningTextBox.Text.Trim(), [System.Globalization.NumberStyles]::Any, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$pacingWarningPercent)) {
+            throw "Watch threshold percent must be a number."
+        }
+
+        $pacingCriticalPercent = 20D
+        if (-not [decimal]::TryParse($pacingCriticalTextBox.Text.Trim(), [System.Globalization.NumberStyles]::Any, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$pacingCriticalPercent)) {
+            throw "At-risk threshold percent must be a number."
+        }
+
+        if ($agreementEndDatePicker.Value.Date -lt $agreementStartDatePicker.Value.Date) {
+            throw "Agreement end date must be on or after the agreement start date."
+        }
+
         $config = @{
             AnalysisMode = $script:AnalysisMode
             TenantId = $tenantTextBox.Text.Trim()
             SubscriptionIds = $subscriptionIds
             AsOfDate = $asOfDatePicker.Value
             OutputRoot = $localOutputTextBox.Text.Trim()
+            HistoryRoot = $historyRootTextBox.Text.Trim()
             RunCostAnalysis = $runCostCheckBox.Checked
             RunResourceGroups = $runResourceGroupsCheckBox.Checked
             InstallAzureCli = $installCliCheckBox.Checked
@@ -980,6 +1514,14 @@ $runButton.Add_Click({
             ContainerOrFileSystem = $containerOrFileSystem
             Prefix = $prefix
             SharePointDataRoot = $sharePointDataRoot
+            AgreementId = if ([string]::IsNullOrWhiteSpace($agreementIdTextBox.Text)) { "MACC-Agreement" } else { $agreementIdTextBox.Text.Trim() }
+            CustomerName = $customerNameTextBox.Text.Trim()
+            AgreementStartDate = $agreementStartDatePicker.Value.Date
+            AgreementEndDate = $agreementEndDatePicker.Value.Date
+            CommitmentAmount = $commitmentAmount.ToString([System.Globalization.CultureInfo]::InvariantCulture)
+            CommitmentCurrency = if ([string]::IsNullOrWhiteSpace($commitmentCurrencyTextBox.Text)) { "USD" } else { $commitmentCurrencyTextBox.Text.Trim().ToUpperInvariant() }
+            PacingWarningPercent = $pacingWarningPercent.ToString([System.Globalization.CultureInfo]::InvariantCulture)
+            PacingCriticalPercent = $pacingCriticalPercent.ToString([System.Globalization.CultureInfo]::InvariantCulture)
         }
 
         $run = New-RunScript -Config $config
@@ -1008,23 +1550,18 @@ A PowerShell execution window is opening now.
     }
 })
 
-$script:AnalysisMode = Show-AnalysisPurposeDialog
-if (-not $script:AnalysisMode) {
-    return
-}
-
-$analysisPurposeText = if ($script:AnalysisMode -eq "History") {
-    "Running history - build cost-retail-history.csv for historical MACC savings analysis"
+$launcherSettings = Get-LauncherSettings
+$settingsPathTextBox.Text = $script:LauncherSettingsPath
+if ($launcherSettings.AnalysisMode -in @("Current", "History")) {
+    Apply-LauncherSettingsToForm -Settings $launcherSettings
 }
 else {
-    "Current view - analyze month-to-date and last month only"
-}
+    $selectedMode = Show-AnalysisPurposeDialog
+    if (-not $selectedMode) {
+        return
+    }
 
-$form.Text = "Azure FinOps MACC Retail Data Pull - $($script:AnalysisMode)"
-$summaryTextBox.Text = "Analysis purpose: $analysisPurposeText`r`n`r`nChoose export and storage options, then click Run. A PowerShell window opens to execute the export and upload steps."
-
-if ($script:AnalysisMode -eq "History") {
-    $skipRetailCheckBox.Checked = $false
+    Set-AnalysisMode -AnalysisMode $selectedMode -Persist
 }
 
 [void]$form.ShowDialog()

@@ -233,6 +233,22 @@ function Get-ArmRegionNameLookup {
     return $lookup
 }
 
+function Convert-CostManagementLocationToArmRegionName {
+    param([string]$ResourceLocation)
+
+    if ([string]::IsNullOrWhiteSpace($ResourceLocation)) {
+        return $ResourceLocation
+    }
+
+    $value = $ResourceLocation.Trim().ToLowerInvariant()
+    if ($value -match "^us\s+(?<direction>east|west|north|south|central)(?<suffix>.*)$") {
+        $suffix = ($Matches.suffix -replace "[^a-z0-9]", "")
+        return "$($Matches.direction)us$suffix"
+    }
+
+    return $ResourceLocation
+}
+
 function Add-ArmRegionName {
     param(
         [Parameter(Mandatory)]
@@ -245,7 +261,7 @@ function Add-ArmRegionName {
     foreach ($row in $Rows) {
         $resourceLocation = [string]$row.ResourceLocation
         $normalized = Normalize-LocationKey $resourceLocation
-        $armRegionName = if ($LocationLookup.ContainsKey($normalized)) { $LocationLookup[$normalized] } else { $resourceLocation }
+        $armRegionName = if ($LocationLookup.ContainsKey($normalized)) { $LocationLookup[$normalized] } else { Convert-CostManagementLocationToArmRegionName $resourceLocation }
 
         $row | Add-Member -NotePropertyName ArmRegionName -NotePropertyValue $armRegionName -Force
         $row

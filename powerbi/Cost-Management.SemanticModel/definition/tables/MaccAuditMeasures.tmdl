@@ -1,0 +1,92 @@
+table MaccAuditMeasures
+	lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111200
+
+	measure 'MACC Commitment Amount' = MAX(MaccAgreementStatus[CommitmentAmount])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111201
+
+	measure 'MACC Eligible Spend To Date' = MAX(MaccAgreementStatus[EligibleSpendToDate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111202
+
+	measure 'MACC Remaining Commitment' = MAX(MaccAgreementStatus[RemainingCommitment])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111203
+
+	measure 'MACC Commitment Utilization' = MAX(MaccAgreementStatus[CommitmentUtilizationPercent])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111204
+
+	measure 'MACC Expected Burn To Date' = MAX(MaccAgreementStatus[ExpectedBurnToDate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111205
+
+	measure 'MACC Burn Variance' = MAX(MaccAgreementStatus[BurnVariance])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111206
+
+	measure 'MACC Required Monthly Run Rate' = MAX(MaccAgreementStatus[RequiredMonthlyRunRate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111207
+
+	measure 'Ledger Actual Cost' = SUM(MaccBenefitLedger[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111208
+
+	measure 'Ledger Retail Equivalent Cost' = SUM(MaccBenefitLedger[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111209
+
+	measure 'Ledger Estimated Savings' = SUM(MaccBenefitLedger[EstimatedSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111210
+
+	measure 'Ledger Savings Rate' = DIVIDE([Ledger Estimated Savings], [Ledger Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111211
+
+	measure 'Ledger Eligible Spend' = SUM(MaccBenefitLedger[EligibleSpend])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111212
+
+	measure 'Ledger Review Spend' = SUM(MaccBenefitLedger[ReviewSpend])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111213
+
+	measure 'Open Exception Count' = COUNTROWS(FILTER(RetailMatchExceptions, RetailMatchExceptions[ReviewStatus] <> "Resolved"))
+		formatString: #,0
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111214
+
+	measure 'Exception Actual Cost' = SUM(RetailMatchExceptions[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111215
+
+	measure 'Audit Retail Match Coverage' = DIVIDE(SUM(DataQualitySnapshot[MatchedActualCost]), SUM(DataQualitySnapshot[ActualCost]))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111216
+
+	measure 'Billing Reconciliation Variance' = SUM(BillingReconciliation[Variance])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111217
+
+	column Measures
+		dataType: string
+		isHidden
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111218
+		summarizeBy: none
+		sourceColumn: Measures
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MaccAuditMeasures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Measures = text], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

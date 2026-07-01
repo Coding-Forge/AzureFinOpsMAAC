@@ -1,0 +1,173 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "retail_snapshot",
+  "position": {
+    "x": 20,
+    "y": 500,
+    "z": 0,
+    "height": 170,
+    "width": 1210,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "ExportRunId"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.ExportRunId",
+              "nativeQueryRef": "ExportRunId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailProductName"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailProductName",
+              "nativeQueryRef": "RetailProductName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailSkuName"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailSkuName",
+              "nativeQueryRef": "RetailSkuName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailMeterName"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailMeterName",
+              "nativeQueryRef": "RetailMeterName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailArmRegionName"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailArmRegionName",
+              "nativeQueryRef": "RetailArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailUnitOfMeasure"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailUnitOfMeasure",
+              "nativeQueryRef": "RetailUnitOfMeasure"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailPrice"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailPrice",
+              "nativeQueryRef": "RetailPrice"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "RetailCurrencyCode"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.RetailCurrencyCode",
+              "nativeQueryRef": "RetailCurrencyCode"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RetailPriceSnapshot"
+                    }
+                  },
+                  "Property": "CalculationVersion"
+                }
+              },
+              "queryRef": "RetailPriceSnapshot.CalculationVersion",
+              "nativeQueryRef": "CalculationVersion"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {}
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Retail Price Snapshot'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
