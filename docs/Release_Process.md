@@ -3,6 +3,21 @@
 This document explains how to build a distributable zip for
 `AzureFinOpsMaccRetailSolution` and tag the matching Git commit.
 
+
+## Customer install from latest tagged release
+
+Customers do not need to clone the repository if a tagged release is available. They can:
+
+1. Open the repository's **Releases** page.
+2. Download the latest `AzureFinOpsMaccRetailSolution-v<version>.zip` asset.
+3. Extract the zip to a local folder.
+4. Run the launcher from the extracted folder:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
+```
+
+The release zip contains the scripts, PBIP report, docs, and HTML help pages. It does not include generated exports, local settings, `.git`, Power BI cache folders, or internal development notes.
 ## Prerequisites
 
 - PowerShell 5.1 or later.
@@ -147,3 +162,4 @@ Example:
 ```text
 v1.1.0
 ```
+

@@ -45,20 +45,48 @@ The launcher writes `powerbi-storage-settings.json` into each run folder with th
 
 ## Quick Start
 
-1. Open the repository root in VS Code.
-2. Launch the Windows UI:
+You can use either the latest tagged release zip or a cloned copy of the repository.
+
+### Option A - Download the latest tagged release
+
+1. Go to the repository's **Releases** page.
+2. Download the latest `AzureFinOpsMaccRetailSolution-v<version>.zip` asset.
+3. Extract the zip to a local folder such as:
+
+```text
+C:\Projects\Fabric\AzureFinOpsMaccRetailSolution
+```
+
+4. Open PowerShell in the extracted folder and launch the Windows UI:
 
 ```powershell
 cd C:\Projects\Fabric\AzureFinOpsMaccRetailSolution
 powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 ```
 
-3. Choose the startup purpose: **Current view** or **Running history**. The launcher saves this choice and does not ask again unless you click **Change purpose**.
-4. Click **Load from tenant**, select the subscriptions to include, choose the export options and storage destination, then click **Run export**.
-5. Copy the generated parameter values from `powerbi-storage-settings.json` into Power BI Desktop.
-6. Open `powerbi/Cost-Management.pbip` in Power BI Desktop and refresh the model.
-7. Review pages:
+### Option B - Clone the repository
+
+1. Clone or open the repository root in VS Code.
+2. Launch the Windows UI from the repository root:
+
+```powershell
+cd C:\Projects\Fabric\AzureFinOpsMaccRetailSolution
+powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
+```
+
+### Run the solution
+
+1. Choose the startup purpose: **Current view** or **Running history**. The launcher saves this choice and does not ask again unless you click **Change purpose**.
+2. Click **Load from tenant**, select the subscriptions to include, choose the export options and storage destination, then click **Run export**.
+3. Copy the generated parameter values from `powerbi-storage-settings.json` into Power BI Desktop.
+4. Open `powerbi/Cost-Management.pbip` in Power BI Desktop and refresh the model.
+5. Review pages:
 - `FinOps MACC vs Retail Overview`
+- `MACC Commitment Overview`
+- `MACC Benefit Ledger`
+- `Agreement Price Audit`
+- `Coverage and Exceptions`
+- `Billing and Ownership`
 - `Granular Detail / Drillthrough`
 - `Data Quality & Customer Actions`
 
