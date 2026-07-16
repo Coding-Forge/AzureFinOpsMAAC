@@ -13,7 +13,7 @@ queryGroup Exports
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","StorageLocation","AnalysisMode","LocalDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","HistoryDataRoot","CsvFromHistoryStorage","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory"]
+annotation PBI_QueryOrder = ["DimRetailMatch","DimRegion","DimService","CostRetailFact","AzureRetail","datedim","_Measures","last-month-cost-by-retail-join-enriched","cost-summary-by-resourcegroup","cost-summary-by-service","last-month-cost-by-retail-join","last-month-cost-by-retail-join-with-arm-region","last-month-cost-by-service-resourcegroup","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","mtd-cost-by-service-resourcegroup","StorageLocation","AnalysisMode","LocalDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","OptionalBillingAuditCsvFromSelectedStorage","HistoryDataRoot","CsvFromHistoryStorage","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","BillingAuditAccounts","BillingAuditProfiles","BillingAuditInvoiceSections","BillingAuditSubscriptionProperties","BillingAuditRoleAssignments","BillingAuditInvoices","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -64,6 +64,13 @@ ref table SpotPricingOpportunities
 ref table SpotWorkloadInventory
 ref table DevTestPricingOpportunities
 ref table DevTestSubscriptionInventory
+ref table LocalDateTable_173d19a0-d198-4b6f-b086-34e8c8d2fc86
+ref table BillingAuditAccounts
+ref table BillingAuditProfiles
+ref table BillingAuditInvoiceSections
+ref table BillingAuditSubscriptionProperties
+ref table BillingAuditRoleAssignments
+ref table BillingAuditInvoices
 
 ref cultureInfo en-US
 

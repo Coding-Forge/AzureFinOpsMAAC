@@ -33,6 +33,10 @@ param(
 
     [datetime]$AsOfDate = (Get-Date),
 
+    [datetime]$CustomStartDate = [datetime]::MinValue,
+
+    [datetime]$CustomEndDate = [datetime]::MinValue,
+
     [switch]$InstallAzureCli,
 
     [switch]$SkipRetailPriceLookup
@@ -694,6 +698,29 @@ $periods = @(
     }
 )
 
+$hasCustomStartDate = $CustomStartDate -ne [datetime]::MinValue
+$hasCustomEndDate = $CustomEndDate -ne [datetime]::MinValue
+
+if ($hasCustomStartDate -xor $hasCustomEndDate) {
+    throw "CustomStartDate and CustomEndDate must be supplied together."
+}
+
+if ($hasCustomStartDate) {
+    $customStart = Get-Date -Year $CustomStartDate.Year -Month $CustomStartDate.Month -Day $CustomStartDate.Day -Hour 0 -Minute 0 -Second 0
+    $customEnd = Get-Date -Year $CustomEndDate.Year -Month $CustomEndDate.Month -Day $CustomEndDate.Day -Hour 23 -Minute 59 -Second 59
+    if ($customEnd -lt $customStart) {
+        throw "CustomEndDate must be on or after CustomStartDate."
+    }
+
+    $periods += @{
+        Prefix = "custom"
+        TimePeriod = @{
+            from = $customStart.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+            to = $customEnd.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+        }
+    }
+}
+
 $results = foreach ($period in $periods) {
     Invoke-CostQueryAcrossSubscriptions `
         -Subscriptions $targetSubscriptions `
@@ -741,7 +768,7 @@ foreach ($period in $periods) {
     }
 }
 
-$summaries = New-CostSummaries -DestinationDir $OutputDir -Prefixes @("mtd", "last-month")
+$summaries = New-CostSummaries -DestinationDir $OutputDir -Prefixes @($periods | ForEach-Object { $_.Prefix })
 
 Write-Host ""
 Write-Host "Cost exports saved to: $OutputDir"

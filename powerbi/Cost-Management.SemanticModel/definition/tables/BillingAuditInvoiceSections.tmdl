@@ -1,0 +1,68 @@
+table BillingAuditInvoiceSections
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117201
+
+	column BillingAccountName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117202
+		summarizeBy: none
+		sourceColumn: BillingAccountName
+
+	column BillingProfileName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117203
+		summarizeBy: none
+		sourceColumn: BillingProfileName
+
+	column InvoiceSectionName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117204
+		summarizeBy: none
+		sourceColumn: InvoiceSectionName
+
+	column DisplayName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117205
+		summarizeBy: none
+		sourceColumn: DisplayName
+
+	column State
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117206
+		summarizeBy: none
+		sourceColumn: State
+
+	column Labels
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117207
+		summarizeBy: none
+		sourceColumn: Labels
+
+	column SystemId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117208
+		summarizeBy: none
+		sourceColumn: SystemId
+
+	column RawJson
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117209
+		summarizeBy: none
+		sourceColumn: RawJson
+
+	partition BillingAuditInvoiceSections = m
+		mode: import
+		source =
+				let
+				    ExpectedColumns = {"BillingAccountName", "BillingProfileName", "InvoiceSectionName", "DisplayName", "State", "Labels", "SystemId", "RawJson"},
+				    Source = OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/invoice-sections.csv", 8),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
+				    Typed = Table.TransformColumnTypes(Selected, {{"BillingAccountName", type text}, {"BillingProfileName", type text}, {"InvoiceSectionName", type text}, {"DisplayName", type text}, {"State", type text}, {"Labels", type text}, {"SystemId", type text}, {"RawJson", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

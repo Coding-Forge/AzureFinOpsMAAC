@@ -27,12 +27,19 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: UsageDate
 
+		annotation SummarizationSetBy = Automatic
+
 	column UsageDateAsDate
 		dataType: dateTime
 		formatString: Short Date
 		lineageTag: 286d23b1-10e0-4c6c-a44f-0cb1b615c8c7
 		summarizeBy: none
 		sourceColumn: UsageDateAsDate
+
+		variation Variation
+			isDefault
+			relationship: 9aaa4e25-bad5-4072-9dd6-f2377e6ad780
+			defaultHierarchy: LocalDateTable_173d19a0-d198-4b6f-b086-34e8c8d2fc86.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 

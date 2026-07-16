@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "billing_accounts",
+  "position": {
+    "x": 20,
+    "y": 85,
+    "z": 1000,
+    "height": 170,
+    "width": 600,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditAccounts"
+                    }
+                  },
+                  "Property": "BillingAccountName"
+                }
+              },
+              "queryRef": "BillingAuditAccounts.BillingAccountName",
+              "nativeQueryRef": "BillingAccountName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditAccounts"
+                    }
+                  },
+                  "Property": "DisplayName"
+                }
+              },
+              "queryRef": "BillingAuditAccounts.DisplayName",
+              "nativeQueryRef": "DisplayName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditAccounts"
+                    }
+                  },
+                  "Property": "AccountType"
+                }
+              },
+              "queryRef": "BillingAuditAccounts.AccountType",
+              "nativeQueryRef": "AccountType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditAccounts"
+                    }
+                  },
+                  "Property": "AgreementType"
+                }
+              },
+              "queryRef": "BillingAuditAccounts.AgreementType",
+              "nativeQueryRef": "AgreementType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditAccounts"
+                    }
+                  },
+                  "Property": "SoldTo"
+                }
+              },
+              "queryRef": "BillingAuditAccounts.SoldTo",
+              "nativeQueryRef": "SoldTo"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Billing accounts and sold-to'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

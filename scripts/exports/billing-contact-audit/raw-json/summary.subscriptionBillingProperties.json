@@ -1,0 +1,12 @@
+{
+  "SubscriptionName": "ME-MngEnvMCAP907283-brcampb-1",
+  "SubscriptionId": "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d",
+  "State": "Enabled",
+  "BillingAccountId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31",
+  "BillingProfileId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31/billingProfiles/J5TQ-WFJU-BG7-PKDK-SGB",
+  "InvoiceSectionId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31/billingProfiles/J5TQ-WFJU-BG7-PKDK-SGB/invoiceSections/EJHH-JWQV-PJA-XRBR-SGB",
+  "ProductId": "DZH318Z0BPS6",
+  "ProductName": "Microsoft Azure Standard",
+  "SkuId": "0001",
+  "RawJson": "raw-json/subscription.c3454f9a-72a4-473e-b7ab-4e9b1107fd6d.billingProperty.json"
+}

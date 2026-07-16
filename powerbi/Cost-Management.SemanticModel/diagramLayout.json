@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 0,
-            "y": 37.5
+            "x": 8160.0485207383063,
+            "y": 81.25
           },
           "nodeIndex": "AzureRetail",
           "nodeLineageTag": "7ad6f92e-e5ae-4813-901c-de526fd001d0",
@@ -19,12 +19,12 @@
             "height": 823,
             "width": 446
           },
-          "zIndex": 1
+          "zIndex": 32
         },
         {
           "location": {
-            "x": 1853,
-            "y": 820.5
+            "x": 10013.048520738306,
+            "y": 864.25
           },
           "nodeIndex": "cost-summary-by-resourcegroup",
           "nodeLineageTag": "800cb7ec-e826-4c58-9bd2-25dd5c8b36fa",
@@ -32,12 +32,12 @@
             "height": 176,
             "width": 234
           },
-          "zIndex": 5
+          "zIndex": 36
         },
         {
           "location": {
-            "x": 1083,
-            "y": 85.5
+            "x": 9243.0485207383063,
+            "y": 129.25
           },
           "nodeIndex": "cost-summary-by-service",
           "nodeLineageTag": "772c4efa-80e5-415b-91ea-4dfd49419d8c",
@@ -45,12 +45,12 @@
             "height": 176,
             "width": 234
           },
-          "zIndex": 2
+          "zIndex": 33
         },
         {
           "location": {
-            "x": 1382,
-            "y": 1091.5
+            "x": 9542.0485207383063,
+            "y": 1135.25
           },
           "nodeIndex": "last-month-cost-by-service-resourcegroup",
           "nodeLineageTag": "4e4c71e6-9a65-4288-b3e7-1f2ea9b98808",
@@ -58,12 +58,12 @@
             "height": 200,
             "width": 234
           },
-          "zIndex": 3
+          "zIndex": 34
         },
         {
           "location": {
-            "x": 694,
-            "y": 585.5
+            "x": 8854.0485207383063,
+            "y": 629.25
           },
           "nodeIndex": "mtd-cost-by-service-resourcegroup",
           "nodeLineageTag": "0713199b-2567-4fcd-ae7b-843652400859",
@@ -71,12 +71,12 @@
             "height": 200,
             "width": 234
           },
-          "zIndex": 4
+          "zIndex": 35
         },
         {
           "location": {
-            "x": 1033,
-            "y": 803
+            "x": 9193.0485207383063,
+            "y": 846.75
           },
           "nodeIndex": "datedim",
           "nodeLineageTag": "ed988f68-0ab6-4cfb-b783-eac0e0c48aee",
@@ -84,25 +84,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         },
         {
           "location": {
-            "x": 1998,
-            "y": 397
-          },
-          "nodeIndex": "AzureServices",
-          "nodeLineageTag": "8e11e0b9-0385-468f-9634-384808f62b03",
-          "size": {
-            "height": 104,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 2412,
-            "y": 500.25
+            "x": 10572.048520738306,
+            "y": 544
           },
           "nodeIndex": "_Measures",
           "nodeLineageTag": "c753e8dd-8d93-42b8-a23a-38fe14ee5c25",
@@ -110,59 +97,397 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2
         },
         {
           "location": {
-            "x": 1428,
-            "y": 869.25
+            "x": 897.04852073830671,
+            "y": 140.75
           },
-          "nodeIndex": "ResourceGroups",
-          "nodeLineageTag": "3eaf4da2-0020-48ad-ae54-a45a513af456",
-          "size": {
-            "height": 104,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 2661,
-            "y": 867.5
-          },
-          "nodeIndex": "azure-resource-groups-by-location",
-          "nodeLineageTag": "d31eff7e-036f-402c-9399-e11a6df2b6a5",
+          "nodeIndex": "MaccAuditMeasures",
+          "nodeLineageTag": "4a0e0e30-4d21-4d7f-9da3-111111111200",
           "size": {
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 3
         },
         {
           "location": {
-            "x": 2726,
-            "y": 211.5
+            "x": 1224.0485207383067,
+            "y": 55.75
           },
-          "nodeIndex": "azure-resource-groups-location-summary",
-          "nodeLineageTag": "97b546fc-3ce3-486d-b09d-f5e2fd2abb34",
+          "nodeIndex": "AgreementPriceAudit",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111104",
           "size": {
-            "height": 248,
-            "width": 283
+            "height": 300,
+            "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4
         },
         {
           "location": {
-            "x": 2241,
-            "y": 643.5
+            "x": 525.04852073830671,
+            "y": 1190.75
           },
-          "nodeIndex": "AzureRegionLocation",
-          "nodeLineageTag": "d7dfaf42-1136-421b-8908-7bf454993d7d",
+          "nodeIndex": "AzureHybridBenefitInventory",
+          "nodeLineageTag": "93e283e5-f365-4ce4-bd19-111111114002",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1571.0485207383067,
+            "y": 314.75
+          },
+          "nodeIndex": "AzureHybridBenefitOpportunities",
+          "nodeLineageTag": "93e283e5-f365-4ce4-bd19-111111114001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1197.0485207383067,
+            "y": 1171.75
+          },
+          "nodeIndex": "BillingReconciliation",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111108",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1144.1949164328773,
+            "y": 645.725903109485
+          },
+          "nodeIndex": "CostRetailFact",
+          "nodeLineageTag": "8f900962-6227-469f-961e-9e452eb5a001",
+          "size": {
+            "height": 454,
+            "width": 234
+          },
+          "zIndex": 37
+        },
+        {
+          "location": {
+            "x": 1737.0485207383067,
+            "y": 1138.75
+          },
+          "nodeIndex": "DataQualitySnapshot",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111106",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 2525.0485207383067,
+            "y": 1364.75
+          },
+          "nodeIndex": "DevTestPricingOpportunities",
+          "nodeLineageTag": "a5a80f78-a261-4afd-a250-111111116001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 2814.0485207383067,
+            "y": 520.75
+          },
+          "nodeIndex": "DevTestSubscriptionInventory",
+          "nodeLineageTag": "a5a80f78-a261-4afd-a250-111111116002",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 592.04852073830671,
+            "y": 304.57144860847649
+          },
+          "nodeIndex": "DimRegion",
+          "nodeLineageTag": "59900d69-512f-4b90-9272-d09dc1e2ccdd",
           "size": {
             "height": 128,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 471.36320744915952
+          },
+          "nodeIndex": "DimRetailMatch",
+          "nodeLineageTag": "f210cd32-b983-4c4d-9f46-77a218120753",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 396.19033330421382,
+            "y": 832.92855139152357
+          },
+          "nodeIndex": "DimService",
+          "nodeLineageTag": "f7d67a5d-a775-4f77-8d8e-dd4a97a5620e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 3098.0485207383067,
+            "y": 520.75
+          },
+          "nodeIndex": "EnterpriseAgreementSavings",
+          "nodeLineageTag": "3f4ea191-4147-4fb1-a201-111111112001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 3382.0485207383067,
+            "y": 520.75
+          },
+          "nodeIndex": "ExportRunManifest",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111107",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 15
+        },
+        {
+          "location": {
+            "x": 3666.0485207383067,
+            "y": 520.75
+          },
+          "nodeIndex": "last-month-cost-by-retail-join",
+          "nodeLineageTag": "6d828175-0034-47b2-8178-99165bd9f046",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 16
+        },
+        {
+          "location": {
+            "x": 3950.0485207383067,
+            "y": 520.75
+          },
+          "nodeIndex": "last-month-cost-by-retail-join-enriched",
+          "nodeLineageTag": "0f5e83fa-40ac-4dc0-adad-11093fc22272",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 17
+        },
+        {
+          "location": {
+            "x": 4234.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "last-month-cost-by-retail-join-with-arm-region",
+          "nodeLineageTag": "75ad8869-79c6-4f96-bff1-4c2414d02cea",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 18
+        },
+        {
+          "location": {
+            "x": 4518.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "MaccAgreementConfig",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111101",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 19
+        },
+        {
+          "location": {
+            "x": 4802.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "MaccAgreementStatus",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111102",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 20
+        },
+        {
+          "location": {
+            "x": 5086.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "MaccBenefitLedger",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111103",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 21
+        },
+        {
+          "location": {
+            "x": 5370.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "mtd-cost-by-retail-join",
+          "nodeLineageTag": "5c0dbb80-6185-42a5-98c9-f7017e7f61f2",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 22
+        },
+        {
+          "location": {
+            "x": 5654.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "mtd-cost-by-retail-join-enriched",
+          "nodeLineageTag": "2faf5600-e388-445b-931f-538403e1f470",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 23
+        },
+        {
+          "location": {
+            "x": 5938.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "mtd-cost-by-retail-join-with-arm-region",
+          "nodeLineageTag": "de842c12-7593-47f6-a881-94d3ef1f12d1",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 24
+        },
+        {
+          "location": {
+            "x": 6222.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "OwnershipMapping",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111109",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 25
+        },
+        {
+          "location": {
+            "x": 6506.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "ReservationSavingsPlanCoverage",
+          "nodeLineageTag": "7d5f8ce3-6fd0-4f97-b1c0-111111113001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 26
+        },
+        {
+          "location": {
+            "x": 6790.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "ReservationSavingsPlanInventory",
+          "nodeLineageTag": "7d5f8ce3-6fd0-4f97-b1c0-111111113002",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 27
+        },
+        {
+          "location": {
+            "x": 7074.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "RetailMatchExceptions",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111105",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 28
+        },
+        {
+          "location": {
+            "x": 7358.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "RetailPriceSnapshot",
+          "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111110",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 29
+        },
+        {
+          "location": {
+            "x": 7642.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "SpotPricingOpportunities",
+          "nodeLineageTag": "64a4b42e-a4fa-4f1a-9d2d-111111115001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 30
+        },
+        {
+          "location": {
+            "x": 7926.0485207383063,
+            "y": 520.75
+          },
+          "nodeIndex": "SpotWorkloadInventory",
+          "nodeLineageTag": "64a4b42e-a4fa-4f1a-9d2d-111111115002",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 31
         }
       ],
       "name": "All tables",

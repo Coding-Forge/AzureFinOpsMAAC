@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "58b2237dd2494dd79ca4",
   "position": {
     "x": 953.21237993596583,
@@ -20,18 +20,36 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CostRetailFact"
+                      "Entity": "datedim"
                     }
                   },
-                  "Property": "UsageDateAsDate"
+                  "Property": "Date"
                 }
               },
-              "queryRef": "CostRetailFact.UsageDateAsDate",
-              "nativeQueryRef": "UsageDateAsDate",
+              "queryRef": "datedim.Date",
+              "nativeQueryRef": "Date",
               "active": true
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "datedim"
+                  }
+                },
+                "Property": "Date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "objects": {
@@ -41,14 +59,14 @@
             "startDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2026-05-01T00:00:00'"
+                  "Value": "datetime'2026-06-21T00:00:00'"
                 }
               }
             },
             "endDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2026-06-25T00:00:00'"
+                  "Value": "datetime'2026-07-16T00:00:00'"
                 }
               }
             },
@@ -116,8 +134,8 @@
                 "Version": 2,
                 "From": [
                   {
-                    "Name": "c",
-                    "Entity": "CostRetailFact",
+                    "Name": "d",
+                    "Entity": "datedim",
                     "Type": 0
                   }
                 ],
@@ -132,15 +150,15 @@
                               "Column": {
                                 "Expression": {
                                   "SourceRef": {
-                                    "Source": "c"
+                                    "Source": "d"
                                   }
                                 },
-                                "Property": "UsageDateAsDate"
+                                "Property": "Date"
                               }
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2026-05-01T00:00:00'"
+                                "Value": "datetime'2026-06-21T00:00:00'"
                               }
                             }
                           }
@@ -152,15 +170,15 @@
                               "Column": {
                                 "Expression": {
                                   "SourceRef": {
-                                    "Source": "c"
+                                    "Source": "d"
                                   }
                                 },
-                                "Property": "UsageDateAsDate"
+                                "Property": "Date"
                               }
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2026-06-26T00:00:00'"
+                                "Value": "datetime'2026-07-17T00:00:00'"
                               }
                             }
                           }

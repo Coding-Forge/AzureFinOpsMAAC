@@ -106,3 +106,7 @@ Power BI refresh reported a cyclic reference starting at `DataQualitySnapshot`. 
 ## CostRetailFact cyclic relationship fix
 
 Power BI refresh reported a cyclic reference starting at `CostRetailFact` after expanded savings tables were added. Inspection showed Power BI auto-detected multiple timestamp relationships across audit/expanded savings tables (`AgreementPriceAudit`, `MaccBenefitLedger`, `EnterpriseAgreementSavings`, `ReservationSavingsPlanCoverage`, `AzureHybridBenefitOpportunities`) using `ExportedUtc`, several with bidirectional filtering. These relationships are not needed for reporting and can create refresh cycles into the core fact model. Removed all `AutoDetected_*` relationships from `relationships.tmdl`, keeping only intentional date and dimension relationships.
+
+## Report navigation layout cleanup
+
+Cleaned the landing page navigation by replacing the single crowded page navigator with four grouped page navigator sections: Core analysis, Agreement value, Optimization, and Validation and operations. Removed broad page navigator visuals from subsequent pages and added a single `back_to_landing` navigator plus `header_page_title` textbox to each non-landing page. Validated report JSON, ensured no root `query`/`ordinal` properties were introduced, and confirmed release packaging includes the updated navigation visuals.

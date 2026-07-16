@@ -1,0 +1,32 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "review_note",
+  "position": {
+    "x": 640,
+    "y": 12,
+    "z": 3001,
+    "height": 58,
+    "width": 600,
+    "tabOrder": 3001
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Review billing audit output for stale legal names, bill-to/sold-to contacts, invoice routing, PO values, subscription billing profile mappings, and billing-role assignments."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

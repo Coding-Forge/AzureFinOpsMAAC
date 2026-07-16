@@ -385,6 +385,10 @@ function New-RunScript {
         StorageLocation = $Config.StorageLocation
         LocalDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $runRoot
         HistoryDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $historyRoot
+        CustomRangeEnabled = [bool]$Config.CustomRangeEnabled
+        CustomStartDate = if ($Config.CustomRangeEnabled) { $Config.CustomStartDate.ToString("yyyy-MM-dd") } else { "" }
+        CustomEndDate = if ($Config.CustomRangeEnabled) { $Config.CustomEndDate.ToString("yyyy-MM-dd") } else { "" }
+        BillingContactAuditFolder = if ($Config.RunBillingContactAudit) { Join-Path $runRoot "billing-contact-audit" } else { "" }
         BlobDataRoot = if ($Config.StorageLocation -eq "AzureBlob") {
             ConvertTo-BaseUrl -StorageLocation "AzureBlob" -StorageAccount $Config.StorageAccount -ContainerOrFileSystem $Config.ContainerOrFileSystem -Prefix $Config.Prefix
         }
@@ -432,6 +436,8 @@ function New-RunScript {
     $prefixLiteral = ConvertTo-PowerShellLiteral (($Config.Prefix -replace "\\", "/").Trim("/"))
     $settingsPathLiteral = ConvertTo-PowerShellLiteral $settingsPath
     $asOfDateLiteral = ConvertTo-PowerShellLiteral $Config.AsOfDate.ToString("yyyy-MM-dd")
+    $customStartDateLiteral = ConvertTo-PowerShellLiteral $(if ($Config.CustomRangeEnabled) { $Config.CustomStartDate.ToString("yyyy-MM-dd") } else { "" })
+    $customEndDateLiteral = ConvertTo-PowerShellLiteral $(if ($Config.CustomRangeEnabled) { $Config.CustomEndDate.ToString("yyyy-MM-dd") } else { "" })
     $analysisModeLiteral = ConvertTo-PowerShellLiteral $Config.AnalysisMode
     $historyPathLiteral = ConvertTo-PowerShellLiteral $historyPath
     $historyRootLiteral = ConvertTo-PowerShellLiteral $historyRoot
@@ -448,6 +454,8 @@ function New-RunScript {
     $skipRetail = if ($Config.SkipRetailPriceLookup) { '$true' } else { '$false' }
     $runCost = if ($Config.RunCostAnalysis) { '$true' } else { '$false' }
     $runResourceGroups = if ($Config.RunResourceGroups) { '$true' } else { '$false' }
+    $runBillingContactAudit = if ($Config.RunBillingContactAudit) { '$true' } else { '$false' }
+    $customRangeEnabled = if ($Config.CustomRangeEnabled) { '$true' } else { '$false' }
     $storageLocationLiteral = ConvertTo-PowerShellLiteral $Config.StorageLocation
 
     $runScript = @"
@@ -457,10 +465,15 @@ function New-RunScript {
 `$tenantId = $tenantLiteral
 `$subscriptionIds = $subscriptionLiteral
 `$asOfDate = [datetime]$asOfDateLiteral
+`$customRangeEnabled = $customRangeEnabled
+`$customStartDate = $customStartDateLiteral
+`$customEndDate = $customEndDateLiteral
 `$installAzureCli = $installAzureCli
 `$skipRetailPriceLookup = $skipRetail
 `$runCostAnalysis = $runCost
 `$runResourceGroups = $runResourceGroups
+`$runBillingContactAudit = $runBillingContactAudit
+`$onlyBillingContactAudit = `$runBillingContactAudit -and -not `$runCostAnalysis -and -not `$runResourceGroups
 `$analysisMode = $analysisModeLiteral
 `$storageLocation = $storageLocationLiteral
 `$storageAccount = $storageAccountLiteral
@@ -616,6 +629,7 @@ function Update-FinOpsCostHistory {
 
     `$mtdPath = Join-Path `$OutputRoot "mtd-cost-by-retail-join-enriched.csv"
     `$lastMonthPath = Join-Path `$OutputRoot "last-month-cost-by-retail-join-enriched.csv"
+    `$customPath = Join-Path `$OutputRoot "custom-cost-by-retail-join-enriched.csv"
     if (-not (Test-Path `$mtdPath) -or -not (Test-Path `$lastMonthPath)) {
         throw "History mode requires Retail Prices enrichment files. Clear 'Skip Retail Prices lookup' and rerun the cost export."
     }
@@ -626,6 +640,9 @@ function Update-FinOpsCostHistory {
         Select-FinOpsHistoryRows -CsvPath `$mtdPath -Period "MTD" -RunId `$runId -ExportedUtc `$exportedUtc
         Select-FinOpsHistoryRows -CsvPath `$lastMonthPath -Period "Last Month" -RunId `$runId -ExportedUtc `$exportedUtc
     )
+    if (Test-Path `$customPath) {
+        `$newRows += Select-FinOpsHistoryRows -CsvPath `$customPath -Period "Custom" -RunId `$runId -ExportedUtc `$exportedUtc
+    }
 
     New-Item -ItemType Directory -Path (Split-Path -Parent `$HistoryPath) -Force | Out-Null
     `$existingRows = if (Test-Path `$HistoryPath) { @(Import-Csv -Path `$HistoryPath) } else { @() }
@@ -654,12 +671,18 @@ Start-Transcript -Path (Join-Path `$outputRoot "finops-data-pull.log") -Force
 try {
     Write-Host "Output folder: `$outputRoot"
     Write-Host "Power BI storage settings: `$settingsPath"
-    Update-PowerBiProjectParameters -ScriptRoot `$scriptRoot -SettingsPath `$settingsPath
+    if (-not `$onlyBillingContactAudit) {
+        Update-PowerBiProjectParameters -ScriptRoot `$scriptRoot -SettingsPath `$settingsPath
+    }
 
     if (`$runCostAnalysis) {
         `$costArgs = @{
             OutputDir = `$outputRoot
             AsOfDate = `$asOfDate
+        }
+        if (`$customRangeEnabled) {
+            `$costArgs.CustomStartDate = [datetime]`$customStartDate
+            `$costArgs.CustomEndDate = [datetime]`$customEndDate
         }
         if (`$tenantId) { `$costArgs.TenantId = `$tenantId }
         if (`$subscriptionIds.Count -gt 0) { `$costArgs.SubscriptionId = `$subscriptionIds }
@@ -684,7 +707,19 @@ try {
         & (Join-Path `$scriptRoot "Get-AzureResourceGroupsByLocation.ps1") @resourceArgs
     }
 
-    if (`$analysisMode -eq "History") {
+    if (`$runBillingContactAudit) {
+        `$billingAuditArgs = @{
+            OutputDir = (Join-Path `$outputRoot "billing-contact-audit")
+            SubscriptionId = `$subscriptionIds
+            IncludeInvoices = `$true
+        }
+        if (`$tenantId) { `$billingAuditArgs.TenantId = `$tenantId }
+        if (`$installAzureCli) { `$billingAuditArgs.InstallAzureCli = `$true }
+
+        & (Join-Path `$scriptRoot "Get-AzureBillingContactAudit.ps1") @billingAuditArgs
+    }
+
+    if (`$analysisMode -eq "History" -and -not `$onlyBillingContactAudit) {
         if (-not `$runCostAnalysis) {
             throw "History mode requires the Cost Management export."
         }
@@ -830,7 +865,7 @@ $clearSubscriptionsButton.Location = New-Object System.Drawing.Point(450, 62)
 $clearSubscriptionsButton.Size = New-Object System.Drawing.Size(90, 28)
 $runTab.Controls.Add($clearSubscriptionsButton)
 
-$subscriptionStatusLabel = New-Label "Load subscriptions, then check the subscriptions to include." 550 66 315 22
+$subscriptionStatusLabel = New-Label "Load subscriptions for cost/resource exports. Billing audit can run without selections." 550 66 315 36
 $runTab.Controls.Add($subscriptionStatusLabel)
 
 $subscriptionListBox = New-Object System.Windows.Forms.CheckedListBox
@@ -847,24 +882,41 @@ $asOfDatePicker.Location = New-Object System.Drawing.Point(210, 206)
 $asOfDatePicker.Size = New-Object System.Drawing.Size(180, 24)
 $runTab.Controls.Add($asOfDatePicker)
 
+$customRangeCheckBox = New-CheckBox "Also export custom range" 420 207 $false 200
+$runTab.Controls.Add($customRangeCheckBox)
+$runTab.Controls.Add((New-Label "Start" 620 210 45))
+$customStartDatePicker = New-Object System.Windows.Forms.DateTimePicker
+$customStartDatePicker.Format = [System.Windows.Forms.DateTimePickerFormat]::Short
+$customStartDatePicker.Location = New-Object System.Drawing.Point(665, 206)
+$customStartDatePicker.Size = New-Object System.Drawing.Size(90, 24)
+$customStartDatePicker.Value = (Get-Date -Day 1)
+$runTab.Controls.Add($customStartDatePicker)
+$runTab.Controls.Add((New-Label "End" 760 210 35))
+$customEndDatePicker = New-Object System.Windows.Forms.DateTimePicker
+$customEndDatePicker.Format = [System.Windows.Forms.DateTimePickerFormat]::Short
+$customEndDatePicker.Location = New-Object System.Drawing.Point(795, 206)
+$customEndDatePicker.Size = New-Object System.Drawing.Size(90, 24)
+$runTab.Controls.Add($customEndDatePicker)
+
 $runCostCheckBox = New-CheckBox "Run Cost Management export" 210 245 $true 280
 $runResourceGroupsCheckBox = New-CheckBox "Run resource group location export" 500 245 $true 300
 $installCliCheckBox = New-CheckBox "Install Azure CLI if missing" 210 280 $false 280
 $skipRetailCheckBox = New-CheckBox "Skip Retail Prices lookup" 500 280 $false 300
-$runTab.Controls.AddRange(@($runCostCheckBox, $runResourceGroupsCheckBox, $installCliCheckBox, $skipRetailCheckBox))
+$runBillingContactAuditCheckBox = New-CheckBox "Run Azure billing contact audit" 210 315 $true 300
+$runTab.Controls.AddRange(@($runCostCheckBox, $runResourceGroupsCheckBox, $installCliCheckBox, $skipRetailCheckBox, $runBillingContactAuditCheckBox))
 
-$runTab.Controls.Add((New-Label "Save output to" 20 325))
+$runTab.Controls.Add((New-Label "Save output to" 20 355))
 $destinationComboBox = New-Object System.Windows.Forms.ComboBox
 $destinationComboBox.DropDownStyle = "DropDownList"
-$destinationComboBox.Location = New-Object System.Drawing.Point(210, 321)
+$destinationComboBox.Location = New-Object System.Drawing.Point(210, 351)
 $destinationComboBox.Size = New-Object System.Drawing.Size(220, 24)
 [void]$destinationComboBox.Items.AddRange(@("Local", "AzureBlob", "ADLSGen2", "SharePoint"))
 $destinationComboBox.SelectedIndex = 0
 $runTab.Controls.Add($destinationComboBox)
 
 $summaryTextBox = New-Object System.Windows.Forms.TextBox
-$summaryTextBox.Location = New-Object System.Drawing.Point(20, 375)
-$summaryTextBox.Size = New-Object System.Drawing.Size(840, 155)
+$summaryTextBox.Location = New-Object System.Drawing.Point(20, 405)
+$summaryTextBox.Size = New-Object System.Drawing.Size(840, 125)
 $summaryTextBox.Multiline = $true
 $summaryTextBox.ScrollBars = "Vertical"
 $summaryTextBox.ReadOnly = $true
@@ -1109,11 +1161,13 @@ Operating flow
 
 3. On Agreement, enter the customer's MACC agreement ID, term, commitment amount, currency, and pacing thresholds.
 
-4. Choose Local, AzureBlob, ADLSGen2, or SharePoint. Configure the matching tab before running.
+4. Keep Run Azure billing contact audit selected when you need invoice recipient, sold-to, bill-to, PO, billing profile, invoice section, subscription billing property, and billing-role evidence.
 
-5. Click Run export. A separate PowerShell window runs the data pull. Keep it open until it reports Done.
+5. Choose Local, AzureBlob, ADLSGen2, or SharePoint. Configure the matching tab before running.
 
-6. Open the generated powerbi-storage-settings.json from the run folder and copy the values into Power BI Desktop parameters:
+6. Click Run export. A separate PowerShell window runs the data pull. Keep it open until it reports Done.
+
+7. Open the generated powerbi-storage-settings.json from the run folder and copy the values into Power BI Desktop parameters:
    StorageLocation
    LocalDataRoot
    HistoryDataRoot
@@ -1121,11 +1175,11 @@ Operating flow
    AdlsDataRoot
    SharePointDataRoot
 
-7. If SharePoint was selected, copy or sync the generated CSV files from the run folder to the configured SharePoint document library folder.
+8. If SharePoint was selected, copy or sync the generated CSV files from the run folder to the configured SharePoint document library folder.
 
-8. Refresh the PBIP model.
+9. Refresh the PBIP model.
 
-9. Review MACC audit files:
+10. Review MACC audit files:
    agreement-config.csv
    macc-agreement-status.csv
    macc-benefit-ledger.csv
@@ -1136,6 +1190,15 @@ Operating flow
    export-run-manifest.csv/json
    billing-reconciliation.csv
    ownership-mapping.csv
+
+11. Review billing contact audit files under billing-contact-audit:
+   Azure-Billing-Contact-Audit-*.md
+   billing-accounts.csv
+   billing-profiles.csv
+   invoice-sections.csv
+   subscription-billing-properties.csv
+   billing-role-assignments.csv
+   invoices.csv
 
 Notes
 
@@ -1237,8 +1300,12 @@ function Get-LauncherSettingsFromForm {
         TenantId = $tenantTextBox.Text.Trim()
         SelectedSubscriptionIds = @(Get-SelectedSubscriptionIds)
         AsOfDate = $asOfDatePicker.Value.ToString("yyyy-MM-dd")
+        CustomRangeEnabled = $customRangeCheckBox.Checked
+        CustomStartDate = $customStartDatePicker.Value.ToString("yyyy-MM-dd")
+        CustomEndDate = $customEndDatePicker.Value.ToString("yyyy-MM-dd")
         RunCostAnalysis = $runCostCheckBox.Checked
         RunResourceGroups = $runResourceGroupsCheckBox.Checked
+        RunBillingContactAudit = $runBillingContactAuditCheckBox.Checked
         InstallAzureCli = $installCliCheckBox.Checked
         SkipRetailPriceLookup = $skipRetailCheckBox.Checked
         StorageLocation = [string]$destinationComboBox.SelectedItem
@@ -1275,8 +1342,22 @@ function Apply-LauncherSettingsToForm {
             $asOfDatePicker.Value = $parsedDate
         }
     }
+    if ($null -ne $Settings.CustomRangeEnabled) { $customRangeCheckBox.Checked = [bool]$Settings.CustomRangeEnabled }
+    if ($Settings.CustomStartDate) {
+        $parsedCustomStartDate = [datetime]::MinValue
+        if ([datetime]::TryParse([string]$Settings.CustomStartDate, [ref]$parsedCustomStartDate)) {
+            $customStartDatePicker.Value = $parsedCustomStartDate
+        }
+    }
+    if ($Settings.CustomEndDate) {
+        $parsedCustomEndDate = [datetime]::MinValue
+        if ([datetime]::TryParse([string]$Settings.CustomEndDate, [ref]$parsedCustomEndDate)) {
+            $customEndDatePicker.Value = $parsedCustomEndDate
+        }
+    }
     if ($null -ne $Settings.RunCostAnalysis) { $runCostCheckBox.Checked = [bool]$Settings.RunCostAnalysis }
     if ($null -ne $Settings.RunResourceGroups) { $runResourceGroupsCheckBox.Checked = [bool]$Settings.RunResourceGroups }
+    if ($null -ne $Settings.RunBillingContactAudit) { $runBillingContactAuditCheckBox.Checked = [bool]$Settings.RunBillingContactAudit }
     if ($null -ne $Settings.InstallAzureCli) { $installCliCheckBox.Checked = [bool]$Settings.InstallAzureCli }
     if ($null -ne $Settings.SkipRetailPriceLookup) { $skipRetailCheckBox.Checked = [bool]$Settings.SkipRetailPriceLookup }
     if ($Settings.StorageLocation -in @("Local", "AzureBlob", "ADLSGen2", "SharePoint")) {
@@ -1464,24 +1545,32 @@ $runButton.Add_Click({
             $sharePointDataRoot = $sharePointRootTextBox.Text.Trim()
         }
 
-        if (-not $runCostCheckBox.Checked -and -not $runResourceGroupsCheckBox.Checked) {
+        if (-not $runCostCheckBox.Checked -and -not $runResourceGroupsCheckBox.Checked -and -not $runBillingContactAuditCheckBox.Checked) {
             throw "Select at least one export to run."
         }
 
-        if ($subscriptionListBox.Items.Count -eq 0) {
-            throw "Load subscriptions from the tenant before running the export."
+        $requiresSubscriptionSelection = $runCostCheckBox.Checked -or $runResourceGroupsCheckBox.Checked
+
+        if ($requiresSubscriptionSelection -and $subscriptionListBox.Items.Count -eq 0) {
+            throw "Load subscriptions from the tenant before running Cost Management or resource group exports."
         }
 
-        if ($subscriptionIds.Count -eq 0) {
-            throw "Select at least one subscription to include."
+        if ($requiresSubscriptionSelection -and $subscriptionIds.Count -eq 0) {
+            throw "Select at least one subscription to include for Cost Management or resource group exports."
         }
 
-        if ($script:AnalysisMode -eq "History" -and -not $runCostCheckBox.Checked) {
+        $onlyBillingContactAudit = $runBillingContactAuditCheckBox.Checked -and -not $runCostCheckBox.Checked -and -not $runResourceGroupsCheckBox.Checked
+
+        if ($script:AnalysisMode -eq "History" -and -not $onlyBillingContactAudit -and -not $runCostCheckBox.Checked) {
             throw "Running history requires the Cost Management export."
         }
 
-        if ($script:AnalysisMode -eq "History" -and $skipRetailCheckBox.Checked) {
+        if ($script:AnalysisMode -eq "History" -and -not $onlyBillingContactAudit -and $skipRetailCheckBox.Checked) {
             throw "Running history requires Retail Prices enrichment so estimated MACC savings can be calculated."
+        }
+
+        if ($customRangeCheckBox.Checked -and $customEndDatePicker.Value.Date -lt $customStartDatePicker.Value.Date) {
+            throw "Custom range end date must be on or after the start date."
         }
 
         if ([string]::IsNullOrWhiteSpace($localOutputTextBox.Text)) {
@@ -1516,10 +1605,14 @@ $runButton.Add_Click({
             TenantId = $tenantTextBox.Text.Trim()
             SubscriptionIds = $subscriptionIds
             AsOfDate = $asOfDatePicker.Value
+            CustomRangeEnabled = $customRangeCheckBox.Checked
+            CustomStartDate = $customStartDatePicker.Value.Date
+            CustomEndDate = $customEndDatePicker.Value.Date
             OutputRoot = $localOutputTextBox.Text.Trim()
             HistoryRoot = $historyRootTextBox.Text.Trim()
             RunCostAnalysis = $runCostCheckBox.Checked
             RunResourceGroups = $runResourceGroupsCheckBox.Checked
+            RunBillingContactAudit = $runBillingContactAuditCheckBox.Checked
             InstallAzureCli = $installCliCheckBox.Checked
             SkipRetailPriceLookup = $skipRetailCheckBox.Checked
             StorageLocation = $storageLocation

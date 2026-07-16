@@ -77,7 +77,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 ### Run the solution
 
 1. Choose the startup purpose: **Current view** or **Running history**. The launcher saves this choice and does not ask again unless you click **Change purpose**.
-2. Click **Load from tenant**, select the subscriptions to include, choose the export options and storage destination, then click **Run export**.
+2. Click **Load from tenant**, select the subscriptions to include, choose the export options and storage destination, then click **Run export**. Optionally check **Also export custom range** and choose start/end dates to create additional `custom-*` Cost Management exports for that date window. Keep **Run Azure billing contact audit** selected when you need billing contact, invoice recipient, sold-to, bill-to, PO, billing profile, invoice section, subscription billing property, and billing-role evidence.
 3. Copy the generated parameter values from `powerbi-storage-settings.json` into Power BI Desktop.
 4. Open `powerbi/Cost-Management.pbip` in Power BI Desktop and refresh the model.
 5. Review pages:
@@ -92,6 +92,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 - `Agreement Price Audit`
 - `Coverage and Exceptions`
 - `Billing and Ownership`
+- `Azure Billing Contact Audit`
 - `Granular Detail / Drillthrough`
 - `Data Quality & Customer Actions`
 
@@ -103,7 +104,7 @@ Run `scripts/Start-FinOpsDataPull.ps1` to open the Windows Forms launcher. The U
 - **Change purpose** - reopens the startup purpose dialog and saves the new choice.
 - **Save settings / Load settings** - saves and reloads launcher fields in `scripts\exports\finops-launcher-settings.json`, including tenant, selected storage destination, output root, script options, storage fields, and selected subscription IDs.
 - **Settings** - choose the JSON settings file location with a browse dialog. Save Settings and Load Settings use the selected file. If a custom settings file is selected, the launcher remembers that path for the next startup.
-- **Run export** - tenant, subscription loader with multi-select checkboxes, date, script selection, Azure CLI install option, Retail Prices lookup option, and destination selection.
+- **Run export** - tenant, subscription loader with multi-select checkboxes, date, script selection, Azure CLI install option, Retail Prices lookup option, Azure billing contact audit option, and destination selection.
 - **Local** - local staging/output root. Every run creates a timestamped `run-*` folder.
 - **Azure Blob** - storage account, container, and virtual folder prefix. Upload uses `az storage blob upload-batch --auth-mode login`.
 - **ADLS Gen2** - storage account, file system, and folder path. Upload uses `az storage fs directory upload --auth-mode login`.
@@ -113,6 +114,8 @@ Run `scripts/Start-FinOpsDataPull.ps1` to open the Windows Forms launcher. The U
 Cloud destinations are staged locally first because the existing export scripts write files. After a successful script run, the launcher uploads the run folder to the selected Blob container or ADLS Gen2 file system. For SharePoint, copy or sync the generated CSV files from the run folder to the configured document library folder. The launcher uses the signed-in Azure CLI identity for Blob and ADLS uploads and does not store storage account keys or SAS tokens.
 
 Saved subscription IDs are reapplied after subscriptions are loaded from Azure. If the saved subscriptions are no longer visible to the signed-in account, they remain unchecked.
+
+When **Run Azure billing contact audit** is selected, the launcher writes a `billing-contact-audit` folder under the timestamped run folder. It includes `Azure-Billing-Contact-Audit-*.md`, CSV summaries, and raw JSON for billing accounts, billing profiles, invoice sections, recent invoices, subscription billing properties, and billing role assignments. The audit is read-only and depends on the signed-in identity's Azure billing access; CSP reseller-only fields may still require a Partner Center export from the reseller.
 
 ## Running History Mode
 

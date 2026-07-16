@@ -1,0 +1,42 @@
+{
+  "Ok": true,
+  "Uri": "https://management.azure.com/subscriptions/c3454f9a-72a4-473e-b7ab-4e9b1107fd6d/providers/Microsoft.Billing/billingProperty/default?api-version=2024-04-01",
+  "Error": null,
+  "Data": {
+    "id": "/subscriptions/c3454f9a-72a4-473e-b7ab-4e9b1107fd6d/providers/Microsoft.Billing/billingProperty/default",
+    "name": "default",
+    "properties": {
+      "billingAccountAgreementType": "MicrosoftCustomerAgreement",
+      "billingAccountDisplayName": "Microsoft Shadow IT",
+      "billingAccountId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31",
+      "billingAccountStatus": "Active",
+      "billingAccountSubType": "Other",
+      "billingAccountType": "Internal",
+      "billingCurrency": "USD",
+      "billingProfileDisplayName": "Microsoft Shadow IT - MCAPS",
+      "billingProfileId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31/billingProfiles/J5TQ-WFJU-BG7-PKDK-SGB",
+      "billingProfilePaymentMethodFamily": "Other",
+      "billingProfileSpendingLimit": "Off",
+      "billingProfileSpendingLimitDetails": [
+        {
+          "startDate": "2022-04-06T18:00:47.4689751Z",
+          "status": "Active",
+          "type": "Sandbox"
+        }
+      ],
+      "billingProfileStatus": "Active",
+      "billingTenantId": "f6eb44c0-c26f-4d49-b816-751054d3b68d",
+      "invoiceSectionDisplayName": "MCAPS_Regions_US",
+      "invoiceSectionId": "/providers/Microsoft.Billing/billingAccounts/992a88b7-cd5b-53cb-2366-db5e28024d14:9229fd47-2538-4637-95a2-d5b3bdd8f0c2_2019-05-31/billingProfiles/J5TQ-WFJU-BG7-PKDK-SGB/invoiceSections/EJHH-JWQV-PJA-XRBR-SGB",
+      "invoiceSectionStatus": "Active",
+      "productId": "DZH318Z0BPS6",
+      "productName": "Microsoft Azure Standard",
+      "skuDescription": "Microsoft Azure Plan",
+      "skuId": "0001",
+      "subscriptionBillingStatus": "Active",
+      "subscriptionBillingType": "Paid",
+      "subscriptionWorkloadType": "Production"
+    },
+    "type": "Microsoft.Billing/billingProperty"
+  }
+}

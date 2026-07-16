@@ -93,6 +93,11 @@ function Get-FinOpsCostRows {
         @{ Period = "Last Month"; Path = Join-Path $RunRoot "last-month-cost-by-retail-join-enriched.csv" }
     )
 
+    $customPath = Join-Path $RunRoot "custom-cost-by-retail-join-enriched.csv"
+    if (Test-Path $customPath) {
+        $inputs += @{ Period = "Custom"; Path = $customPath }
+    }
+
     foreach ($input in $inputs) {
         if (-not (Test-Path $input.Path)) {
             Write-Warning "Audit artifacts could not find enriched cost file: $($input.Path)"

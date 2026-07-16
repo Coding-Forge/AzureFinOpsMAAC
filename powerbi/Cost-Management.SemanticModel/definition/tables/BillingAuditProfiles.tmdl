@@ -1,0 +1,80 @@
+table BillingAuditProfiles
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117101
+
+	column BillingAccountName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117102
+		summarizeBy: none
+		sourceColumn: BillingAccountName
+
+	column BillingProfileName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117103
+		summarizeBy: none
+		sourceColumn: BillingProfileName
+
+	column DisplayName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117104
+		summarizeBy: none
+		sourceColumn: DisplayName
+
+	column Status
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117105
+		summarizeBy: none
+		sourceColumn: Status
+
+	column BillTo
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117106
+		summarizeBy: none
+		sourceColumn: BillTo
+
+	column InvoiceEmailOptIn
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117107
+		summarizeBy: none
+		sourceColumn: InvoiceEmailOptIn
+
+	column InvoiceDay
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117108
+		summarizeBy: none
+		sourceColumn: InvoiceDay
+
+	column PoNumber
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117109
+		summarizeBy: none
+		sourceColumn: PoNumber
+
+	column Currency
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117110
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column RawJson
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117111
+		summarizeBy: none
+		sourceColumn: RawJson
+
+	partition BillingAuditProfiles = m
+		mode: import
+		source =
+				let
+				    ExpectedColumns = {"BillingAccountName", "BillingProfileName", "DisplayName", "Status", "BillTo", "InvoiceEmailOptIn", "InvoiceDay", "PoNumber", "Currency", "RawJson"},
+				    Source = OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/billing-profiles.csv", 10),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
+				    Typed = Table.TransformColumnTypes(Selected, {{"BillingAccountName", type text}, {"BillingProfileName", type text}, {"DisplayName", type text}, {"Status", type text}, {"BillTo", type text}, {"InvoiceEmailOptIn", type text}, {"InvoiceDay", type text}, {"PoNumber", type text}, {"Currency", type text}, {"RawJson", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

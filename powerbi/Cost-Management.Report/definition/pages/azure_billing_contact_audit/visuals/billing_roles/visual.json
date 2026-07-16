@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "billing_roles",
+  "position": {
+    "x": 20,
+    "y": 470,
+    "z": 1003,
+    "height": 205,
+    "width": 600,
+    "tabOrder": 1003
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "Scope"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.Scope",
+              "nativeQueryRef": "Scope"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "BillingAccountName"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.BillingAccountName",
+              "nativeQueryRef": "BillingAccountName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "Parent"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.Parent",
+              "nativeQueryRef": "Parent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "PrincipalName"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.PrincipalName",
+              "nativeQueryRef": "PrincipalName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "PrincipalEmail"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.PrincipalEmail",
+              "nativeQueryRef": "PrincipalEmail"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditRoleAssignments"
+                    }
+                  },
+                  "Property": "RoleDefinitionId"
+                }
+              },
+              "queryRef": "BillingAuditRoleAssignments.RoleDefinitionId",
+              "nativeQueryRef": "RoleDefinitionId"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Billing role assignments'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

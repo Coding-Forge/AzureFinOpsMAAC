@@ -21,7 +21,7 @@ table datedim
 		dataType: int64
 		formatString: 0
 		lineageTag: a967538f-bf69-4c36-b973-d39ed8e92cbc
-		summarizeBy: count
+		summarizeBy: none
 		sourceColumn: DateKey
 
 		annotation SummarizationSetBy = Automatic

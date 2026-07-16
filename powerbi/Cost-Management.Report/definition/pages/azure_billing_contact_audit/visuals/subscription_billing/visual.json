@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "subscription_billing",
+  "position": {
+    "x": 640,
+    "y": 280,
+    "z": 1002,
+    "height": 155,
+    "width": 600,
+    "tabOrder": 1002
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditSubscriptionProperties"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "BillingAuditSubscriptionProperties.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditSubscriptionProperties"
+                    }
+                  },
+                  "Property": "SubscriptionId"
+                }
+              },
+              "queryRef": "BillingAuditSubscriptionProperties.SubscriptionId",
+              "nativeQueryRef": "SubscriptionId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditSubscriptionProperties"
+                    }
+                  },
+                  "Property": "BillingAccountId"
+                }
+              },
+              "queryRef": "BillingAuditSubscriptionProperties.BillingAccountId",
+              "nativeQueryRef": "BillingAccountId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditSubscriptionProperties"
+                    }
+                  },
+                  "Property": "BillingProfileId"
+                }
+              },
+              "queryRef": "BillingAuditSubscriptionProperties.BillingProfileId",
+              "nativeQueryRef": "BillingProfileId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditSubscriptionProperties"
+                    }
+                  },
+                  "Property": "InvoiceSectionId"
+                }
+              },
+              "queryRef": "BillingAuditSubscriptionProperties.InvoiceSectionId",
+              "nativeQueryRef": "InvoiceSectionId"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Subscription billing mappings'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

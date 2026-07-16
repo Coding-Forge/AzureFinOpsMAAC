@@ -15,11 +15,12 @@
     "macc_price_audit",
     "macc_coverage_exceptions",
     "macc_billing_ownership",
+    "azure_billing_contact_audit",
     "ea_savings_overview",
     "reservation_savings_plan_coverage",
     "azure_hybrid_benefit_opportunities",
     "spot_pricing_opportunities",
     "devtest_pricing_opportunities"
   ],
-  "activePageName": "finops_report_landing"
+  "activePageName": "azure_billing_contact_audit"
 }

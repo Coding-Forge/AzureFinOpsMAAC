@@ -1,0 +1,23 @@
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "b821d3a2-12b8-4f92-8a28-737690ac4e0a",
+  "id": "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d",
+  "isDefault": true,
+  "managedByTenants": [
+    {
+      "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+    },
+    {
+      "tenantId": "2f4a9838-26b7-47ee-be60-ccc1fdec5953"
+    }
+  ],
+  "name": "ME-MngEnvMCAP907283-brcampb-1",
+  "state": "Enabled",
+  "tenantDefaultDomain": "MngEnvMCAP907283.onmicrosoft.com",
+  "tenantDisplayName": "Contoso",
+  "tenantId": "b821d3a2-12b8-4f92-8a28-737690ac4e0a",
+  "user": {
+    "name": "brcampb@MngEnvMCAP907283.onmicrosoft.com",
+    "type": "user"
+  }
+}

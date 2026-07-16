@@ -1,0 +1,68 @@
+table BillingAuditAccounts
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117001
+
+	column BillingAccountName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117002
+		summarizeBy: none
+		sourceColumn: BillingAccountName
+
+	column DisplayName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117003
+		summarizeBy: none
+		sourceColumn: DisplayName
+
+	column AccountType
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117004
+		summarizeBy: none
+		sourceColumn: AccountType
+
+	column AgreementType
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117005
+		summarizeBy: none
+		sourceColumn: AgreementType
+
+	column Status
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117006
+		summarizeBy: none
+		sourceColumn: Status
+
+	column SoldTo
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117007
+		summarizeBy: none
+		sourceColumn: SoldTo
+
+	column RegistrationNumber
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117008
+		summarizeBy: none
+		sourceColumn: RegistrationNumber
+
+	column RawJson
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117009
+		summarizeBy: none
+		sourceColumn: RawJson
+
+	partition BillingAuditAccounts = m
+		mode: import
+		source =
+				let
+				    ExpectedColumns = {"BillingAccountName", "DisplayName", "AccountType", "AgreementType", "Status", "SoldTo", "RegistrationNumber", "RawJson"},
+				    Source = OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/billing-accounts.csv", 8),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
+				    Typed = Table.TransformColumnTypes(Selected, {{"BillingAccountName", type text}, {"DisplayName", type text}, {"AccountType", type text}, {"AgreementType", type text}, {"Status", type text}, {"SoldTo", type text}, {"RegistrationNumber", type text}, {"RawJson", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

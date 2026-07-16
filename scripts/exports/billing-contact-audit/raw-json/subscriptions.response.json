@@ -1,0 +1,40 @@
+{
+  "Ok": true,
+  "Uri": "https://management.azure.com/subscriptions?api-version=2022-12-01",
+  "Error": null,
+  "Data": {
+    "count": {
+      "type": "Total",
+      "value": 1
+    },
+    "value": [
+      {
+        "authorizationSource": "RoleBased",
+        "displayName": "ME-MngEnvMCAP907283-brcampb-1",
+        "id": "/subscriptions/c3454f9a-72a4-473e-b7ab-4e9b1107fd6d",
+        "managedByTenants": [
+          {
+            "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+          },
+          {
+            "tenantId": "2f4a9838-26b7-47ee-be60-ccc1fdec5953"
+          }
+        ],
+        "state": "Enabled",
+        "subscriptionId": "c3454f9a-72a4-473e-b7ab-4e9b1107fd6d",
+        "subscriptionPolicies": {
+          "locationPlacementId": "Internal_2014-09-01",
+          "quotaId": "Internal_2014-09-01",
+          "spendingLimit": "Off"
+        },
+        "tags": {
+          "Division": "Core",
+          "Environment": "Hybrid",
+          "Purpose": "UserTenant",
+          "TimeZone": "_P73324_United States_444350001"
+        },
+        "tenantId": "b821d3a2-12b8-4f92-8a28-737690ac4e0a"
+      }
+    ]
+  }
+}

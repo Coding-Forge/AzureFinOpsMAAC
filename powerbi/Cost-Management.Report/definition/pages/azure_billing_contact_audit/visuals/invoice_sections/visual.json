@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "invoice_sections",
+  "position": {
+    "x": 20,
+    "y": 280,
+    "z": 1005,
+    "height": 155,
+    "width": 600,
+    "tabOrder": 1005
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoiceSections"
+                    }
+                  },
+                  "Property": "BillingAccountName"
+                }
+              },
+              "queryRef": "BillingAuditInvoiceSections.BillingAccountName",
+              "nativeQueryRef": "BillingAccountName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoiceSections"
+                    }
+                  },
+                  "Property": "BillingProfileName"
+                }
+              },
+              "queryRef": "BillingAuditInvoiceSections.BillingProfileName",
+              "nativeQueryRef": "BillingProfileName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoiceSections"
+                    }
+                  },
+                  "Property": "InvoiceSectionName"
+                }
+              },
+              "queryRef": "BillingAuditInvoiceSections.InvoiceSectionName",
+              "nativeQueryRef": "InvoiceSectionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoiceSections"
+                    }
+                  },
+                  "Property": "DisplayName"
+                }
+              },
+              "queryRef": "BillingAuditInvoiceSections.DisplayName",
+              "nativeQueryRef": "DisplayName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoiceSections"
+                    }
+                  },
+                  "Property": "State"
+                }
+              },
+              "queryRef": "BillingAuditInvoiceSections.State",
+              "nativeQueryRef": "State"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Invoice sections'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

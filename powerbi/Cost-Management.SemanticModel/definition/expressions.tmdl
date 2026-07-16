@@ -15,7 +15,7 @@ expression AnalysisMode = "History" meta [IsParameterQuery=true, List={"Current"
 	annotation PBI_ResultType = Text
 
 /// Local folder that contains the generated CSV files. Include the trailing slash or backslash.
-expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260630-171906\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260714-104827\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 977cdcb8-7cbf-4b71-b544-57e8d7a7bf85
 
 	annotation PBI_NavigationStepName = Navigation
@@ -65,6 +65,14 @@ expression HistoryDataRoot = "C:\Projects\Fabric\AuditDumps\history\" meta [IsPa
 /// Loads the durable historical CSV file from HistoryDataRoot. If the file is not present yet, returns a column-count-shaped empty CSV.
 expression CsvFromHistoryStorage = (fileName as text, columnCount as number) as table => let TrimmedRoot = Text.Trim(HistoryDataRoot), RootWithSeparator = if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\", SafeColumnCount = if columnCount < 1 then 1 else columnCount, EmptyCsvBinary = Text.ToBinary(Text.Combine(List.Transform({1..SafeColumnCount}, each "Column" & Text.From(_)), ",")), LoadedCsv = try File.Contents(RootWithSeparator & fileName), CsvBinary = if LoadedCsv[HasError] then EmptyCsvBinary else LoadedCsv[Value], Source = if LoadedCsv[HasError] then Csv.Document(CsvBinary, [Delimiter = ",", Columns = SafeColumnCount, Encoding = 65001, QuoteStyle = QuoteStyle.None]) else Csv.Document(CsvBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.None]) in Source
 	lineageTag: 77e4a29c-c189-4d3c-95fb-6e3674f3a9fd
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+/// Loads optional billing audit CSV files. Missing billing-contact-audit files return an empty column-count-shaped CSV so older export runs still refresh.
+expression OptionalBillingAuditCsvFromSelectedStorage = (fileName as text, columnCount as number) as table => let SelectedRoot = if StorageLocation = "Local" then LocalDataRoot else if StorageLocation = "AzureBlob" then BlobDataRoot else if StorageLocation = "ADLSGen2" then AdlsDataRoot else if StorageLocation = "SharePoint" then SharePointDataRoot else error "Unsupported StorageLocation. Use Local, AzureBlob, ADLSGen2, or SharePoint.", TrimmedRoot = Text.Trim(SelectedRoot), RootWithSeparator = if StorageLocation = "Local" then if Text.EndsWith(TrimmedRoot, "\") or Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "\" else if Text.EndsWith(TrimmedRoot, "/") then TrimmedRoot else TrimmedRoot & "/", SafeColumnCount = if columnCount < 1 then 1 else columnCount, EmptyCsvBinary = Text.ToBinary(Text.Combine(List.Transform({1..SafeColumnCount}, each "Column" & Text.From(_)), ",")), CsvBinary = if StorageLocation = "Local" then let NormalizedFileName = Text.Replace(fileName, "/", "\"), RelativeParts = Text.Split(NormalizedFileName, "\"), TargetName = List.Last(RelativeParts), TargetFolderSuffix = if List.Count(RelativeParts) > 1 then Text.Combine(List.RemoveLastN(RelativeParts, 1), "\") & "\" else "", FolderRows = try Folder.Files(RootWithSeparator) otherwise #table({}, {}), MatchingRows = if Table.HasColumns(FolderRows, {"Folder Path", "Name", "Content"}) then Table.SelectRows(FolderRows, each [Name] = TargetName and Text.EndsWith([Folder Path], TargetFolderSuffix)) else #table({}, {}), Content = if Table.RowCount(MatchingRows) > 0 then MatchingRows{0}[Content] else EmptyCsvBinary in Content else let LoadedCsv = try Web.Contents(RootWithSeparator & fileName) in if LoadedCsv[HasError] then EmptyCsvBinary else LoadedCsv[Value], Source = Csv.Document(CsvBinary, [Delimiter = ",", Columns = SafeColumnCount, Encoding = 65001, QuoteStyle = QuoteStyle.None]) in Source
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117901
 
 	annotation PBI_NavigationStepName = Navigation
 

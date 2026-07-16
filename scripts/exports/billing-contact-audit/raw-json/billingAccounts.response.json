@@ -1,0 +1,8 @@
+{
+  "Ok": true,
+  "Uri": "https://management.azure.com/providers/Microsoft.Billing/billingAccounts?api-version=2024-04-01",
+  "Error": null,
+  "Data": {
+    "value": []
+  }
+}
