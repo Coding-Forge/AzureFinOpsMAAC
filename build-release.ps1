@@ -168,7 +168,30 @@ $manifestPath = Join-Path $ReleaseRoot "_release-manifest.json"
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -Path $manifestPath -Encoding UTF8
 
 if (-not $NoZip) {
-    Compress-Archive -Path (Join-Path $ReleaseRoot "*") -DestinationPath $ZipPath -CompressionLevel Optimal -Force
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $zipDirectory = Split-Path -Parent $ZipPath
+    New-Item -ItemType Directory -Path $zipDirectory -Force | Out-Null
+    if (Test-Path $ZipPath) {
+        Remove-Item -Path $ZipPath -Force
+    }
+
+    $zipArchive = [System.IO.Compression.ZipFile]::Open($ZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        Get-ChildItem -Path $ReleaseRoot -Recurse -File | Sort-Object FullName | ForEach-Object {
+            $entryName = (Get-RelativeReleasePath -Root $ReleaseRoot -Path $_.FullName) -replace "\\", "/"
+            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                $zipArchive,
+                $_.FullName,
+                $entryName,
+                [System.IO.Compression.CompressionLevel]::Optimal
+            ) | Out-Null
+        }
+    }
+    finally {
+        $zipArchive.Dispose()
+    }
+
     $hash = Get-FileHash -Path $ZipPath -Algorithm SHA256
     $hashPath = "$ZipPath.sha256"
     "$($hash.Hash)  $(Split-Path -Leaf $ZipPath)" | Set-Content -Path $hashPath -Encoding ASCII

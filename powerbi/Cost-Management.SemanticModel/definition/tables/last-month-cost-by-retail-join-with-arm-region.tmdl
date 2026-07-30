@@ -114,9 +114,9 @@ table last-month-cost-by-retail-join-with-arm-region
 		mode: import
 		source =
 				let
-				Source = CsvFromSelectedStorage("last-month-cost-by-retail-join-with-arm-region.csv", 11),
-				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}})
+				Source = #"last-month-cost-by-retail-join-enriched",
+				#"Selected columns" = Table.SelectColumns(Source, {"UsageQuantity", "Cost", "UsageDate", "ServiceName", "ResourceLocation", "Meter", "Product", "PartNumber", "UnitOfMeasure", "Currency", "SubscriptionId", "SubscriptionName", "ArmRegionName"}),
+				#"Changed column type" = Table.TransformColumnTypes(#"Selected columns", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}})
 				in
 				#"Changed column type"
 

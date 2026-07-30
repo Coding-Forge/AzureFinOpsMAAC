@@ -1299,7 +1299,6 @@ function Get-LauncherSettingsFromForm {
         AnalysisMode = $script:AnalysisMode
         TenantId = $tenantTextBox.Text.Trim()
         SelectedSubscriptionIds = @(Get-SelectedSubscriptionIds)
-        AsOfDate = $asOfDatePicker.Value.ToString("yyyy-MM-dd")
         CustomRangeEnabled = $customRangeCheckBox.Checked
         CustomStartDate = $customStartDatePicker.Value.ToString("yyyy-MM-dd")
         CustomEndDate = $customEndDatePicker.Value.ToString("yyyy-MM-dd")
@@ -1336,12 +1335,7 @@ function Apply-LauncherSettingsToForm {
         Set-AnalysisMode -AnalysisMode $Settings.AnalysisMode
     }
     if ($null -ne $Settings.TenantId) { $tenantTextBox.Text = [string]$Settings.TenantId }
-    if ($Settings.AsOfDate) {
-        $parsedDate = [datetime]::MinValue
-        if ([datetime]::TryParse([string]$Settings.AsOfDate, [ref]$parsedDate)) {
-            $asOfDatePicker.Value = $parsedDate
-        }
-    }
+    $asOfDatePicker.Value = (Get-Date).Date
     if ($null -ne $Settings.CustomRangeEnabled) { $customRangeCheckBox.Checked = [bool]$Settings.CustomRangeEnabled }
     if ($Settings.CustomStartDate) {
         $parsedCustomStartDate = [datetime]::MinValue
