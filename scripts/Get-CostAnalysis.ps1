@@ -282,6 +282,68 @@ function New-ODataStringLiteral {
     return "'" + ($Value -replace "'", "''") + "'"
 }
 
+function Get-RestRetryDelaySeconds {
+    param(
+        [Parameter(Mandatory)]
+        [System.Management.Automation.ErrorRecord]$ErrorRecord,
+
+        [Parameter(Mandatory)]
+        [int]$Attempt
+    )
+
+    $retryAfter = $null
+    if ($ErrorRecord.Exception.Response -and $ErrorRecord.Exception.Response.Headers) {
+        $retryAfter = $ErrorRecord.Exception.Response.Headers["Retry-After"]
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($retryAfter)) {
+        $retryAfterSeconds = 0
+        if ([int]::TryParse($retryAfter, [ref]$retryAfterSeconds) -and $retryAfterSeconds -gt 0) {
+            return [Math]::Min(300, $retryAfterSeconds)
+        }
+
+        $retryAfterDate = [datetime]::MinValue
+        if ([datetime]::TryParse($retryAfter, [ref]$retryAfterDate)) {
+            $secondsUntilRetry = [int][Math]::Ceiling(($retryAfterDate.ToUniversalTime() - (Get-Date).ToUniversalTime()).TotalSeconds)
+            if ($secondsUntilRetry -gt 0) {
+                return [Math]::Min(300, $secondsUntilRetry)
+            }
+        }
+    }
+
+    return [Math]::Min(120, [Math]::Pow(2, $Attempt) * 5)
+}
+
+function Invoke-RestMethodWithRetry {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Uri,
+
+        [string]$Method = "Get",
+
+        [int]$MaxAttempts = 6
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            return Invoke-RestMethod -Uri $Uri -Method $Method
+        }
+        catch {
+            $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $message = $_.Exception.Message
+            $isRetryable = $statusCode -eq 429 -or $statusCode -in @(500, 502, 503, 504) -or $message -match "Too many requests|Too Many Requests|temporarily unavailable|timeout|timed out"
+
+            if (-not $isRetryable -or $attempt -eq $MaxAttempts) {
+                throw
+            }
+
+            $delaySeconds = Get-RestRetryDelaySeconds -ErrorRecord $_ -Attempt $attempt
+            Write-Warning "Retail Prices API request was throttled or temporarily unavailable. Retrying in $delaySeconds seconds. Attempt $attempt of $MaxAttempts."
+            Start-Sleep -Seconds $delaySeconds
+        }
+    }
+}
+
 function Get-RetailPriceCandidates {
     param(
         [string]$ServiceName,
@@ -320,7 +382,7 @@ function Get-RetailPriceCandidates {
     $items = @()
 
     do {
-        $response = Invoke-RestMethod -Uri $url -Method Get
+        $response = Invoke-RestMethodWithRetry -Uri $url -Method Get
         $items += @($response.Items)
         $url = $response.NextPageLink
     } while ($url)
