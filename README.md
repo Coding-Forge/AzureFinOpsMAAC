@@ -123,10 +123,32 @@ More detailed operational and technical information has been moved out of this f
 
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
 - **Azure permissions matter.** Cost data, billing data, and storage uploads may require different permissions.
+- **Azure Government / GCC High requires extra validation.** Sign into Azure CLI with `az cloud set --name AzureUSGovernment` before running, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
 - **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.
 - **Some opportunity files are first-pass indicators.** RI/SP, Azure Hybrid Benefit, Spot, and Dev/Test outputs should be validated with official entitlement, utilization, and configuration data before making claims.
 - **PBIT files must be re-exported after model changes.** If the PBIP semantic model changes, open the PBIP in Power BI Desktop, validate refresh, and export a fresh `template\Cost-Management.pbit` before publishing a customer release.
+
+## Azure Government / GCC High note
+
+The solution was originally built and validated against commercial Azure endpoints. To use it with Azure Government / GCC High tenants, start PowerShell with Azure CLI set to the government cloud:
+
+```powershell
+az cloud set --name AzureUSGovernment
+az login --use-device-code --allow-no-subscriptions
+az account set --subscription "<subscription-id>"
+```
+
+Common government cloud portals:
+
+| Purpose | URL |
+| --- | --- |
+| Azure Government portal | `https://portal.azure.us` |
+| Microsoft 365 sign-in | `https://portal.office365.us` |
+| Microsoft 365 admin center | `https://admin.microsoft.us` |
+| Entra admin center | `https://entra.microsoft.us` |
+
+Before using results externally, verify the Cost Management, Billing, and Retail Prices calls succeed for the target government tenant. Some billing APIs, invoice fields, retail price metadata, or services may differ from commercial Azure.
 
 ## Disclaimer
 

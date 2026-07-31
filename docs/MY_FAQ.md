@@ -33,3 +33,28 @@ The most important nuance: **not all Azure cost counts toward MACC**. A good rep
 Some tables intentionally remain standalone because they are not at the same grain as the core cost facts. Examples include billing audit evidence, exception queues, export manifests, invoice reconciliation templates, ownership mapping templates, and savings-opportunity review outputs.
 
 Relating every table can create ambiguous filters, many-to-many behavior, duplicate totals, or circular dependencies. The core analytical model uses normalized facts and dimensions for cost and retail match analysis. Standalone tables are still important, but they should be used on their dedicated pages for evidence, governance, and remediation workflows.
+
+## Can I use this with Azure Government / GCC High?
+
+Yes, but validate the endpoints and available APIs before using the outputs externally. Set Azure CLI to the government cloud before launching the data pull:
+
+```powershell
+az cloud set --name AzureUSGovernment
+az login --use-device-code --allow-no-subscriptions
+az account set --subscription "<subscription-id>"
+```
+
+Useful government cloud URLs:
+
+| Purpose | URL |
+|---|---|
+| Azure Government portal | `https://portal.azure.us` |
+| Microsoft 365 / Office sign-in | `https://portal.office365.us` |
+| Microsoft 365 admin center | `https://admin.microsoft.us` |
+| Entra admin center | `https://entra.microsoft.us` |
+
+Important caveats:
+
+- Cost Management and Billing API availability/fields can differ by agreement type and cloud.
+- The solution currently uses the public Azure Retail Prices endpoint for retail enrichment. Confirm it is appropriate for the government tenant and pricing discussion.
+- If government retail matching is incomplete or not appropriate, use the report's actual-cost and billing evidence views, and treat retail-equivalent savings as directional only.

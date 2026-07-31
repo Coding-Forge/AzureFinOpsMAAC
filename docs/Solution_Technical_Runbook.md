@@ -56,6 +56,53 @@ The launcher supports:
 - Agreement ID, customer name, term dates, commitment amount, currency, and pacing thresholds.
 - Save/load of launcher settings.
 
+## Azure Government / GCC High operation
+
+The current scripts were originally developed against commercial Azure endpoints and should be validated carefully before customer use in Azure Government / GCC High. The Azure CLI cloud profile controls Azure Resource Manager endpoints used by `az account`, `az rest`, and storage upload commands.
+
+Before launching the data pull for an Azure Government tenant, run:
+
+```powershell
+az cloud set --name AzureUSGovernment
+az login --use-device-code --allow-no-subscriptions
+az account set --subscription "<subscription-id>"
+az cloud show
+```
+
+Confirm `az cloud show` reports `AzureUSGovernment` before using the launcher. If you later return to commercial Azure, reset with:
+
+```powershell
+az cloud set --name AzureCloud
+```
+
+Common government cloud URLs:
+
+| Purpose | URL |
+| --- | --- |
+| Azure Government portal | `https://portal.azure.us` |
+| Microsoft 365 / Office sign-in | `https://portal.office365.us` |
+| Microsoft 365 admin center | `https://admin.microsoft.us` |
+| Entra admin center | `https://entra.microsoft.us` |
+| My Apps | `https://myapps.microsoft.us` |
+
+### Government cloud validation checklist
+
+Before relying on the report for a GCC High / Azure Government customer, validate:
+
+1. `az account list` shows the intended government tenant/subscriptions.
+2. Cost Management query succeeds for the selected subscription.
+3. Billing audit APIs return data or documented warnings appropriate to the customer's billing model.
+4. Storage upload works if using Azure Blob Storage or ADLS Gen2 in Azure Government.
+5. Retail Prices enrichment succeeds and produces acceptable match coverage.
+6. Power BI Desktop can open the PBIT and refresh from the generated local or government storage paths.
+
+### Known caveats
+
+- The scripts call the Azure Retail Prices API at `https://prices.azure.com/api/retail/prices`. Validate that this public retail endpoint and its metadata are acceptable for the government customer scenario before using retail-equivalent savings externally.
+- Billing APIs may expose less data depending on MCA/EA/CSP/reseller structure and government cloud availability.
+- Government storage account URLs and authentication are controlled by Azure CLI cloud context; do not mix commercial and government storage roots.
+- Microsoft 365 GCC High portals use `.us` endpoints; do not use commercial admin URLs for tenant administration.
+
 ## Power BI parameter handling
 
 Each run writes:
@@ -112,6 +159,8 @@ https://management.azure.com/{scope}/providers/Microsoft.CostManagement/query?ap
 
 The request queries `ActualCost` with daily granularity. It groups data by service, resource group, resource location, meter, product, part number, and unit of measure.
 
+In Azure Government, Azure CLI should translate `management.azure.com` calls to the active cloud's Resource Manager endpoint when using `az rest`. Confirm this by setting `AzureUSGovernment` before running and validating the generated exports.
+
 The script runs the query for:
 
 - Month-to-date.
@@ -129,6 +178,8 @@ https://prices.azure.com/api/retail/prices
 ```
 
 The script filters by service name, meter, ARM region, and unit of measure. It retrieves retail SKU/meter identifiers, product names, SKU names, meter names, retail prices, unit prices, currency, and retail region.
+
+For Azure Government scenarios, treat retail enrichment as a validation item. Public retail pricing metadata may not always align with government offers, billing constructs, or contracted terms.
 
 This path can be slow and throttle-prone. The script retries 429, timeout, and temporary 5xx failures with backoff and honors `Retry-After` when returned.
 

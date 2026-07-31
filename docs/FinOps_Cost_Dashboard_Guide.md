@@ -190,6 +190,15 @@ Core customer-facing measures:
 
 Minimum practical permissions depend on where the data is queried.
 
+For Azure Government / GCC High customers, ensure Azure CLI is set to `AzureUSGovernment` before data extraction and validate the generated files before refreshing the PBIT:
+
+```powershell
+az cloud set --name AzureUSGovernment
+az login --use-device-code --allow-no-subscriptions
+```
+
+Use `https://portal.azure.us` for Azure Government administration and `https://admin.microsoft.us` / `https://portal.office365.us` for Microsoft 365 government administration.
+
 ### Azure subscription / resource scope
 
 For subscription-level Cost Management queries, the identity running the script generally needs one of the following at the target subscription, management group, or billing scope:

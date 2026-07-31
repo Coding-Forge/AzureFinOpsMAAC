@@ -148,6 +148,7 @@ When validating a release after semantic model changes, also confirm:
 - The PBIT refreshes after parameters are filled from `powerbi-storage-settings.json`.
 - Model Technical Tables visuals render named role-playing date dimensions.
 - Standalone audit/template pages render without requiring relationships to the core cost model.
+- For Azure Government / GCC High scenarios, validate the release with `az cloud set --name AzureUSGovernment`, government storage paths, and the customer's available Cost Management/Billing API surface.
 
 ## Commit release changes
 
