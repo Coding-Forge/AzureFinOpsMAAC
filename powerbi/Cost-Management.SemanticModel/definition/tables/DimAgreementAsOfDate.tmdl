@@ -8,26 +8,39 @@ table DimAgreementAsOfDate
 		summarizeBy: none
 		sourceColumn: Date
 
+		variation Variation
+			isDefault
+			relationship: 16f5916f-8e6f-46fe-ae3f-4ff4d2ace858
+			defaultHierarchy: LocalDateTable_6a7279ad-0f3e-4d62-8f43-ac9cf1f5d2df.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
 	column DateKey
 		dataType: int64
 		formatString: 0
 		lineageTag: 0874189f-0e39-47f0-968c-311112040003
-		summarizeBy: none
+		summarizeBy: count
 		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
 
 	column Year
 		dataType: int64
 		formatString: 0
 		lineageTag: 0874189f-0e39-47f0-968c-311112040004
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
 
 	column Month
 		dataType: int64
 		formatString: 0
 		lineageTag: 0874189f-0e39-47f0-968c-311112040005
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Month Name'
 		dataType: string
@@ -51,14 +64,43 @@ table DimAgreementAsOfDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 0874189f-0e39-47f0-968c-311112040009
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Fiscal Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Fiscal Quarter'
 		dataType: string
 		lineageTag: 0874189f-0e39-47f0-968c-311112040010
 		summarizeBy: none
 		sourceColumn: Fiscal Quarter
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: eb8193de-c062-4057-ba09-93e826ffade4
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: d03eba1f-bdfe-4649-ae01-6ee63a9862e4
+		summarizeBy: count
+		sourceColumn: YearMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 82841b75-b7cd-418a-8d97-7cda864d3b6f
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
 
 	partition DimAgreementAsOfDate = m
 		mode: import

@@ -8,26 +8,39 @@ table DimAgreementEndDate
 		summarizeBy: none
 		sourceColumn: Date
 
+		variation Variation
+			isDefault
+			relationship: 410182b9-d5ad-4de0-a517-cb969fea5266
+			defaultHierarchy: LocalDateTable_74e6b0e6-7062-4993-9777-53dbe720e596.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
 	column DateKey
 		dataType: int64
 		formatString: 0
 		lineageTag: 7b005859-b632-497a-b06d-311112030003
-		summarizeBy: none
+		summarizeBy: count
 		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
 
 	column Year
 		dataType: int64
 		formatString: 0
 		lineageTag: 7b005859-b632-497a-b06d-311112030004
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
 
 	column Month
 		dataType: int64
 		formatString: 0
 		lineageTag: 7b005859-b632-497a-b06d-311112030005
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Month Name'
 		dataType: string
@@ -51,14 +64,43 @@ table DimAgreementEndDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 7b005859-b632-497a-b06d-311112030009
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Fiscal Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Fiscal Quarter'
 		dataType: string
 		lineageTag: 7b005859-b632-497a-b06d-311112030010
 		summarizeBy: none
 		sourceColumn: Fiscal Quarter
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: d96398c3-5c36-4c43-9a7c-2cdbf883925c
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 9be66adf-4bd5-41f8-a087-78af1029d09f
+		summarizeBy: count
+		sourceColumn: YearMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1114b472-2e68-4ff8-86b7-2a69e20a053d
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
 
 	partition DimAgreementEndDate = m
 		mode: import

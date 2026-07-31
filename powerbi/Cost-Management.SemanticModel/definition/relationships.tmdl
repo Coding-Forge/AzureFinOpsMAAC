@@ -116,3 +116,34 @@ relationship 18f0a345-c782-43f0-b3c0-311112070010
 	joinOnDateBehavior: datePartOnly
 	fromColumn: AzureRetail.'Items.effectiveEndDate'
 	toColumn: DimRetailEffectiveEndDate.Date
+
+relationship c798a41f-4d59-43e8-8500-ae4531664e58
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimUsageDate.Date
+	toColumn: LocalDateTable_49fc166b-94d1-4626-aa4e-032e570a1543.Date
+
+relationship a5b6252c-7543-443e-b4cb-281e8573a569
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimAgreementStartDate.Date
+	toColumn: LocalDateTable_c2b7d299-dc73-4040-910e-c0ef0d09c791.Date
+
+relationship 410182b9-d5ad-4de0-a517-cb969fea5266
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimAgreementEndDate.Date
+	toColumn: LocalDateTable_74e6b0e6-7062-4993-9777-53dbe720e596.Date
+
+relationship 16f5916f-8e6f-46fe-ae3f-4ff4d2ace858
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimAgreementAsOfDate.Date
+	toColumn: LocalDateTable_6a7279ad-0f3e-4d62-8f43-ac9cf1f5d2df.Date
+
+relationship fcb8ff03-d6ed-43f1-ab2a-49e48bbf4fc1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimRetailEffectiveStartDate.Date
+	toColumn: LocalDateTable_8724d77b-4337-4561-ace2-8fe0f794be62.Date
+
+relationship 75876a71-7699-4305-b0d4-ced9516f0686
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimRetailEffectiveEndDate.Date
+	toColumn: LocalDateTable_fe6b35d8-0937-4d1c-adf6-74a6f25bf8d6.Date
+

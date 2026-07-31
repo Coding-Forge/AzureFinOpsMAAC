@@ -8,26 +8,39 @@ table DimAgreementStartDate
 		summarizeBy: none
 		sourceColumn: Date
 
+		variation Variation
+			isDefault
+			relationship: a5b6252c-7543-443e-b4cb-281e8573a569
+			defaultHierarchy: LocalDateTable_c2b7d299-dc73-4040-910e-c0ef0d09c791.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
 	column DateKey
 		dataType: int64
 		formatString: 0
 		lineageTag: 82683935-f29b-43dd-8a7e-311112020003
-		summarizeBy: none
+		summarizeBy: count
 		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
 
 	column Year
 		dataType: int64
 		formatString: 0
 		lineageTag: 82683935-f29b-43dd-8a7e-311112020004
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
 
 	column Month
 		dataType: int64
 		formatString: 0
 		lineageTag: 82683935-f29b-43dd-8a7e-311112020005
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Month Name'
 		dataType: string
@@ -51,14 +64,43 @@ table DimAgreementStartDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 82683935-f29b-43dd-8a7e-311112020009
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Fiscal Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Fiscal Quarter'
 		dataType: string
 		lineageTag: 82683935-f29b-43dd-8a7e-311112020010
 		summarizeBy: none
 		sourceColumn: Fiscal Quarter
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 3b292ad4-b581-4fdb-8f07-50d054285844
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 81dca1f8-798b-4615-a6ab-b948c8660de7
+		summarizeBy: count
+		sourceColumn: YearMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 005eb335-1e83-40f2-9d8b-286d220ceb19
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
 
 	partition DimAgreementStartDate = m
 		mode: import

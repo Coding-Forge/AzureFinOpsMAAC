@@ -8,6 +8,13 @@ table DimUsageDate
 		summarizeBy: none
 		sourceColumn: Date
 
+		variation Variation
+			isDefault
+			relationship: c798a41f-4d59-43e8-8500-ae4531664e58
+			defaultHierarchy: LocalDateTable_49fc166b-94d1-4626-aa4e-032e570a1543.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
 	column DateKey
 		dataType: int64
 		formatString: 0
@@ -19,15 +26,19 @@ table DimUsageDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 0cf35b78-b843-44ce-a45e-311112010004
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
 
 	column Month
 		dataType: int64
 		formatString: 0
 		lineageTag: 0cf35b78-b843-44ce-a45e-311112010005
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Month Name'
 		dataType: string
@@ -51,14 +62,43 @@ table DimUsageDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 0cf35b78-b843-44ce-a45e-311112010009
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Fiscal Month
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Fiscal Quarter'
 		dataType: string
 		lineageTag: 0cf35b78-b843-44ce-a45e-311112010010
 		summarizeBy: none
 		sourceColumn: Fiscal Quarter
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 694a8c0a-f7e3-4ff8-995b-bebd2b5352c4
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b735c5e5-eb7b-437a-9fe4-c7c6cbb46c3a
+		summarizeBy: count
+		sourceColumn: YearMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: fae9a2f1-4312-4d08-b11a-34dc35ec0dd3
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
 
 	partition DimUsageDate = m
 		mode: import

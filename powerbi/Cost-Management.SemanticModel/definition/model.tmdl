@@ -20,12 +20,6 @@ annotation PBI_ProTooling = ["DevMode"]
 ref table AzureRetail
 ref table DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484
 ref table datedim
-ref table DimUsageDate
-ref table DimAgreementStartDate
-ref table DimAgreementEndDate
-ref table DimAgreementAsOfDate
-ref table DimRetailEffectiveStartDate
-ref table DimRetailEffectiveEndDate
 ref table LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430
 ref table _Measures
 ref table last-month-cost-by-retail-join-enriched
@@ -75,6 +69,18 @@ ref table FactCostUsage
 ref table FactRetailPriceMatch
 ref table LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75
 ref table DimRetailSku
+ref table DimUsageDate
+ref table DimAgreementStartDate
+ref table DimAgreementEndDate
+ref table DimAgreementAsOfDate
+ref table DimRetailEffectiveStartDate
+ref table DimRetailEffectiveEndDate
+ref table LocalDateTable_49fc166b-94d1-4626-aa4e-032e570a1543
+ref table LocalDateTable_c2b7d299-dc73-4040-910e-c0ef0d09c791
+ref table LocalDateTable_74e6b0e6-7062-4993-9777-53dbe720e596
+ref table LocalDateTable_6a7279ad-0f3e-4d62-8f43-ac9cf1f5d2df
+ref table LocalDateTable_8724d77b-4337-4561-ace2-8fe0f794be62
+ref table LocalDateTable_fe6b35d8-0937-4d1c-adf6-74a6f25bf8d6
 
 ref cultureInfo en-US
 
