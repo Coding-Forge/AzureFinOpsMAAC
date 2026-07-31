@@ -13,7 +13,7 @@ queryGroup Exports
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["StorageLocation","AnalysisMode","LocalDataRoot","HistoryDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","CsvFromHistoryStorage","OptionalBillingAuditCsvFromSelectedStorage","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","last-month-cost-by-retail-join","last-month-cost-by-retail-join-enriched","last-month-cost-by-retail-join-with-arm-region","cost-summary-by-service","cost-summary-by-resourcegroup","DimSubscription","DimServiceModel","DimRegionModel","DimMeter","FactCostUsage","FactRetailPriceMatch","CostRetailFact","DimService","DimRegion","DimRetailMatch","AzureRetail","datedim","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","BillingAuditAccounts","BillingAuditProfiles","BillingAuditInvoiceSections","BillingAuditSubscriptionProperties","BillingAuditRoleAssignments","BillingAuditInvoices","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory","_Measures"]
+annotation PBI_QueryOrder = ["StorageLocation","AnalysisMode","LocalDataRoot","HistoryDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","CsvFromHistoryStorage","OptionalBillingAuditCsvFromSelectedStorage","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","last-month-cost-by-retail-join","last-month-cost-by-retail-join-enriched","last-month-cost-by-retail-join-with-arm-region","cost-summary-by-service","cost-summary-by-resourcegroup","DimSubscription","DimServiceModel","DimRegionModel","DimMeter","FactCostUsage","FactRetailPriceMatch","DimRetailSku","CostRetailFact","DimService","DimRegion","DimRetailMatch","AzureRetail","datedim","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","BillingAuditAccounts","BillingAuditProfiles","BillingAuditInvoiceSections","BillingAuditSubscriptionProperties","BillingAuditRoleAssignments","BillingAuditInvoices","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory","_Measures"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -75,6 +75,7 @@ ref table DimRegionModel
 ref table DimMeter
 ref table FactCostUsage
 ref table FactRetailPriceMatch
+ref table DimRetailSku
 ref table LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75
 
 ref cultureInfo en-US

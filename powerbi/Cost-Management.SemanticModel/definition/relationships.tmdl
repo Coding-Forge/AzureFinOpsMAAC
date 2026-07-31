@@ -96,6 +96,10 @@ relationship 8da193e6-5e86-46db-9e96-311111180008
 	fromColumn: FactRetailPriceMatch.MeterKey
 	toColumn: DimMeter.MeterKey
 
+relationship 8da193e6-5e86-46db-9e96-311111180009
+	fromColumn: FactRetailPriceMatch.RetailSkuKey
+	toColumn: DimRetailSku.RetailSkuKey
+
 relationship 8da193e6-5e86-46db-9e96-311111180010
 	fromColumn: FactRetailPriceMatch.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
