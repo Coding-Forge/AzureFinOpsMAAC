@@ -481,7 +481,7 @@ function Invoke-AzRestWithRetry {
 
         [string]$BodyPath,
 
-        [int]$MaxAttempts = 6
+        [int]$MaxAttempts = 8
     )
 
     for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
@@ -490,18 +490,31 @@ function Invoke-AzRestWithRetry {
             $args += @("--body", "@$BodyPath")
         }
 
-        $output = az @args 2>&1
-        if ($LASTEXITCODE -eq 0) {
-            return ($output -join [Environment]::NewLine)
+        $previousErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        try {
+            $output = az @args 2>&1
+            $exitCode = $LASTEXITCODE
+        }
+        catch {
+            $output = @($_.Exception.Message)
+            $exitCode = 1
+        }
+        finally {
+            $ErrorActionPreference = $previousErrorActionPreference
         }
 
-        $message = ($output -join [Environment]::NewLine)
+        $message = ($output | Out-String).Trim()
+        if ($exitCode -eq 0) {
+            return $message
+        }
+
         $isRetryable = $message -match "Too Many Requests|429|temporarily unavailable|timeout|timed out|503|504"
         if (-not $isRetryable -or $attempt -eq $MaxAttempts) {
             throw "Azure REST call failed after $attempt attempt(s): $message"
         }
 
-        $delaySeconds = [Math]::Min(60, [Math]::Pow(2, $attempt) * 5)
+        $delaySeconds = [Math]::Min(300, [Math]::Pow(2, $attempt) * 10)
         Write-Warning "Azure REST call was throttled or temporarily unavailable. Retrying in $delaySeconds seconds. Attempt $attempt of $MaxAttempts."
         Start-Sleep -Seconds $delaySeconds
     }
