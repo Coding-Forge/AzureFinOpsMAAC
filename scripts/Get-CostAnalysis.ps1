@@ -157,8 +157,28 @@ function Get-TargetSubscriptions {
             $requestedSet.Keys | Where-Object { -not $foundSet.ContainsKey($_) }
         )
 
+        foreach ($missingId in @($missing)) {
+            az account set --subscription $missingId 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                $subscriptionJson = az account show --output json 2>$null
+                if ($LASTEXITCODE -eq 0 -and $subscriptionJson) {
+                    $subscription = $subscriptionJson | ConvertFrom-Json
+                    if ($subscription.state -eq "Enabled" -and (-not $TenantId -or $subscription.tenantId -eq $TenantId)) {
+                        $selectedSubscriptions += $subscription
+                        $foundSet[([string]$subscription.id).ToLowerInvariant()] = $true
+                    }
+                }
+            }
+        }
+
+        $missing = @(
+            $requestedSet.Keys | Where-Object { -not $foundSet.ContainsKey($_) }
+        )
+
         if ($missing.Count -gt 0) {
-            throw "These subscription IDs were not found or are not enabled/accessible: $($missing -join ', ')"
+            $currentCloud = az cloud show --query name --output tsv 2>$null
+            $visibleSubscriptionIds = @($enabledSubscriptions | ForEach-Object { "$($_.name) [$($_.id)] tenant=$($_.tenantId)" })
+            throw "These subscription IDs were not found or are not enabled/accessible in Azure cloud '$currentCloud': $($missing -join ', '). Visible enabled subscriptions: $($visibleSubscriptionIds -join '; ')"
         }
     }
     else {
