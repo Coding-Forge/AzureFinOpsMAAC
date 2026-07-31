@@ -8,7 +8,8 @@ This Power BI project helps customers compare their actual Azure cost from the t
 
 | File or folder | Purpose |
 |---|---|
-| `Cost-Management.pbip` | Recommended PBIP file to open in Power BI Desktop. |
+| `Cost-Management.pbit` | Recommended customer distribution template when included in a release. |
+| `Cost-Management.pbip` | Source-controlled PBIP project for development and troubleshooting. |
 | `Cost-Management.Report` | Report layout pages and visuals. |
 | `Cost-Management.SemanticModel` | TMDL semantic model, tables, measures, relationships, and Power Query definitions. |
 | `FinOps_Cost_Dashboard_Guide.md` | This documentation file. |

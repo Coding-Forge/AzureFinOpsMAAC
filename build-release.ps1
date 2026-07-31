@@ -16,7 +16,9 @@ param(
 
     [switch]$Force,
 
-    [switch]$NoZip
+    [switch]$NoZip,
+
+    [switch]$RequirePbit
 )
 
 $ErrorActionPreference = "Stop"
@@ -122,6 +124,16 @@ $sourceFiles = Get-ChildItem -Path $ScriptRoot -Recurse -File -Force |
         -not (Test-ExcludedReleasePath -RelativePath $relativePath)
     }
 
+$pbitFiles = @(
+    $sourceFiles | Where-Object {
+        (Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName) -like "powerbi\*.pbit"
+    }
+)
+
+if ($RequirePbit -and $pbitFiles.Count -eq 0) {
+    throw "No Power BI template (.pbit) was found under $ScriptRoot\powerbi. Export the customer distribution template from Power BI Desktop before building with -RequirePbit."
+}
+
 foreach ($file in $sourceFiles) {
     $relativePath = Get-RelativeReleasePath -Root $ScriptRoot -Path $file.FullName
     $destinationPath = Join-Path $ReleaseRoot $relativePath
@@ -151,6 +163,8 @@ $manifest = [ordered]@{
     gitCommit = $commit
     gitHasUncommittedChanges = ($status.Count -gt 0)
     fileCount = @($sourceFiles).Count
+    hasPbit = ($pbitFiles.Count -gt 0)
+    pbitFiles = @($pbitFiles | ForEach-Object { Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName })
     excluded = @(
         ".git",
         "internal-docs",
@@ -201,6 +215,12 @@ Write-Host ""
 Write-Host "Release build complete."
 Write-Host "Version:        $Version"
 Write-Host "Release folder: $ReleaseRoot"
+if ($pbitFiles.Count -gt 0) {
+    Write-Host "PBIT files:     $($pbitFiles.Count)"
+}
+else {
+    Write-Warning "No .pbit file was found under powerbi. The release still includes the PBIP source, but customer template distribution requires manually exporting a PBIT before building with -RequirePbit."
+}
 if (-not $NoZip) {
     Write-Host "Release zip:    $ZipPath"
     Write-Host "SHA256 file:    $ZipPath.sha256"

@@ -17,7 +17,32 @@ Customers do not need to clone the repository if a tagged release is available. 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 ```
 
-The release zip contains the scripts, PBIP report, docs, and HTML help pages. It does not include generated exports, local settings, `.git`, Power BI cache folders, or internal development notes.
+The release zip contains the scripts, PBIP report source, docs, HTML help pages, and the customer-facing PBIT template when one has been exported under `powerbi\`. It does not include generated exports, local settings, `.git`, Power BI cache folders, or internal development notes.
+
+## PBIT distribution model
+
+Keep PBIP as the source-controlled development format. Use PBIT as the customer distribution format because it opens as a clean template, prompts for parameters, and avoids shipping cached local data.
+
+Recommended pattern:
+
+| Format | Purpose |
+| --- | --- |
+| `powerbi\Cost-Management.pbip` | Source-controlled development project. |
+| `powerbi\Cost-Management.pbit` | Customer-facing Power BI template exported before release. |
+| `AzureFinOpsMaccRetailSolution-v<version>.zip` | GitHub release bundle containing scripts, docs, PBIP source, and PBIT when present. |
+
+Power BI Desktop does not provide a reliable command-line export path for PBIT from PBIP. Export the PBIT manually during release validation:
+
+1. Open `powerbi\Cost-Management.pbip` in Power BI Desktop.
+2. Confirm parameters are generic or point to a safe sample/current run location.
+3. Use **File > Export > Power BI template (.pbit)**.
+4. Save it as:
+
+```text
+powerbi\Cost-Management.pbit
+```
+
+5. Close Power BI Desktop before running the release build.
 ## Prerequisites
 
 - PowerShell 5.1 or later.
@@ -45,7 +70,15 @@ releases\AzureFinOpsMaccRetailSolution-v1.0.0.zip.sha256
 
 The release folder includes `_release-manifest.json` with build metadata,
 including version, source path, Git branch, Git commit, file count, and whether
-there were uncommitted changes at build time.
+there were uncommitted changes at build time. It also records whether PBIT files were included.
+
+For customer releases where the PBIT is required, use:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit
+```
+
+`-RequirePbit` fails the build if no `.pbit` file exists under `powerbi\`.
 
 ## Replace an existing release build
 
@@ -75,6 +108,7 @@ The release package excludes generated or local-only content:
 - `scripts\exports`
 - Power BI `.pbi` cache/local settings folders
 - Existing `.zip` files
+- Generated export folders
 - Temporary and log files
 
 ## Validate the zip
@@ -86,7 +120,13 @@ cd <extracted-folder>
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 ```
 
-Also open:
+Also open the PBIT if it is included:
+
+```text
+powerbi\Cost-Management.pbit
+```
+
+Confirm the template opens, prompts for parameters, and can be pointed at a valid export folder. If no PBIT is included, open the PBIP source project:
 
 ```text
 powerbi\Cost-Management.pbip
@@ -144,11 +184,12 @@ For each new release:
 
 1. Make and validate the solution changes.
 2. Update documentation if user-facing behavior changed.
-3. Run `build-release.ps1` with a new version.
-4. Extract and smoke-test the zip.
-5. Commit the final changes.
-6. Create and push an annotated tag for the same version.
-7. Attach the zip and `.sha256` file to the GitHub release, if using GitHub
+3. Export `powerbi\Cost-Management.pbit` from Power BI Desktop when customer template distribution is needed.
+4. Run `build-release.ps1` with a new version, using `-RequirePbit` for customer releases.
+5. Extract and smoke-test the zip.
+6. Commit the final changes.
+7. Create and push an annotated tag for the same version.
+8. Attach the zip and `.sha256` file to the GitHub release, if using GitHub
    Releases.
 
 Recommended version tag format:

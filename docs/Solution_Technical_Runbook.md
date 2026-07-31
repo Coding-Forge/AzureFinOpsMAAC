@@ -6,7 +6,7 @@ This runbook contains the operational and technical details that were previously
 
 | Path | Purpose |
 | --- | --- |
-| `powerbi\` | PBIP report, report pages, visuals, semantic model, tables, measures, and Power Query definitions. |
+| `powerbi\` | PBIP report source, optional PBIT customer template, report pages, visuals, semantic model, tables, measures, and Power Query definitions. |
 | `scripts\` | PowerShell scripts used to collect and enrich Azure cost, pricing, resource, and billing data. |
 | `docs\` | Supporting documentation, report guides, FAQ, and release process. |
 | `pictures\` | Screenshot assets and visual references. |
@@ -28,7 +28,7 @@ This runbook contains the operational and technical details that were previously
 - Windows with PowerShell 7+ or Windows PowerShell 5.1.
 - Azure CLI available on PATH.
 - Azure CLI signed into the target tenant.
-- Power BI Desktop with PBIP support.
+- Power BI Desktop with PBIP support. PBIT export for customer releases is done manually from Power BI Desktop.
 - Access to read Azure Cost Management data for the selected subscriptions.
 - Additional billing permissions when running the billing contact audit.
 - Storage data-plane permissions when uploading to Azure Blob Storage or ADLS Gen2.
@@ -261,4 +261,10 @@ Create a distributable release folder and zip from the solution root:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0
 ```
 
-Release outputs are written to `releases\`. See `docs\Release_Process.md` for the full release, validation, and Git tagging workflow.
+For customer releases that must include a Power BI template, first export `powerbi\Cost-Management.pbit` from Power BI Desktop, then run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit
+```
+
+Release outputs are written to `releases\`. See `docs\Release_Process.md` for the full release, PBIT export, validation, and Git tagging workflow.

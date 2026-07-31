@@ -26,7 +26,7 @@ This project brings those signals together so a team can answer practical FinOps
 
 ## What is included
 
-- A Power BI report and semantic model in PBIP format.
+- A Power BI report and semantic model in PBIP format, with an optional PBIT template for customer distribution.
 - A Windows PowerShell launcher for running data pulls.
 - Scripts that collect Azure cost, pricing, resource location, and billing evidence.
 - CSV/JSON outputs that can be stored locally, in Azure Blob Storage, in ADLS Gen2, or copied to SharePoint.
@@ -60,7 +60,13 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 
 Then use the launcher to load subscriptions, choose the export options, and run the data pull. Close Power BI Desktop before running the export because the launcher updates PBIP parameter defaults before the refresh.
 
-After the run completes, open:
+After the run completes, open the customer template if one is included:
+
+```text
+powerbi\Cost-Management.pbit
+```
+
+If the release does not include a PBIT, open the PBIP source project instead:
 
 ```text
 powerbi\Cost-Management.pbip
