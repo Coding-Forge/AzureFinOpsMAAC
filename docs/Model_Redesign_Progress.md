@@ -7,8 +7,8 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 19 / 24 complete
-[###################-----] 79%
+Overall progress: 20 / 24 complete
+[####################----] 83%
 ```
 
 | Phase | Status | Complete | Total |
@@ -17,7 +17,7 @@ Overall progress: 19 / 24 complete
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
 | Phase 3 - Build relationship-based semantic model | In progress | 6 | 7 |
 | Phase 4 - Retire redundant staging tables | Complete | 4 | 4 |
-| Phase 5 - Release and documentation | Not started | 0 | 2 |
+| Phase 5 - Release and documentation | In progress | 1 | 2 |
 
 ## Phase 1 - Stabilize current model
 
@@ -65,7 +65,7 @@ Purpose: reduce refresh complexity and avoid cyclic dependency/staging-table iss
 
 Purpose: make the redesign understandable and distributable.
 
-- [ ] Update README, technical runbook, report guide, and release process.
+- [x] Update README, technical runbook, report guide, and release process.
 - [ ] Publish a release with the updated PBIT and PBIP/source package.
 
 ## Design principles
@@ -114,3 +114,10 @@ Use this section to capture evidence from the stabilization pass.
 | Check | Result | Evidence / notes |
 | --- | --- | --- |
 | Retail join staging tables retired | Passed | The four redundant retail join staging tables were marked `isHidden` instead of deleted because the `finops_pipeline_diagnostics` page still references them. This preserves diagnostics visuals while removing the tables from the normal field list. |
+
+## Phase 5 validation notes
+
+| Check | Result | Evidence / notes |
+| --- | --- | --- |
+| Documentation updated | Passed | README, technical runbook, and report guide now describe normalized model outputs, normalized history files, and the need to re-export `template\Cost-Management.pbit` after semantic model changes. |
+| PBIT re-export and release | Pending | Requires opening the PBIP in Power BI Desktop, validating refresh, exporting a fresh PBIT, and publishing a new release. |
