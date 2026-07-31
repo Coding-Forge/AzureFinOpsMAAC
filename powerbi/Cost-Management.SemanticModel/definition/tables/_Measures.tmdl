@@ -1,13 +1,13 @@
 table _Measures
 	lineageTag: c753e8dd-8d93-42b8-a23a-38fe14ee5c25
 
-	measure 'MTD Cost' = CALCULATE(sum('mtd-cost-by-service-resourcegroup'[Cost]))
+	measure 'MTD Cost' = CALCULATE(SUM(FactCostUsage[Cost]), FactCostUsage[Period] = "MTD")
 		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
 		lineageTag: 08b3bb46-e5ef-4e65-a825-e5288a90453b
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
-	measure 'Last Months Cost' = CALCULATE(sum('last-month-cost-by-service-resourcegroup'[Cost]))
+	measure 'Last Months Cost' = CALCULATE(SUM(FactCostUsage[Cost]), FactCostUsage[Period] = "Last Month")
 		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
 		lineageTag: a515d70a-7899-43d3-b81f-554aced87e64
 

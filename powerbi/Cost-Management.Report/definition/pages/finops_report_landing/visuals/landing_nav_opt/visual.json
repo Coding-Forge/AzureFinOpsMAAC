@@ -136,7 +136,7 @@
             }
           },
           "selector": {
-            "id": "finops_cost_export_validation"
+            "id": "finops_pipeline_diagnostics"
           }
         },
         {

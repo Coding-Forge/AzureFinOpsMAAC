@@ -49,32 +49,6 @@
         },
         {
           "location": {
-            "x": 9542.0485207383063,
-            "y": 1229.9375
-          },
-          "nodeIndex": "last-month-cost-by-service-resourcegroup",
-          "nodeLineageTag": "4e4c71e6-9a65-4288-b3e7-1f2ea9b98808",
-          "size": {
-            "height": 200,
-            "width": 234
-          },
-          "zIndex": 34
-        },
-        {
-          "location": {
-            "x": 8854.0485207383063,
-            "y": 723.9375
-          },
-          "nodeIndex": "mtd-cost-by-service-resourcegroup",
-          "nodeLineageTag": "0713199b-2567-4fcd-ae7b-843652400859",
-          "size": {
-            "height": 200,
-            "width": 234
-          },
-          "zIndex": 35
-        },
-        {
-          "location": {
             "x": 9193.0485207383063,
             "y": 941.4375
           },
