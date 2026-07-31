@@ -31,5 +31,6 @@
       }
     ]
   },
+  "visibility": "HiddenInViewMode",
   "howCreated": "Copilot"
 }
