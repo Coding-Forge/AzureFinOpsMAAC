@@ -1,0 +1,53 @@
+table DimMeter
+	lineageTag: 5640aa90-c060-4738-b652-311111160001
+
+	column MeterKey
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160002
+		summarizeBy: none
+		sourceColumn: MeterKey
+
+	column ServiceName
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160003
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column Meter
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160004
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160005
+		summarizeBy: none
+		sourceColumn: Product
+
+	column PartNumber
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160006
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: 5640aa90-c060-4738-b652-311111160007
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+	partition DimMeter = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("dim-meter.csv", 6),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"MeterKey", type text}, {"ServiceName", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}}, [MissingField = MissingField.UseNull])
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

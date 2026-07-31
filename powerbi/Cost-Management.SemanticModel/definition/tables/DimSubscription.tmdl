@@ -1,0 +1,29 @@
+table DimSubscription
+	lineageTag: 7e6f3e96-e503-46ac-b381-311111130001
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 7e6f3e96-e503-46ac-b381-311111130002
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 7e6f3e96-e503-46ac-b381-311111130003
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	partition DimSubscription = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("dim-subscription.csv", 2),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"SubscriptionId", type text}, {"SubscriptionName", type text}}, [MissingField = MissingField.UseNull])
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
