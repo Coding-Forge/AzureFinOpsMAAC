@@ -46,6 +46,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 The launcher supports:
 
 - Current view or running history mode.
+- Azure cloud selection: `AzureCloud` or `AzureUSGovernment`.
 - Tenant and subscription selection.
 - Month-to-date, last-month, and optional custom range exports.
 - Cost Management export.
@@ -60,7 +61,13 @@ The launcher supports:
 
 The current scripts were originally developed against commercial Azure endpoints and should be validated carefully before customer use in Azure Government / GCC High. The Azure CLI cloud profile controls Azure Resource Manager endpoints used by `az account`, `az rest`, and storage upload commands.
 
-Before launching the data pull for an Azure Government tenant, run:
+For an Azure Government tenant, select this on the Run export tab:
+
+```text
+Azure cloud = AzureUSGovernment
+```
+
+The launcher runs `az cloud set --name <selected cloud>` before loading subscriptions and before executing the generated run script. You can also set it manually before launching:
 
 ```powershell
 az cloud set --name AzureUSGovernment
@@ -69,7 +76,7 @@ az account set --subscription "<subscription-id>"
 az cloud show
 ```
 
-Confirm `az cloud show` reports `AzureUSGovernment` before using the launcher. If you later return to commercial Azure, reset with:
+Confirm `az cloud show` reports `AzureUSGovernment` when troubleshooting. If you later return to commercial Azure, either choose `AzureCloud` in the launcher or reset manually with:
 
 ```powershell
 az cloud set --name AzureCloud

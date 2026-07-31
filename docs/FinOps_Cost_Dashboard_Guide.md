@@ -190,7 +190,7 @@ Core customer-facing measures:
 
 Minimum practical permissions depend on where the data is queried.
 
-For Azure Government / GCC High customers, ensure Azure CLI is set to `AzureUSGovernment` before data extraction and validate the generated files before refreshing the PBIT:
+For Azure Government / GCC High customers, choose `AzureUSGovernment` in the launcher before loading subscriptions. The launcher sets the Azure CLI cloud before data extraction. You can also set it manually:
 
 ```powershell
 az cloud set --name AzureUSGovernment

@@ -36,7 +36,13 @@ Relating every table can create ambiguous filters, many-to-many behavior, duplic
 
 ## Can I use this with Azure Government / GCC High?
 
-Yes, but validate the endpoints and available APIs before using the outputs externally. Set Azure CLI to the government cloud before launching the data pull:
+Yes, but validate the endpoints and available APIs before using the outputs externally. In the launcher, choose:
+
+```text
+Azure cloud = AzureUSGovernment
+```
+
+The launcher sets the Azure CLI cloud before loading subscriptions and running the export. You can also set it manually:
 
 ```powershell
 az cloud set --name AzureUSGovernment

@@ -317,8 +317,31 @@ function Ensure-AzureCliForUi {
     }
 }
 
+function Set-AzureCloudForUi {
+    param([string]$AzureCloud = "AzureCloud")
+
+    $validClouds = @("AzureCloud", "AzureUSGovernment")
+    if ($AzureCloud -notin $validClouds) {
+        throw "Unsupported Azure cloud '$AzureCloud'. Use AzureCloud or AzureUSGovernment."
+    }
+
+    $currentCloud = az cloud show --query name --output tsv 2>$null
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($currentCloud) -or $currentCloud.Trim() -ne $AzureCloud) {
+        Write-Host "Setting Azure CLI cloud to $AzureCloud..."
+        az cloud set --name $AzureCloud | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Could not set Azure CLI cloud to '$AzureCloud'."
+        }
+    }
+}
+
 function Ensure-AzureLoginForUi {
-    param([string]$TenantId)
+    param(
+        [string]$TenantId,
+        [string]$AzureCloud = "AzureCloud"
+    )
+
+    Set-AzureCloudForUi -AzureCloud $AzureCloud
 
     $accountJson = az account show --output json 2>$null
     if ($LASTEXITCODE -eq 0 -and $accountJson) {
@@ -339,11 +362,12 @@ function Ensure-AzureLoginForUi {
 function Get-AzureSubscriptionsForUi {
     param(
         [string]$TenantId,
-        [bool]$InstallAzureCli
+        [bool]$InstallAzureCli,
+        [string]$AzureCloud = "AzureCloud"
     )
 
     Ensure-AzureCliForUi -InstallAzureCli $InstallAzureCli
-    Ensure-AzureLoginForUi -TenantId $TenantId
+    Ensure-AzureLoginForUi -TenantId $TenantId -AzureCloud $AzureCloud
 
     $subscriptions = @(az account list --all --output json | ConvertFrom-Json)
     if (-not $subscriptions -or $subscriptions.Count -eq 0) {
@@ -382,6 +406,7 @@ function New-RunScript {
 
     $settings = [ordered]@{
         AnalysisMode = $Config.AnalysisMode
+        AzureCloud = if ([string]::IsNullOrWhiteSpace([string]$Config.AzureCloud)) { "AzureCloud" } else { [string]$Config.AzureCloud }
         StorageLocation = $Config.StorageLocation
         LocalDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $runRoot
         HistoryDataRoot = ConvertTo-BaseUrl -StorageLocation "Local" -LocalPath $historyRoot
@@ -429,6 +454,7 @@ function New-RunScript {
     }
 
     $tenantLiteral = ConvertTo-PowerShellLiteral $Config.TenantId
+    $azureCloudLiteral = ConvertTo-PowerShellLiteral $(if ([string]::IsNullOrWhiteSpace([string]$Config.AzureCloud)) { "AzureCloud" } else { [string]$Config.AzureCloud })
     $outputLiteral = ConvertTo-PowerShellLiteral $runRoot
     $scriptRootLiteral = ConvertTo-PowerShellLiteral $PSScriptRoot
     $storageAccountLiteral = ConvertTo-PowerShellLiteral $Config.StorageAccount
@@ -463,6 +489,7 @@ function New-RunScript {
 `$scriptRoot = $scriptRootLiteral
 `$outputRoot = $outputLiteral
 `$tenantId = $tenantLiteral
+`$azureCloud = $azureCloudLiteral
 `$subscriptionIds = $subscriptionLiteral
 `$asOfDate = [datetime]$asOfDateLiteral
 `$customRangeEnabled = $customRangeEnabled
@@ -490,6 +517,17 @@ function New-RunScript {
 `$commitmentCurrency = $commitmentCurrencyLiteral
 `$pacingWarningPercent = [decimal]$pacingWarningLiteral
 `$pacingCriticalPercent = [decimal]$pacingCriticalLiteral
+
+if (`$azureCloud -notin @("AzureCloud", "AzureUSGovernment")) {
+    throw "Unsupported Azure cloud '`$azureCloud'. Use AzureCloud or AzureUSGovernment."
+}
+
+`$currentCloud = az cloud show --query name --output tsv 2>`$null
+if (`$LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace(`$currentCloud) -or `$currentCloud.Trim() -ne `$azureCloud) {
+    Write-Host "Setting Azure CLI cloud to `$azureCloud..."
+    az cloud set --name `$azureCloud | Out-Null
+    if (`$LASTEXITCODE -ne 0) { throw "Could not set Azure CLI cloud to '`$azureCloud'." }
+}
 
 function ConvertTo-TmdlStringLiteral {
     param([AllowNull()][string]`$Value)
@@ -934,8 +972,17 @@ $instructionsTab.Text = "Instructions"
 $tabs.TabPages.Add($instructionsTab)
 
 $runTab.Controls.Add((New-Label "Tenant ID (optional)" 20 25))
-$tenantTextBox = New-TextBox 210 22 600
+$tenantTextBox = New-TextBox 210 22 360
 $runTab.Controls.Add($tenantTextBox)
+
+$runTab.Controls.Add((New-Label "Azure cloud" 590 25 90))
+$azureCloudComboBox = New-Object System.Windows.Forms.ComboBox
+$azureCloudComboBox.DropDownStyle = "DropDownList"
+$azureCloudComboBox.Location = New-Object System.Drawing.Point(680, 22)
+$azureCloudComboBox.Size = New-Object System.Drawing.Size(180, 24)
+[void]$azureCloudComboBox.Items.AddRange(@("AzureCloud", "AzureUSGovernment"))
+$azureCloudComboBox.SelectedItem = "AzureCloud"
+$runTab.Controls.Add($azureCloudComboBox)
 
 $runTab.Controls.Add((New-Label "Subscriptions" 20 65))
 $loadSubscriptionsButton = New-Object System.Windows.Forms.Button
@@ -1248,7 +1295,7 @@ Operating flow
 1. Open this launcher from PowerShell:
    powershell.exe -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 
-2. On Run export, enter an optional tenant ID, click Load from tenant, and check the subscriptions to include.
+2. On Run export, choose AzureCloud or AzureUSGovernment, enter an optional tenant ID, click Load from tenant, and check the subscriptions to include.
 
 3. On Agreement, enter the customer's MACC agreement ID, term, commitment amount, currency, and pacing thresholds.
 
@@ -1388,6 +1435,7 @@ function Set-CheckedSubscriptionsById {
 function Get-LauncherSettingsFromForm {
     return @{
         AnalysisMode = $script:AnalysisMode
+        AzureCloud = [string]$azureCloudComboBox.SelectedItem
         TenantId = $tenantTextBox.Text.Trim()
         SelectedSubscriptionIds = @(Get-SelectedSubscriptionIds)
         CustomRangeEnabled = $customRangeCheckBox.Checked
@@ -1424,6 +1472,9 @@ function Apply-LauncherSettingsToForm {
 
     if ($Settings.AnalysisMode -in @("Current", "History")) {
         Set-AnalysisMode -AnalysisMode $Settings.AnalysisMode
+    }
+    if ($Settings.AzureCloud -in @("AzureCloud", "AzureUSGovernment")) {
+        $azureCloudComboBox.SelectedItem = [string]$Settings.AzureCloud
     }
     if ($null -ne $Settings.TenantId) { $tenantTextBox.Text = [string]$Settings.TenantId }
     $asOfDatePicker.Value = (Get-Date).Date
@@ -1490,7 +1541,7 @@ $loadSubscriptionsButton.Add_Click({
         $subscriptionStatusLabel.Text = "Loading subscriptions..."
         $form.Refresh()
 
-        $subscriptions = @(Get-AzureSubscriptionsForUi -TenantId $tenantTextBox.Text -InstallAzureCli $installCliCheckBox.Checked)
+        $subscriptions = @(Get-AzureSubscriptionsForUi -TenantId $tenantTextBox.Text -InstallAzureCli $installCliCheckBox.Checked -AzureCloud ([string]$azureCloudComboBox.SelectedItem))
         $subscriptionListBox.Items.Clear()
 
         foreach ($subscription in $subscriptions) {
@@ -1687,6 +1738,7 @@ $runButton.Add_Click({
 
         $config = @{
             AnalysisMode = $script:AnalysisMode
+            AzureCloud = [string]$azureCloudComboBox.SelectedItem
             TenantId = $tenantTextBox.Text.Trim()
             SubscriptionIds = $subscriptionIds
             AsOfDate = $asOfDatePicker.Value

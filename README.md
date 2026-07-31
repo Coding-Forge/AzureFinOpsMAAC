@@ -123,7 +123,7 @@ More detailed operational and technical information has been moved out of this f
 
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
 - **Azure permissions matter.** Cost data, billing data, and storage uploads may require different permissions.
-- **Azure Government / GCC High requires extra validation.** Sign into Azure CLI with `az cloud set --name AzureUSGovernment` before running, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
+- **Azure Government / GCC High requires extra validation.** Choose `AzureUSGovernment` in the launcher, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
 - **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.
 - **Some opportunity files are first-pass indicators.** RI/SP, Azure Hybrid Benefit, Spot, and Dev/Test outputs should be validated with official entitlement, utilization, and configuration data before making claims.
@@ -131,7 +131,13 @@ More detailed operational and technical information has been moved out of this f
 
 ## Azure Government / GCC High note
 
-The solution was originally built and validated against commercial Azure endpoints. To use it with Azure Government / GCC High tenants, start PowerShell with Azure CLI set to the government cloud:
+The solution was originally built and validated against commercial Azure endpoints. To use it with Azure Government / GCC High tenants, choose this value in the launcher:
+
+```text
+Azure cloud = AzureUSGovernment
+```
+
+The launcher applies the selected Azure CLI cloud before loading subscriptions or running exports. You can also set it manually before launch if preferred:
 
 ```powershell
 az cloud set --name AzureUSGovernment
