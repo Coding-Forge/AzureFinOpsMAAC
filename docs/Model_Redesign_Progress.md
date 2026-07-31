@@ -7,15 +7,15 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 9 / 24 complete
-[#########---------------] 38%
+Overall progress: 11 / 24 complete
+[###########-------------] 46%
 ```
 
 | Phase | Status | Complete | Total |
 | --- | --- | ---: | ---: |
 | Phase 1 - Stabilize current model | In progress | 3 | 5 |
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
-| Phase 3 - Build relationship-based semantic model | Not started | 0 | 7 |
+| Phase 3 - Build relationship-based semantic model | In progress | 2 | 7 |
 | Phase 4 - Retire redundant staging tables | Not started | 0 | 4 |
 | Phase 5 - Release and documentation | Not started | 0 | 2 |
 
@@ -44,8 +44,8 @@ Purpose: add model-friendly files without breaking existing audit/report files.
 
 Purpose: make Power BI responsible for relationships, slicers, reusable dimensions, and measures.
 
-- [ ] Add/import `FactCostUsage`.
-- [ ] Add/import `FactRetailPriceMatch`.
+- [x] Add/import `FactCostUsage`.
+- [x] Add/import `FactRetailPriceMatch`.
 - [ ] Add/import normalized dimensions: subscription, service, region, meter, retail SKU, match status.
 - [ ] Relate facts to dimensions with single-direction filter paths where possible.
 - [ ] Rebuild core measures from normalized facts.
@@ -95,3 +95,11 @@ Use this section to capture evidence from the stabilization pass.
 | Normalized output function parses | Passed | `scripts\Get-CostAnalysis.ps1` parsed successfully after adding normalized output functions. |
 | Synthetic normalized output test | Passed | Focused helper test generated `fact-cost-usage.csv`, `dim-subscription.csv`, `dim-service.csv`, `dim-region.csv`, `dim-meter.csv`, `fact-retail-price-match.csv`, and `dim-retail-sku.csv` from a two-row synthetic dataset. |
 | Existing files preserved | Passed | New outputs are additive. Existing enriched cost, retail join, summary, history, and audit CSV generation remains in place. |
+
+## Phase 3 validation notes
+
+| Check | Result | Evidence / notes |
+| --- | --- | --- |
+| `FactCostUsage` imported | Passed | Added `powerbi\Cost-Management.SemanticModel\definition\tables\FactCostUsage.tmdl`, sourced from `fact-cost-usage.csv`, and registered it in `model.tmdl`. |
+| `FactRetailPriceMatch` imported | Passed | Added `powerbi\Cost-Management.SemanticModel\definition\tables\FactRetailPriceMatch.tmdl`, sourced from `fact-retail-price-match.csv`, and registered it in `model.tmdl`. |
+| Backward compatibility | Passed | New fact tables are additive and tolerate missing normalized CSVs with `MissingField.UseNull`; existing report tables and measures remain unchanged. |
