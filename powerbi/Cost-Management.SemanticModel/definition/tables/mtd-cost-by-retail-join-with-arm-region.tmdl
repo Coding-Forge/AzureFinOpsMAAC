@@ -1,4 +1,5 @@
 table mtd-cost-by-retail-join-with-arm-region
+	isHidden
 	lineageTag: de842c12-7593-47f6-a881-94d3ef1f12d1
 
 	column UsageQuantity

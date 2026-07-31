@@ -1,4 +1,5 @@
 table last-month-cost-by-retail-join-with-arm-region
+	isHidden
 	lineageTag: 75ad8869-79c6-4f96-bff1-4c2414d02cea
 
 	column UsageQuantity

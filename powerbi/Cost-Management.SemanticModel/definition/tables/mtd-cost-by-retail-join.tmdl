@@ -1,4 +1,5 @@
 table mtd-cost-by-retail-join
+	isHidden
 	lineageTag: 5c0dbb80-6185-42a5-98c9-f7017e7f61f2
 
 	column UsageQuantity
