@@ -80,6 +80,15 @@ function Set-AzureCloud {
     }
 }
 
+function Get-AzureResourceManagerEndpoint {
+    $endpoint = az cloud show --query endpoints.resourceManager --output tsv 2>$null
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($endpoint)) {
+        throw "Could not determine Azure Resource Manager endpoint for the active Azure CLI cloud."
+    }
+
+    return $endpoint.TrimEnd("/")
+}
+
 function Ensure-AzureLogin {
     $accountJson = az account show --output json 2>$null
     if ($LASTEXITCODE -eq 0 -and $accountJson) {
@@ -153,23 +162,31 @@ function Invoke-AzRestJson {
     )
 
     try {
-        $raw = az rest --method get --uri $Uri --only-show-errors 2>&1
+        $resourceManagerEndpoint = Get-AzureResourceManagerEndpoint
+        $resolvedUri = if ($Uri -like "https://management.azure.com*") {
+            $Uri -replace "^https://management\.azure\.com", $resourceManagerEndpoint
+        }
+        else {
+            $Uri
+        }
+
+        $raw = az rest --method get --uri $resolvedUri --resource $resourceManagerEndpoint --only-show-errors 2>&1
         if ($LASTEXITCODE -ne 0) {
             if ($AllowFailure) {
                 return [pscustomobject]@{
                     Ok = $false
-                    Uri = $Uri
+                    Uri = $resolvedUri
                     Error = ($raw | Out-String).Trim()
                     Data = $null
                 }
             }
-            throw "az rest failed for $Uri`n$raw"
+            throw "az rest failed for $resolvedUri`n$raw"
         }
 
         $data = if ([string]::IsNullOrWhiteSpace($raw)) { $null } else { $raw | ConvertFrom-Json }
         return [pscustomobject]@{
             Ok = $true
-            Uri = $Uri
+            Uri = $resolvedUri
             Error = $null
             Data = $data
         }

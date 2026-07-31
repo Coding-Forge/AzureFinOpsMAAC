@@ -95,6 +95,15 @@ function Set-AzureCloud {
     }
 }
 
+function Get-AzureResourceManagerEndpoint {
+    $endpoint = az cloud show --query endpoints.resourceManager --output tsv 2>$null
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($endpoint)) {
+        throw "Could not determine Azure Resource Manager endpoint for the active Azure CLI cloud."
+    }
+
+    return $endpoint.TrimEnd("/")
+}
+
 function Ensure-AzureLogin {
     $accountJson = az account show --output json 2>$null
     if ($LASTEXITCODE -eq 0 -and $accountJson) {
@@ -524,7 +533,8 @@ function Invoke-AzRestWithRetry {
     )
 
     for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
-        $args = @("rest", "--method", $Method, "--uri", $Uri, "--output", "json")
+        $resourceManagerEndpoint = Get-AzureResourceManagerEndpoint
+        $args = @("rest", "--method", $Method, "--uri", $Uri, "--resource", $resourceManagerEndpoint, "--output", "json")
         if ($BodyPath) {
             $args += @("--body", "@$BodyPath")
         }
@@ -581,7 +591,8 @@ function Invoke-CostQuery {
         [string]$FileSuffix = "service-resourcegroup"
     )
 
-    $uri = "https://management.azure.com$Scope/providers/Microsoft.CostManagement/query?api-version=2023-11-01"
+    $resourceManagerEndpoint = Get-AzureResourceManagerEndpoint
+    $uri = "$resourceManagerEndpoint$Scope/providers/Microsoft.CostManagement/query?api-version=2023-11-01"
     $body = @{
         type = "ActualCost"
         timeframe = "Custom"
