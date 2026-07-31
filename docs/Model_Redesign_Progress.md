@@ -7,8 +7,8 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 15 / 24 complete
-[###############---------] 63%
+Overall progress: 19 / 24 complete
+[###################-----] 79%
 ```
 
 | Phase | Status | Complete | Total |
@@ -16,7 +16,7 @@ Overall progress: 15 / 24 complete
 | Phase 1 - Stabilize current model | In progress | 3 | 5 |
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
 | Phase 3 - Build relationship-based semantic model | In progress | 6 | 7 |
-| Phase 4 - Retire redundant staging tables | Not started | 0 | 4 |
+| Phase 4 - Retire redundant staging tables | Complete | 4 | 4 |
 | Phase 5 - Release and documentation | Not started | 0 | 2 |
 
 ## Phase 1 - Stabilize current model
@@ -56,10 +56,10 @@ Purpose: make Power BI responsible for relationships, slicers, reusable dimensio
 
 Purpose: reduce refresh complexity and avoid cyclic dependency/staging-table issues.
 
-- [ ] Hide or remove `mtd-cost-by-retail-join`.
-- [ ] Hide or remove `mtd-cost-by-retail-join-with-arm-region`.
-- [ ] Hide or remove `last-month-cost-by-retail-join`.
-- [ ] Hide or remove `last-month-cost-by-retail-join-with-arm-region`.
+- [x] Hide or remove `mtd-cost-by-retail-join`.
+- [x] Hide or remove `mtd-cost-by-retail-join-with-arm-region`.
+- [x] Hide or remove `last-month-cost-by-retail-join`.
+- [x] Hide or remove `last-month-cost-by-retail-join-with-arm-region`.
 
 ## Phase 5 - Release and documentation
 
@@ -108,3 +108,9 @@ Use this section to capture evidence from the stabilization pass.
 | Normalized measures added | Passed | Added additive normalized measures for actual cost, retail equivalent cost, estimated savings, savings rate, matched actual cost, retail match coverage, and cost row count. Existing measures were not replaced. |
 | Normalized history support added | Passed | Generated run scripts now maintain `fact-cost-usage-history.csv` and `fact-retail-price-match-history.csv`; normalized fact tables switch between current files and history files based on `AnalysisMode`. |
 | Normalized totals validated | Passed | Against `C:\Projects\Fabric\AuditDumps\run-20260730-105838`, `FactCostUsage` and `FactRetailPriceMatch` matched enriched-file totals with zero delta: MTD `$473.588895`; Last Month `$1279.839633`. Generated normalized files had 1,134 fact rows, 1 subscription, 7 services, 4 regions, 26 meters, and 27 retail SKUs. |
+
+## Phase 4 validation notes
+
+| Check | Result | Evidence / notes |
+| --- | --- | --- |
+| Retail join staging tables retired | Passed | The four redundant retail join staging tables were marked `isHidden` instead of deleted because the `finops_pipeline_diagnostics` page still references them. This preserves diagnostics visuals while removing the tables from the normal field list. |
