@@ -7,15 +7,15 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 14 / 24 complete
-[##############----------] 58%
+Overall progress: 15 / 24 complete
+[###############---------] 63%
 ```
 
 | Phase | Status | Complete | Total |
 | --- | --- | ---: | ---: |
 | Phase 1 - Stabilize current model | In progress | 3 | 5 |
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
-| Phase 3 - Build relationship-based semantic model | In progress | 5 | 7 |
+| Phase 3 - Build relationship-based semantic model | In progress | 6 | 7 |
 | Phase 4 - Retire redundant staging tables | Not started | 0 | 4 |
 | Phase 5 - Release and documentation | Not started | 0 | 2 |
 
@@ -49,7 +49,7 @@ Purpose: make Power BI responsible for relationships, slicers, reusable dimensio
 - [x] Add/import normalized dimensions: subscription, service, region, meter, retail SKU, match status.
 - [x] Relate facts to dimensions with single-direction filter paths where possible.
 - [x] Rebuild core measures from normalized facts.
-- [ ] Validate totals against the current enriched-file model.
+- [x] Validate totals against the current enriched-file model.
 - [ ] Update PBIT parameters and refresh behavior.
 
 ## Phase 4 - Retire redundant staging tables
@@ -106,3 +106,5 @@ Use this section to capture evidence from the stabilization pass.
 | Normalized dimensions imported | Passed | Added `DimSubscription`, `DimServiceModel`, `DimRegionModel`, `DimMeter`, and `DimRetailSku` from normalized CSV outputs. Continued using existing `DimRetailMatch` for match-status filtering. |
 | Normalized relationships added | Passed | Added single-direction relationships from `FactCostUsage` and `FactRetailPriceMatch` to subscription, service, region, meter, retail SKU, and retail match dimensions. |
 | Normalized measures added | Passed | Added additive normalized measures for actual cost, retail equivalent cost, estimated savings, savings rate, matched actual cost, retail match coverage, and cost row count. Existing measures were not replaced. |
+| Normalized history support added | Passed | Generated run scripts now maintain `fact-cost-usage-history.csv` and `fact-retail-price-match-history.csv`; normalized fact tables switch between current files and history files based on `AnalysisMode`. |
+| Normalized totals validated | Passed | Against `C:\Projects\Fabric\AuditDumps\run-20260730-105838`, `FactCostUsage` and `FactRetailPriceMatch` matched enriched-file totals with zero delta: MTD `$473.588895`; Last Month `$1279.839633`. Generated normalized files had 1,134 fact rows, 1 subscription, 7 services, 4 regions, 26 meters, and 27 retail SKUs. |
