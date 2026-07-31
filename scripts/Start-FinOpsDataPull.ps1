@@ -667,6 +667,96 @@ function Update-FinOpsCostHistory {
     Write-Host "Historical cost file copied to: `$((Join-Path `$OutputRoot "cost-retail-history.csv"))"
 }
 
+function Select-FinOpsNormalizedHistoryRows {
+    param(
+        [Parameter(Mandatory)]
+        [string]`$CsvPath,
+
+        [Parameter(Mandatory)]
+        [string]`$RunId,
+
+        [Parameter(Mandatory)]
+        [string]`$ExportedUtc
+    )
+
+    Import-Csv -Path `$CsvPath | ForEach-Object {
+        `$usageText = [string]`$_.UsageDate
+        `$historyMonth = if (`$usageText.Length -ge 6) { "`$(`$usageText.Substring(0, 4))-`$(`$usageText.Substring(4, 2))" } else { "" }
+        `$row = [ordered]@{
+            HistoryMonth = `$historyMonth
+            ExportRunId = `$RunId
+            ExportedUtc = `$ExportedUtc
+        }
+
+        foreach (`$property in `$_.PSObject.Properties) {
+            `$row[`$property.Name] = `$property.Value
+        }
+
+        [pscustomobject]`$row
+    }
+}
+
+function Update-FinOpsNormalizedHistoryFile {
+    param(
+        [Parameter(Mandatory)]
+        [string]`$OutputRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$FileName,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryFileName
+    )
+
+    `$currentPath = Join-Path `$OutputRoot `$FileName
+    if (-not (Test-Path `$currentPath)) {
+        Write-Warning "Normalized history file was skipped because the current run file was not found: `$currentPath"
+        return
+    }
+
+    New-Item -ItemType Directory -Path `$HistoryRoot -Force | Out-Null
+    `$historyFilePath = Join-Path `$HistoryRoot `$HistoryFileName
+    `$runId = Split-Path -Leaf `$OutputRoot
+    `$exportedUtc = (Get-Date).ToUniversalTime().ToString("o")
+    `$newRows = @(Select-FinOpsNormalizedHistoryRows -CsvPath `$currentPath -RunId `$runId -ExportedUtc `$exportedUtc)
+    `$existingRows = if (Test-Path `$historyFilePath) { @(Import-Csv -Path `$historyFilePath) } else { @() }
+    `$replaceKeys = @{}
+    foreach (`$row in `$newRows) {
+        `$replaceKeys["`$(`$row.HistoryMonth)|`$(`$row.Period)"] = `$true
+    }
+
+    `$keptRows = @(
+        `$existingRows | Where-Object {
+            -not `$replaceKeys.ContainsKey("`$(`$_.HistoryMonth)|`$(`$_.Period)")
+        }
+    )
+
+    `$allRows = @(`$keptRows) + @(`$newRows)
+    `$allRows |
+        Sort-Object HistoryMonth, Period, SubscriptionName, ServiceName, ArmRegionName, MeterKey, UsageDate |
+        Export-Csv -Path `$historyFilePath -NoTypeInformation -Encoding UTF8
+
+    Copy-Item -Path `$historyFilePath -Destination (Join-Path `$OutputRoot `$HistoryFileName) -Force
+    Write-Host "Normalized history file updated: `$historyFilePath"
+    Write-Host "Normalized history file copied to: `$((Join-Path `$OutputRoot `$HistoryFileName))"
+}
+
+function Update-FinOpsNormalizedHistories {
+    param(
+        [Parameter(Mandatory)]
+        [string]`$OutputRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryRoot
+    )
+
+    Update-FinOpsNormalizedHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "fact-cost-usage.csv" -HistoryFileName "fact-cost-usage-history.csv"
+    Update-FinOpsNormalizedHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "fact-retail-price-match.csv" -HistoryFileName "fact-retail-price-match-history.csv"
+}
+
 Start-Transcript -Path (Join-Path `$outputRoot "finops-data-pull.log") -Force
 try {
     Write-Host "Output folder: `$outputRoot"
@@ -725,6 +815,7 @@ try {
         }
 
         Update-FinOpsCostHistory -OutputRoot `$outputRoot -HistoryPath `$historyPath
+        Update-FinOpsNormalizedHistories -OutputRoot `$outputRoot -HistoryRoot `$historyRoot
     }
 
     if (`$runCostAnalysis -and -not `$skipRetailPriceLookup) {
