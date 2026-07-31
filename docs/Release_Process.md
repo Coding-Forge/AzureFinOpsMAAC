@@ -17,7 +17,7 @@ Customers do not need to clone the repository if a tagged release is available. 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDataPull.ps1
 ```
 
-The release zip contains the scripts, PBIP report source, docs, HTML help pages, and the customer-facing PBIT template when one has been exported under `powerbi\`. It does not include generated exports, local settings, `.git`, Power BI cache folders, or internal development notes.
+The release zip contains the scripts, docs, HTML help pages, and whichever Power BI report artifacts are selected for the release: PBIP source, PBIT template, or both. It does not include generated exports, local settings, `.git`, Power BI cache folders, or internal development notes.
 
 ## PBIT distribution model
 
@@ -29,7 +29,7 @@ Recommended pattern:
 | --- | --- |
 | `powerbi\Cost-Management.pbip` | Source-controlled development project. |
 | `powerbi\Cost-Management.pbit` | Customer-facing Power BI template exported before release. |
-| `AzureFinOpsMaccRetailSolution-v<version>.zip` | GitHub release bundle containing scripts, docs, PBIP source, and PBIT when present. |
+| `AzureFinOpsMaccRetailSolution-v<version>.zip` | GitHub release bundle containing scripts, docs, and the selected Power BI artifacts. |
 
 Power BI Desktop does not provide a reliable command-line export path for PBIT from PBIP. Export the PBIT manually during release validation:
 
@@ -79,6 +79,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Ver
 ```
 
 `-RequirePbit` fails the build if no `.pbit` file exists under `powerbi\`.
+
+To build a customer-only release that includes the PBIT but omits the PBIP source project, use:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit -ExcludePbip
+```
+
+`-ExcludePbip` removes `powerbi\*.pbip`, `powerbi\*.Report\`, and `powerbi\*.SemanticModel\` from the package. It fails unless a `.pbit` is present, so the release still contains a usable Power BI report artifact.
 
 ## Replace an existing release build
 
@@ -185,7 +193,7 @@ For each new release:
 1. Make and validate the solution changes.
 2. Update documentation if user-facing behavior changed.
 3. Export `powerbi\Cost-Management.pbit` from Power BI Desktop when customer template distribution is needed.
-4. Run `build-release.ps1` with a new version, using `-RequirePbit` for customer releases.
+4. Run `build-release.ps1` with a new version. Use `-RequirePbit` when a PBIT must be included, and add `-ExcludePbip` when the PBIP source should not be included.
 5. Extract and smoke-test the zip.
 6. Commit the final changes.
 7. Create and push an annotated tag for the same version.

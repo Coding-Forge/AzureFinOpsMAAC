@@ -18,7 +18,9 @@ param(
 
     [switch]$NoZip,
 
-    [switch]$RequirePbit
+    [switch]$RequirePbit,
+
+    [switch]$ExcludePbip
 )
 
 $ErrorActionPreference = "Stop"
@@ -47,6 +49,14 @@ function Test-ExcludedReleasePath {
     param([Parameter(Mandatory)][string]$RelativePath)
 
     $normalized = $RelativePath -replace "\\", "/"
+    if ($ExcludePbip -and (
+        $normalized -like "powerbi/*.pbip" -or
+        $normalized -like "powerbi/*.Report/*" -or
+        $normalized -like "powerbi/*.SemanticModel/*"
+    )) {
+        return $true
+    }
+
     $excludePatterns = @(
         ".git/*",
         ".git",
@@ -130,8 +140,21 @@ $pbitFiles = @(
     }
 )
 
+$pbipFiles = @(
+    $sourceFiles | Where-Object {
+        $relativePath = Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName
+        $relativePath -like "powerbi\*.pbip" -or
+            $relativePath -like "powerbi\*.Report\*" -or
+            $relativePath -like "powerbi\*.SemanticModel\*"
+    }
+)
+
 if ($RequirePbit -and $pbitFiles.Count -eq 0) {
     throw "No Power BI template (.pbit) was found under $ScriptRoot\powerbi. Export the customer distribution template from Power BI Desktop before building with -RequirePbit."
+}
+
+if ($ExcludePbip -and $pbitFiles.Count -eq 0) {
+    throw "Cannot build with -ExcludePbip because no Power BI template (.pbit) was found under $ScriptRoot\powerbi. Export a PBIT first or omit -ExcludePbip."
 }
 
 foreach ($file in $sourceFiles) {
@@ -164,7 +187,10 @@ $manifest = [ordered]@{
     gitHasUncommittedChanges = ($status.Count -gt 0)
     fileCount = @($sourceFiles).Count
     hasPbit = ($pbitFiles.Count -gt 0)
+    hasPbip = ($pbipFiles.Count -gt 0)
+    pbipExcluded = [bool]$ExcludePbip
     pbitFiles = @($pbitFiles | ForEach-Object { Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName })
+    pbipFiles = @($pbipFiles | ForEach-Object { Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName })
     excluded = @(
         ".git",
         "internal-docs",
@@ -220,6 +246,12 @@ if ($pbitFiles.Count -gt 0) {
 }
 else {
     Write-Warning "No .pbit file was found under powerbi. The release still includes the PBIP source, but customer template distribution requires manually exporting a PBIT before building with -RequirePbit."
+}
+if ($pbipFiles.Count -gt 0) {
+    Write-Host "PBIP files:     $($pbipFiles.Count)"
+}
+elseif ($ExcludePbip) {
+    Write-Host "PBIP source:    excluded"
 }
 if (-not $NoZip) {
     Write-Host "Release zip:    $ZipPath"

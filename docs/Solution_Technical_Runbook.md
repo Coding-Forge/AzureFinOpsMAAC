@@ -6,7 +6,7 @@ This runbook contains the operational and technical details that were previously
 
 | Path | Purpose |
 | --- | --- |
-| `powerbi\` | PBIP report source, optional PBIT customer template, report pages, visuals, semantic model, tables, measures, and Power Query definitions. |
+| `powerbi\` | Power BI artifacts. Releases can include the PBIP source project, the customer-facing PBIT template, or both. |
 | `scripts\` | PowerShell scripts used to collect and enrich Azure cost, pricing, resource, and billing data. |
 | `docs\` | Supporting documentation, report guides, FAQ, and release process. |
 | `pictures\` | Screenshot assets and visual references. |
@@ -265,6 +265,12 @@ For customer releases that must include a Power BI template, first export `power
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit
+```
+
+To publish only the customer template and omit the PBIP source project, use:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit -ExcludePbip
 ```
 
 Release outputs are written to `releases\`. See `docs\Release_Process.md` for the full release, PBIT export, validation, and Git tagging workflow.
