@@ -94,11 +94,6 @@ table AzureRetail
 		summarizeBy: none
 		sourceColumn: Items.effectiveStartDate
 
-		variation Variation
-			isDefault
-			relationship: 0d7607ca-9c60-4ce7-b8b5-9b0eed0cc740
-			defaultHierarchy: LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 	column 'Items.effectiveEndDate'
@@ -107,11 +102,6 @@ table AzureRetail
 		lineageTag: 66a7e133-85e1-45c1-afcb-2e4b47e2cbff
 		summarizeBy: none
 		sourceColumn: Items.effectiveEndDate
-
-		variation Variation
-			isDefault
-			relationship: e93dfa69-84f9-47ef-8af6-4e626119d659
-			defaultHierarchy: LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 

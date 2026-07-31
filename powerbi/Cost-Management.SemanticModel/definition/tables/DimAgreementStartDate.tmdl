@@ -1,0 +1,74 @@
+table DimAgreementStartDate
+	lineageTag: 82683935-f29b-43dd-8a7e-311112020001
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020002
+		summarizeBy: none
+		sourceColumn: Date
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020003
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020004
+		summarizeBy: none
+		sourceColumn: Year
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020005
+		summarizeBy: none
+		sourceColumn: Month
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020006
+		summarizeBy: none
+		sourceColumn: Month Name
+
+	column Year-Month
+		dataType: string
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020007
+		summarizeBy: none
+		sourceColumn: Year-Month
+
+	column 'Fiscal Year Label'
+		dataType: string
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020008
+		summarizeBy: none
+		sourceColumn: Fiscal Year Label
+
+	column 'Fiscal Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020009
+		summarizeBy: none
+		sourceColumn: Fiscal Month
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 82683935-f29b-43dd-8a7e-311112020010
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+	partition DimAgreementStartDate = m
+		mode: import
+		source =
+				let
+				    Source = datedim
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

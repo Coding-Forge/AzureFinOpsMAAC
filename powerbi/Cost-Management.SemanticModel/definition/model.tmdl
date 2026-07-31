@@ -13,15 +13,19 @@ queryGroup Exports
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["StorageLocation","AnalysisMode","LocalDataRoot","HistoryDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","CsvFromHistoryStorage","OptionalBillingAuditCsvFromSelectedStorage","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","last-month-cost-by-retail-join","last-month-cost-by-retail-join-enriched","last-month-cost-by-retail-join-with-arm-region","cost-summary-by-service","cost-summary-by-resourcegroup","DimSubscription","DimServiceModel","DimRegionModel","DimMeter","FactCostUsage","FactRetailPriceMatch","DimRetailSku","CostRetailFact","DimService","DimRegion","DimRetailMatch","AzureRetail","datedim","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","BillingAuditAccounts","BillingAuditProfiles","BillingAuditInvoiceSections","BillingAuditSubscriptionProperties","BillingAuditRoleAssignments","BillingAuditInvoices","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory","_Measures"]
+annotation PBI_QueryOrder = ["StorageLocation","AnalysisMode","LocalDataRoot","HistoryDataRoot","BlobDataRoot","AdlsDataRoot","SharePointDataRoot","CsvFromSelectedStorage","CsvFromHistoryStorage","OptionalBillingAuditCsvFromSelectedStorage","mtd-cost-by-retail-join","mtd-cost-by-retail-join-enriched","mtd-cost-by-retail-join-with-arm-region","last-month-cost-by-retail-join","last-month-cost-by-retail-join-enriched","last-month-cost-by-retail-join-with-arm-region","cost-summary-by-service","cost-summary-by-resourcegroup","datedim","DimUsageDate","DimAgreementStartDate","DimAgreementEndDate","DimAgreementAsOfDate","DimRetailEffectiveStartDate","DimRetailEffectiveEndDate","DimSubscription","DimServiceModel","DimRegionModel","DimMeter","FactCostUsage","FactRetailPriceMatch","DimRetailSku","CostRetailFact","DimService","DimRegion","DimRetailMatch","AzureRetail","MaccAgreementConfig","MaccAgreementStatus","MaccBenefitLedger","AgreementPriceAudit","RetailPriceSnapshot","RetailMatchExceptions","DataQualitySnapshot","ExportRunManifest","BillingReconciliation","OwnershipMapping","BillingAuditAccounts","BillingAuditProfiles","BillingAuditInvoiceSections","BillingAuditSubscriptionProperties","BillingAuditRoleAssignments","BillingAuditInvoices","MaccAuditMeasures","EnterpriseAgreementSavings","ReservationSavingsPlanCoverage","ReservationSavingsPlanInventory","AzureHybridBenefitOpportunities","AzureHybridBenefitInventory","SpotPricingOpportunities","SpotWorkloadInventory","DevTestPricingOpportunities","DevTestSubscriptionInventory","_Measures"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table AzureRetail
 ref table DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484
-ref table LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be
-ref table LocalDateTable_90c04e35-8470-4019-bd29-13831954d043
 ref table datedim
+ref table DimUsageDate
+ref table DimAgreementStartDate
+ref table DimAgreementEndDate
+ref table DimAgreementAsOfDate
+ref table DimRetailEffectiveStartDate
+ref table DimRetailEffectiveEndDate
 ref table LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430
 ref table _Measures
 ref table last-month-cost-by-retail-join-enriched
@@ -48,12 +52,6 @@ ref table BillingReconciliation
 ref table OwnershipMapping
 ref table MaccAuditMeasures
 ref table EnterpriseAgreementSavings
-ref table LocalDateTable_6cc518f0-d1b7-4e50-bdb3-263d9ad289c9
-ref table LocalDateTable_351e8e34-f430-493c-806c-b117e34cb4c7
-ref table LocalDateTable_77a3edcc-d984-4804-ba0e-3186ad6c69ac
-ref table LocalDateTable_a8ba2e7a-cd17-491c-80b4-585317ca92ca
-ref table LocalDateTable_d2db135e-79a4-46cb-bb5b-6745a4296321
-ref table LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44
 ref table ReservationSavingsPlanCoverage
 ref table ReservationSavingsPlanInventory
 ref table AzureHybridBenefitOpportunities
@@ -75,8 +73,8 @@ ref table DimRegionModel
 ref table DimMeter
 ref table FactCostUsage
 ref table FactRetailPriceMatch
-ref table DimRetailSku
 ref table LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75
+ref table DimRetailSku
 
 ref cultureInfo en-US
 

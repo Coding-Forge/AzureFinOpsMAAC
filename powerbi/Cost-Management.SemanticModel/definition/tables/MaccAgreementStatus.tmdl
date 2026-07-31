@@ -20,11 +20,6 @@ table MaccAgreementStatus
 		summarizeBy: none
 		sourceColumn: AgreementStartDate
 
-		variation Variation
-			isDefault
-			relationship: 980d3de5-d54d-4367-b2a1-8228b9b94de2
-			defaultHierarchy: LocalDateTable_a8ba2e7a-cd17-491c-80b4-585317ca92ca.'Date Hierarchy'
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column AgreementEndDate
@@ -33,11 +28,6 @@ table MaccAgreementStatus
 		lineageTag: d4177220-05bf-478c-96af-5466f9c0490d
 		summarizeBy: none
 		sourceColumn: AgreementEndDate
-
-		variation Variation
-			isDefault
-			relationship: 5148782c-e115-4617-a350-76927ecccd9b
-			defaultHierarchy: LocalDateTable_d2db135e-79a4-46cb-bb5b-6745a4296321.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 
@@ -60,11 +50,6 @@ table MaccAgreementStatus
 		lineageTag: d389ad9a-478b-4b8e-8fd0-b6bdd9479a12
 		summarizeBy: none
 		sourceColumn: AsOfDate
-
-		variation Variation
-			isDefault
-			relationship: fe5baa46-dac2-41d7-9301-42b1e9b2fce4
-			defaultHierarchy: LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 

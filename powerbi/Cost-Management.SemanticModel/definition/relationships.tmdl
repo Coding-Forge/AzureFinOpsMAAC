@@ -1,13 +1,3 @@
-relationship 0d7607ca-9c60-4ce7-b8b5-9b0eed0cc740
-	joinOnDateBehavior: datePartOnly
-	fromColumn: AzureRetail.'Items.effectiveStartDate'
-	toColumn: LocalDateTable_70284317-a9ab-49ba-87a4-ad4c686037be.Date
-
-relationship e93dfa69-84f9-47ef-8af6-4e626119d659
-	joinOnDateBehavior: datePartOnly
-	fromColumn: AzureRetail.'Items.effectiveEndDate'
-	toColumn: LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Date
-
 relationship 9b6dba4f-f2ca-417c-9ce1-f6e3ccd81064
 	joinOnDateBehavior: datePartOnly
 	fromColumn: datedim.Date
@@ -24,36 +14,6 @@ relationship e0cdc8b1-0e2a-4625-8fff-47b44f5b741f
 relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
 	fromColumn: CostRetailFact.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
-
-relationship c9fec520-176e-4194-8269-871f1029927c
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementConfig.AgreementStartDate
-	toColumn: LocalDateTable_6cc518f0-d1b7-4e50-bdb3-263d9ad289c9.Date
-
-relationship 1bbe3fea-4e76-4796-ba34-730fc347ddf0
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementConfig.AgreementEndDate
-	toColumn: LocalDateTable_351e8e34-f430-493c-806c-b117e34cb4c7.Date
-
-relationship 299ccb37-80f4-4856-a875-649670671df2
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementConfig.AsOfDate
-	toColumn: LocalDateTable_77a3edcc-d984-4804-ba0e-3186ad6c69ac.Date
-
-relationship 980d3de5-d54d-4367-b2a1-8228b9b94de2
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementStatus.AgreementStartDate
-	toColumn: LocalDateTable_a8ba2e7a-cd17-491c-80b4-585317ca92ca.Date
-
-relationship 5148782c-e115-4617-a350-76927ecccd9b
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementStatus.AgreementEndDate
-	toColumn: LocalDateTable_d2db135e-79a4-46cb-bb5b-6745a4296321.Date
-
-relationship fe5baa46-dac2-41d7-9301-42b1e9b2fce4
-	joinOnDateBehavior: datePartOnly
-	fromColumn: MaccAgreementStatus.AsOfDate
-	toColumn: LocalDateTable_d6ffc843-1d36-4908-83ff-0b57042c1f44.Date
 
 relationship 9aaa4e25-bad5-4072-9dd6-f2377e6ad780
 	joinOnDateBehavior: datePartOnly
@@ -96,10 +56,6 @@ relationship 8da193e6-5e86-46db-9e96-311111180008
 	fromColumn: FactRetailPriceMatch.MeterKey
 	toColumn: DimMeter.MeterKey
 
-relationship 8da193e6-5e86-46db-9e96-311111180009
-	fromColumn: FactRetailPriceMatch.RetailSkuKey
-	toColumn: DimRetailSku.RetailSkuKey
-
 relationship 8da193e6-5e86-46db-9e96-311111180010
 	fromColumn: FactRetailPriceMatch.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
@@ -109,3 +65,54 @@ relationship 330af3bf-d185-451d-9dc0-7556673529fc
 	fromColumn: FactCostUsage.UsageDateAsDate
 	toColumn: LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75.Date
 
+relationship 8da193e6-5e86-46db-9e96-311111180009
+	fromColumn: FactRetailPriceMatch.RetailSkuKey
+	toColumn: DimRetailSku.RetailSkuKey
+
+relationship 18f0a345-c782-43f0-b3c0-311112070001
+	fromColumn: FactCostUsage.UsageDate
+	toColumn: DimUsageDate.DateKey
+
+relationship 18f0a345-c782-43f0-b3c0-311112070002
+	fromColumn: FactRetailPriceMatch.UsageDate
+	toColumn: DimUsageDate.DateKey
+
+relationship 18f0a345-c782-43f0-b3c0-311112070003
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AgreementStartDate
+	toColumn: DimAgreementStartDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070004
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AgreementStartDate
+	toColumn: DimAgreementStartDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070005
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AgreementEndDate
+	toColumn: DimAgreementEndDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070006
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AgreementEndDate
+	toColumn: DimAgreementEndDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070007
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AsOfDate
+	toColumn: DimAgreementAsOfDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070008
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AsOfDate
+	toColumn: DimAgreementAsOfDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070009
+	joinOnDateBehavior: datePartOnly
+	fromColumn: AzureRetail.'Items.effectiveStartDate'
+	toColumn: DimRetailEffectiveStartDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070010
+	joinOnDateBehavior: datePartOnly
+	fromColumn: AzureRetail.'Items.effectiveEndDate'
+	toColumn: DimRetailEffectiveEndDate.Date

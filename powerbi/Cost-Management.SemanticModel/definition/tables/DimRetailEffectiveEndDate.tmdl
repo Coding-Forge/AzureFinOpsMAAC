@@ -1,0 +1,74 @@
+table DimRetailEffectiveEndDate
+	lineageTag: 801d3a6d-1475-4644-819f-311112060001
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 801d3a6d-1475-4644-819f-311112060002
+		summarizeBy: none
+		sourceColumn: Date
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 801d3a6d-1475-4644-819f-311112060003
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 801d3a6d-1475-4644-819f-311112060004
+		summarizeBy: none
+		sourceColumn: Year
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 801d3a6d-1475-4644-819f-311112060005
+		summarizeBy: none
+		sourceColumn: Month
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 801d3a6d-1475-4644-819f-311112060006
+		summarizeBy: none
+		sourceColumn: Month Name
+
+	column Year-Month
+		dataType: string
+		lineageTag: 801d3a6d-1475-4644-819f-311112060007
+		summarizeBy: none
+		sourceColumn: Year-Month
+
+	column 'Fiscal Year Label'
+		dataType: string
+		lineageTag: 801d3a6d-1475-4644-819f-311112060008
+		summarizeBy: none
+		sourceColumn: Fiscal Year Label
+
+	column 'Fiscal Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 801d3a6d-1475-4644-819f-311112060009
+		summarizeBy: none
+		sourceColumn: Fiscal Month
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 801d3a6d-1475-4644-819f-311112060010
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+	partition DimRetailEffectiveEndDate = m
+		mode: import
+		source =
+				let
+				    Source = datedim
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
