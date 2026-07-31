@@ -38,6 +38,25 @@ table FactRetailPriceMatch
 		summarizeBy: none
 		sourceColumn: MeterKey
 
+	column Currency
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120019
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120020
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column Cost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120021
+		summarizeBy: sum
+		sourceColumn: Cost
+
 	column RetailSkuKey
 		dataType: string
 		lineageTag: 1eacacfd-4d06-451e-8279-311111120008
@@ -111,9 +130,9 @@ table FactRetailPriceMatch
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("fact-retail-price-match.csv", 17),
+				    Source = CsvFromSelectedStorage("fact-retail-price-match.csv", 20),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"Period", type text}, {"SubscriptionId", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"RetailSkuKey", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Period", type text}, {"SubscriptionId", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"RetailSkuKey", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
 				in
 				    Typed
 

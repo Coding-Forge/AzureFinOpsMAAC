@@ -839,6 +839,9 @@ function New-NormalizedFinOpsModelFiles {
                     ServiceName = $_.ServiceName
                     ArmRegionName = $_.ArmRegionName
                     MeterKey = $meterKey
+                    Currency = $_.Currency
+                    UsageQuantity = $_.UsageQuantity
+                    Cost = $_.Cost
                     RetailSkuKey = $retailSkuKey
                     RetailMatchStatus = $_.RetailMatchStatus
                     RetailCandidateCount = $_.RetailCandidateCount
@@ -935,7 +938,7 @@ function New-NormalizedFinOpsModelFiles {
         @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
         @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("ArmRegionName","ResourceLocation"); Rows = $regionRows },
         @{ Path = Join-Path $DestinationDir "dim-meter.csv"; Columns = @("MeterKey","ServiceName","Meter","Product","PartNumber","UnitOfMeasure"); Rows = $meterRows },
-        @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
+        @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
         @{ Path = Join-Path $DestinationDir "dim-retail-sku.csv"; Columns = @("RetailSkuKey","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailSkuRows }
     )
 

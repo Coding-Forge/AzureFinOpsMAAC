@@ -65,6 +65,34 @@ table _Measures
 		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
 		lineageTag: 590bd8df-8916-4a74-a0e8-c324cacc301b
 
+	measure 'Normalized Actual Cost' = SUM(FactCostUsage[Cost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190001
+
+	measure 'Normalized Retail Equivalent Cost' = SUMX(FactRetailPriceMatch, FactRetailPriceMatch[UsageQuantity] * FactRetailPriceMatch[RetailPrice])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190002
+
+	measure 'Normalized Estimated Savings' = [Normalized Retail Equivalent Cost] - [Normalized Actual Cost]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190003
+
+	measure 'Normalized Savings Rate' = DIVIDE([Normalized Estimated Savings], [Normalized Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190004
+
+	measure 'Normalized Matched Actual Cost' = CALCULATE(SUM(FactRetailPriceMatch[Cost]), FactRetailPriceMatch[RetailMatchStatus] = "Matched")
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190005
+
+	measure 'Normalized Retail Match Coverage' = DIVIDE([Normalized Matched Actual Cost], [Normalized Actual Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190006
+
+	measure 'Normalized Cost Rows' = COUNTROWS(FactCostUsage)
+		formatString: #,0
+		lineageTag: 4bb48d8e-a6cd-4499-8bc0-311111190007
+
 	column Measures
 		dataType: string
 		isHidden
