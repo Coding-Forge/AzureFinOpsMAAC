@@ -7,15 +7,15 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 13 / 24 complete
-[#############-----------] 54%
+Overall progress: 14 / 24 complete
+[##############----------] 58%
 ```
 
 | Phase | Status | Complete | Total |
 | --- | --- | ---: | ---: |
 | Phase 1 - Stabilize current model | In progress | 3 | 5 |
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
-| Phase 3 - Build relationship-based semantic model | In progress | 4 | 7 |
+| Phase 3 - Build relationship-based semantic model | In progress | 5 | 7 |
 | Phase 4 - Retire redundant staging tables | Not started | 0 | 4 |
 | Phase 5 - Release and documentation | Not started | 0 | 2 |
 
@@ -48,7 +48,7 @@ Purpose: make Power BI responsible for relationships, slicers, reusable dimensio
 - [x] Add/import `FactRetailPriceMatch`.
 - [x] Add/import normalized dimensions: subscription, service, region, meter, retail SKU, match status.
 - [x] Relate facts to dimensions with single-direction filter paths where possible.
-- [ ] Rebuild core measures from normalized facts.
+- [x] Rebuild core measures from normalized facts.
 - [ ] Validate totals against the current enriched-file model.
 - [ ] Update PBIT parameters and refresh behavior.
 
@@ -105,3 +105,4 @@ Use this section to capture evidence from the stabilization pass.
 | Backward compatibility | Passed | New fact tables are additive and tolerate missing normalized CSVs with `MissingField.UseNull`; existing report tables and measures remain unchanged. |
 | Normalized dimensions imported | Passed | Added `DimSubscription`, `DimServiceModel`, `DimRegionModel`, `DimMeter`, and `DimRetailSku` from normalized CSV outputs. Continued using existing `DimRetailMatch` for match-status filtering. |
 | Normalized relationships added | Passed | Added single-direction relationships from `FactCostUsage` and `FactRetailPriceMatch` to subscription, service, region, meter, retail SKU, and retail match dimensions. |
+| Normalized measures added | Passed | Added additive normalized measures for actual cost, retail equivalent cost, estimated savings, savings rate, matched actual cost, retail match coverage, and cost row count. Existing measures were not replaced. |
