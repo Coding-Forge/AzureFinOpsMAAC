@@ -65,10 +65,6 @@ relationship 330af3bf-d185-451d-9dc0-7556673529fc
 	fromColumn: FactCostUsage.UsageDateAsDate
 	toColumn: LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75.Date
 
-relationship 8da193e6-5e86-46db-9e96-311111180009
-	fromColumn: FactRetailPriceMatch.RetailSkuKey
-	toColumn: DimRetailSku.RetailSkuKey
-
 relationship 18f0a345-c782-43f0-b3c0-311112070001
 	fromColumn: FactCostUsage.UsageDate
 	toColumn: DimUsageDate.DateKey

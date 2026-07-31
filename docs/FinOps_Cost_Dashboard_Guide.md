@@ -130,7 +130,7 @@ Core normalized tables include:
 | `DimServiceModel` | Normalized service dimension. |
 | `DimRegionModel` | Normalized region dimension. |
 | `DimMeter` | Meter/product/unit dimension. |
-| `DimRetailSku` | Retail SKU and price dimension. |
+| `DimRetailSku` | Retail SKU and price reference table. It is intentionally disconnected because it is derived from `FactRetailPriceMatch`; Retail SKU fields are also available directly on the fact for filtering/drilldown. |
 | `DimUsageDate` | Usage-date role-playing date dimension. |
 | `DimAgreementStartDate` | Agreement start-date role-playing date dimension. |
 | `DimAgreementEndDate` | Agreement end-date role-playing date dimension. |
@@ -148,6 +148,7 @@ Not every table should be related to the core model. Several report pages need a
 |---|---|
 | `AgreementPriceAudit` | Detailed evidence table for reviewing calculations and selected retail matches. It overlaps with the facts and could duplicate totals if related broadly. |
 | `RetailPriceSnapshot` | Pricing evidence snapshot; not every price row should filter cost facts. |
+| `DimRetailSku` | Retail SKU reference/detail table derived from `FactRetailPriceMatch`. Relating it back to the same fact creates a cyclic dependency, so it remains disconnected. |
 | `RetailMatchExceptions` | Operational queue for review/remediation. It should be filtered directly on exception pages. |
 | `DataQualitySnapshot` | Period-level quality metrics; not at the same grain as daily usage. |
 | `ExportRunManifest` | Run-level metadata; used for traceability. |

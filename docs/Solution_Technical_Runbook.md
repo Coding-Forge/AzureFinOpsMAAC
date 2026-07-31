@@ -322,7 +322,6 @@ These tables participate in the relationship model and should be used for cross-
 | `DimServiceModel` | Service dimension for normalized facts. |
 | `DimRegionModel` | Region dimension for normalized facts. |
 | `DimMeter` | Meter/product/unit dimension. |
-| `DimRetailSku` | Retail SKU dimension derived from `FactRetailPriceMatch` to avoid a parallel CSV dependency cycle. |
 | `DimRetailMatch` | Match status dimension. |
 | `DimUsageDate` | Usage-date role-playing date dimension. |
 | `DimAgreementStartDate` | Agreement start-date role-playing date dimension. |
@@ -330,6 +329,8 @@ These tables participate in the relationship model and should be used for cross-
 | `DimAgreementAsOfDate` | Agreement as-of date role-playing date dimension. |
 | `DimRetailEffectiveStartDate` | Retail price effective-start role-playing date dimension. |
 | `DimRetailEffectiveEndDate` | Retail price effective-end role-playing date dimension. |
+
+`DimRetailSku` is present as a disconnected lookup/detail table derived from `FactRetailPriceMatch`. It is intentionally not related back to `FactRetailPriceMatch` because Power BI evaluates that self-derived dimension plus relationship as a cyclic dependency. Retail SKU fields remain available directly on `FactRetailPriceMatch` for filtering/drilldown, and `DimRetailSku` can be used for reference/detail pages.
 
 ### Standalone tables and why they remain disconnected
 
@@ -339,6 +340,7 @@ Some tables intentionally do not have relationships. This is not a defect. These
 | --- | --- |
 | `AgreementPriceAudit` | Row-level calculation evidence. It overlaps with cost, retail, service, region, and meter grain, but is used for audit drilldown rather than primary aggregation. |
 | `RetailPriceSnapshot` | Point-in-time pricing evidence. It may include selected retail price rows without a one-to-one analytical relationship to every cost row. |
+| `DimRetailSku` | Retail SKU reference/detail table derived from the retail match fact. It remains disconnected to avoid a cyclic dependency caused by relating a fact-derived dimension back to its source fact. |
 | `RetailMatchExceptions` | Review queue for unmatched/multiple-candidate rows. It supports operational remediation and should not be allowed to cross-filter core cost totals unexpectedly. |
 | `DataQualitySnapshot` | Period-level quality summary. Its grain is intentionally higher than transaction/detail facts. |
 | `ExportRunManifest` | Run metadata and traceability. It describes a run, not a cost grain. |
