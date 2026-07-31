@@ -75,6 +75,7 @@ ref table DimRegionModel
 ref table DimMeter
 ref table FactCostUsage
 ref table FactRetailPriceMatch
+ref table LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75
 
 ref cultureInfo en-US
 

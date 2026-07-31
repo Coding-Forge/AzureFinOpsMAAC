@@ -41,8 +41,10 @@ table FactCostUsage
 		dataType: int64
 		formatString: 0
 		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110005
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
 
 	column UsageDateAsDate
 		dataType: dateTime
@@ -50,6 +52,13 @@ table FactCostUsage
 		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110006
 		summarizeBy: none
 		sourceColumn: UsageDateAsDate
+
+		variation Variation
+			isDefault
+			relationship: 330af3bf-d185-451d-9dc0-7556673529fc
+			defaultHierarchy: LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ServiceName
 		dataType: string
