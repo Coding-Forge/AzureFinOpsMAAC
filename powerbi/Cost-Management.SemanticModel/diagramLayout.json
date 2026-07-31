@@ -11,7 +11,7 @@
         {
           "location": {
             "x": 8160.0485207383063,
-            "y": 109.125
+            "y": 175.9375
           },
           "nodeIndex": "AzureRetail",
           "nodeLineageTag": "7ad6f92e-e5ae-4813-901c-de526fd001d0",
@@ -24,7 +24,7 @@
         {
           "location": {
             "x": 10013.048520738306,
-            "y": 892.125
+            "y": 958.9375
           },
           "nodeIndex": "cost-summary-by-resourcegroup",
           "nodeLineageTag": "800cb7ec-e826-4c58-9bd2-25dd5c8b36fa",
@@ -37,7 +37,7 @@
         {
           "location": {
             "x": 9243.0485207383063,
-            "y": 157.125
+            "y": 223.9375
           },
           "nodeIndex": "cost-summary-by-service",
           "nodeLineageTag": "772c4efa-80e5-415b-91ea-4dfd49419d8c",
@@ -50,7 +50,7 @@
         {
           "location": {
             "x": 9542.0485207383063,
-            "y": 1163.125
+            "y": 1229.9375
           },
           "nodeIndex": "last-month-cost-by-service-resourcegroup",
           "nodeLineageTag": "4e4c71e6-9a65-4288-b3e7-1f2ea9b98808",
@@ -63,7 +63,7 @@
         {
           "location": {
             "x": 8854.0485207383063,
-            "y": 657.125
+            "y": 723.9375
           },
           "nodeIndex": "mtd-cost-by-service-resourcegroup",
           "nodeLineageTag": "0713199b-2567-4fcd-ae7b-843652400859",
@@ -76,7 +76,7 @@
         {
           "location": {
             "x": 9193.0485207383063,
-            "y": 874.625
+            "y": 941.4375
           },
           "nodeIndex": "datedim",
           "nodeLineageTag": "ed988f68-0ab6-4cfb-b783-eac0e0c48aee",
@@ -89,7 +89,7 @@
         {
           "location": {
             "x": 10572.048520738306,
-            "y": 571.875
+            "y": 638.6875
           },
           "nodeIndex": "_Measures",
           "nodeLineageTag": "c753e8dd-8d93-42b8-a23a-38fe14ee5c25",
@@ -102,7 +102,7 @@
         {
           "location": {
             "x": 897.04852073830671,
-            "y": 168.625
+            "y": 235.4375
           },
           "nodeIndex": "MaccAuditMeasures",
           "nodeLineageTag": "4a0e0e30-4d21-4d7f-9da3-111111111200",
@@ -115,7 +115,7 @@
         {
           "location": {
             "x": 1224.0485207383067,
-            "y": 83.625
+            "y": 150.4375
           },
           "nodeIndex": "AgreementPriceAudit",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111104",
@@ -128,7 +128,7 @@
         {
           "location": {
             "x": 525.04852073830671,
-            "y": 1218.625
+            "y": 1285.4375
           },
           "nodeIndex": "AzureHybridBenefitInventory",
           "nodeLineageTag": "93e283e5-f365-4ce4-bd19-111111114002",
@@ -141,7 +141,7 @@
         {
           "location": {
             "x": 1571.0485207383067,
-            "y": 342.625
+            "y": 409.4375
           },
           "nodeIndex": "AzureHybridBenefitOpportunities",
           "nodeLineageTag": "93e283e5-f365-4ce4-bd19-111111114001",
@@ -154,7 +154,7 @@
         {
           "location": {
             "x": 1197.0485207383067,
-            "y": 1199.625
+            "y": 1266.4375
           },
           "nodeIndex": "BillingReconciliation",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111108",
@@ -167,7 +167,7 @@
         {
           "location": {
             "x": 1144.1949164328773,
-            "y": 673.600903109485
+            "y": 740.413403109485
           },
           "nodeIndex": "CostRetailFact",
           "nodeLineageTag": "8f900962-6227-469f-961e-9e452eb5a001",
@@ -180,7 +180,7 @@
         {
           "location": {
             "x": 1737.0485207383067,
-            "y": 1166.625
+            "y": 1233.4375
           },
           "nodeIndex": "DataQualitySnapshot",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111106",
@@ -193,7 +193,7 @@
         {
           "location": {
             "x": 2525.0485207383067,
-            "y": 1392.625
+            "y": 1459.4375
           },
           "nodeIndex": "DevTestPricingOpportunities",
           "nodeLineageTag": "a5a80f78-a261-4afd-a250-111111116001",
@@ -206,7 +206,7 @@
         {
           "location": {
             "x": 2814.0485207383067,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "DevTestSubscriptionInventory",
           "nodeLineageTag": "a5a80f78-a261-4afd-a250-111111116002",
@@ -219,7 +219,7 @@
         {
           "location": {
             "x": 592.04852073830671,
-            "y": 332.44644860847649
+            "y": 399.25894860847649
           },
           "nodeIndex": "DimRegion",
           "nodeLineageTag": "59900d69-512f-4b90-9272-d09dc1e2ccdd",
@@ -232,7 +232,7 @@
         {
           "location": {
             "x": 50,
-            "y": 499.23820744915952
+            "y": 566.05070744915952
           },
           "nodeIndex": "DimRetailMatch",
           "nodeLineageTag": "f210cd32-b983-4c4d-9f46-77a218120753",
@@ -245,7 +245,7 @@
         {
           "location": {
             "x": 396.19033330421382,
-            "y": 860.80355139152357
+            "y": 927.61605139152357
           },
           "nodeIndex": "DimService",
           "nodeLineageTag": "f7d67a5d-a775-4f77-8d8e-dd4a97a5620e",
@@ -258,7 +258,7 @@
         {
           "location": {
             "x": 3098.0485207383067,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "EnterpriseAgreementSavings",
           "nodeLineageTag": "3f4ea191-4147-4fb1-a201-111111112001",
@@ -271,7 +271,7 @@
         {
           "location": {
             "x": 3382.0485207383067,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "ExportRunManifest",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111107",
@@ -284,7 +284,7 @@
         {
           "location": {
             "x": 3666.0485207383067,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "last-month-cost-by-retail-join",
           "nodeLineageTag": "6d828175-0034-47b2-8178-99165bd9f046",
@@ -297,7 +297,7 @@
         {
           "location": {
             "x": 3950.0485207383067,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "last-month-cost-by-retail-join-enriched",
           "nodeLineageTag": "0f5e83fa-40ac-4dc0-adad-11093fc22272",
@@ -310,7 +310,7 @@
         {
           "location": {
             "x": 4234.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "last-month-cost-by-retail-join-with-arm-region",
           "nodeLineageTag": "75ad8869-79c6-4f96-bff1-4c2414d02cea",
@@ -323,7 +323,7 @@
         {
           "location": {
             "x": 4518.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "MaccAgreementConfig",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111101",
@@ -336,7 +336,7 @@
         {
           "location": {
             "x": 4802.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "MaccAgreementStatus",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111102",
@@ -349,7 +349,7 @@
         {
           "location": {
             "x": 5086.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "MaccBenefitLedger",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111103",
@@ -362,7 +362,7 @@
         {
           "location": {
             "x": 5370.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "mtd-cost-by-retail-join",
           "nodeLineageTag": "5c0dbb80-6185-42a5-98c9-f7017e7f61f2",
@@ -375,7 +375,7 @@
         {
           "location": {
             "x": 5654.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "mtd-cost-by-retail-join-enriched",
           "nodeLineageTag": "2faf5600-e388-445b-931f-538403e1f470",
@@ -388,7 +388,7 @@
         {
           "location": {
             "x": 5938.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "mtd-cost-by-retail-join-with-arm-region",
           "nodeLineageTag": "de842c12-7593-47f6-a881-94d3ef1f12d1",
@@ -401,7 +401,7 @@
         {
           "location": {
             "x": 6222.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "OwnershipMapping",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111109",
@@ -414,7 +414,7 @@
         {
           "location": {
             "x": 6506.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "ReservationSavingsPlanCoverage",
           "nodeLineageTag": "7d5f8ce3-6fd0-4f97-b1c0-111111113001",
@@ -427,7 +427,7 @@
         {
           "location": {
             "x": 6790.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "ReservationSavingsPlanInventory",
           "nodeLineageTag": "7d5f8ce3-6fd0-4f97-b1c0-111111113002",
@@ -440,7 +440,7 @@
         {
           "location": {
             "x": 7074.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "RetailMatchExceptions",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111105",
@@ -453,7 +453,7 @@
         {
           "location": {
             "x": 7358.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "RetailPriceSnapshot",
           "nodeLineageTag": "7c3b4c5d-8a9b-4c1d-9e2f-111111111110",
@@ -466,7 +466,7 @@
         {
           "location": {
             "x": 7642.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "SpotPricingOpportunities",
           "nodeLineageTag": "64a4b42e-a4fa-4f1a-9d2d-111111115001",
@@ -479,7 +479,7 @@
         {
           "location": {
             "x": 7926.0485207383063,
-            "y": 548.625
+            "y": 615.4375
           },
           "nodeIndex": "SpotWorkloadInventory",
           "nodeLineageTag": "64a4b42e-a4fa-4f1a-9d2d-111111115002",
@@ -492,7 +492,7 @@
         {
           "location": {
             "x": 10806.048520738306,
-            "y": 696.375
+            "y": 763.1875
           },
           "nodeIndex": "BillingAuditAccounts",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117001",
@@ -505,7 +505,7 @@
         {
           "location": {
             "x": 11090.048520738306,
-            "y": 684.375
+            "y": 751.1875
           },
           "nodeIndex": "BillingAuditInvoices",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117501",
@@ -518,7 +518,7 @@
         {
           "location": {
             "x": 11374.048520738306,
-            "y": 696.375
+            "y": 763.1875
           },
           "nodeIndex": "BillingAuditInvoiceSections",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117201",
@@ -531,7 +531,7 @@
         {
           "location": {
             "x": 11658.048520738306,
-            "y": 682.375
+            "y": 749.1875
           },
           "nodeIndex": "BillingAuditProfiles",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117101",
@@ -544,7 +544,7 @@
         {
           "location": {
             "x": 11942.048520738306,
-            "y": 696.375
+            "y": 763.1875
           },
           "nodeIndex": "BillingAuditRoleAssignments",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117401",
@@ -557,10 +557,88 @@
         {
           "location": {
             "x": 12226.048520738306,
-            "y": 682.375
+            "y": 749.1875
           },
           "nodeIndex": "BillingAuditSubscriptionProperties",
           "nodeLineageTag": "5b0e8a70-489d-4bb8-bd37-111111117301",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12510.048520738306,
+            "y": 522.65318869454018
+          },
+          "nodeIndex": "DimMeter",
+          "nodeLineageTag": "5640aa90-c060-4738-b652-311111160001",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12797.048359281893,
+            "y": 350.01849027056511
+          },
+          "nodeIndex": "DimRegionModel",
+          "nodeLineageTag": "03cf8953-8dc9-462f-bb1a-311111150001",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12676.685241278994,
+            "y": 1188.6065097294349
+          },
+          "nodeIndex": "DimServiceModel",
+          "nodeLineageTag": "58055d38-564f-4c0b-9397-311111140001",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12963.704070787548,
+            "y": 1113.6923269587376
+          },
+          "nodeIndex": "DimSubscription",
+          "nodeLineageTag": "7e6f3e96-e503-46ac-b381-311111130001",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12676.665663213451,
+            "y": 836.25158071389524
+          },
+          "nodeIndex": "FactCostUsage",
+          "nodeLineageTag": "4d14fd74-28f9-49aa-a10e-311111110001",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 12962.3021936338,
+            "y": 530.82281652567076
+          },
+          "nodeIndex": "FactRetailPriceMatch",
+          "nodeLineageTag": "1eacacfd-4d06-451e-8279-311111120001",
           "size": {
             "height": 300,
             "width": 234
