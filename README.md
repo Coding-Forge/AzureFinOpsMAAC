@@ -100,6 +100,15 @@ Important outputs include:
 | `data-quality-snapshot.csv` | Match coverage and exception summary. |
 | `billing-contact-audit\` | Billing, invoice, role, and ownership evidence where available. |
 
+## Model design at a glance
+
+The Power BI model now uses a hybrid design:
+
+- **Related model tables** support the core analytical experience. Normalized facts such as `FactCostUsage` and `FactRetailPriceMatch` connect to dimensions for subscription, service, region, meter, retail SKU, match status, and role-playing dates.
+- **Standalone audit and template tables** remain intentionally disconnected when forcing a relationship would create ambiguous filters, duplicate totals, or misleading cross-filter behavior.
+
+Disconnected tables are still important. They support evidence review, exception management, billing reconciliation, ownership mapping, export traceability, and diagnostics. Use them as report-specific detail/evidence tables rather than as universal slicer targets.
+
 ## Supporting documentation
 
 More detailed operational and technical information has been moved out of this front-door README:

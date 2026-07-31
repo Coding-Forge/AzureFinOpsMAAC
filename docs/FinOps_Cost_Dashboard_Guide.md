@@ -77,13 +77,18 @@ Important files to upload:
 
 ## Power BI semantic model
 
-The current customer-facing report still uses the established unified fact table:
+The model now has two layers:
+
+1. A normalized relationship model for core cost, pricing, match coverage, and savings analysis.
+2. Standalone audit/template/diagnostic tables for evidence and operational review.
+
+The original enriched fact remains available:
 
 ```text
 CostRetailFact
 ```
 
-`CostRetailFact` combines month-to-date and last-month enriched cost CSVs.
+`CostRetailFact` combines month-to-date and last-month enriched cost CSVs and remains useful for backward compatibility and evidence comparison.
 
 Key columns:
 
@@ -115,7 +120,7 @@ The model is partially denormalized because the script already joins Cost Manage
 | `CostRetailFact[ArmRegionName]` | `DimRegion[ArmRegionName]` | Region slicers and region-level reporting. |
 | `CostRetailFact[RetailMatchStatus]` | `DimRetailMatch[RetailMatchStatus]` | Matched/unmatched data-quality filtering. |
 
-New normalized tables include:
+Core normalized tables include:
 
 | Table | Purpose |
 |---|---|
@@ -126,8 +131,32 @@ New normalized tables include:
 | `DimRegionModel` | Normalized region dimension. |
 | `DimMeter` | Meter/product/unit dimension. |
 | `DimRetailSku` | Retail SKU and price dimension. |
+| `DimUsageDate` | Usage-date role-playing date dimension. |
+| `DimAgreementStartDate` | Agreement start-date role-playing date dimension. |
+| `DimAgreementEndDate` | Agreement end-date role-playing date dimension. |
+| `DimAgreementAsOfDate` | Agreement as-of date role-playing date dimension. |
+| `DimRetailEffectiveStartDate` | Retail price effective-start date dimension. |
+| `DimRetailEffectiveEndDate` | Retail price effective-end date dimension. |
 
-The normalized model includes additive measures prefixed with `Normalized`. Existing report visuals have not yet been switched to these measures.
+The normalized model includes additive measures prefixed with `Normalized`.
+
+## Why some tables do not have relationships
+
+Not every table should be related to the core model. Several report pages need audit evidence, templates, or diagnostic snapshots that do not share the same grain as cost usage.
+
+| Standalone table | Why it remains disconnected |
+|---|---|
+| `AgreementPriceAudit` | Detailed evidence table for reviewing calculations and selected retail matches. It overlaps with the facts and could duplicate totals if related broadly. |
+| `RetailPriceSnapshot` | Pricing evidence snapshot; not every price row should filter cost facts. |
+| `RetailMatchExceptions` | Operational queue for review/remediation. It should be filtered directly on exception pages. |
+| `DataQualitySnapshot` | Period-level quality metrics; not at the same grain as daily usage. |
+| `ExportRunManifest` | Run-level metadata; used for traceability. |
+| `BillingReconciliation` | Customer-maintained invoice template; may not align one-to-one with usage rows. |
+| `OwnershipMapping` | Customer-maintained ownership template; may be incomplete or many-to-many. |
+| `BillingAudit*` tables | Billing hierarchy/evidence tables from Billing APIs; not the same grain as Cost Management. |
+| Savings opportunity tables | RI/SP, AHB, Spot, and Dev/Test candidates are review outputs, not authoritative cost facts. |
+
+These tables are still important because they explain, validate, and govern the numbers shown in the main report pages.
 
 ## Measures
 

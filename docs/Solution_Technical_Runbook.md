@@ -238,7 +238,7 @@ AnalysisMode = History
 
 ## Relationship-based semantic model migration
 
-The solution now emits normalized CSVs alongside the original enriched/audit files. The original enriched files remain for auditability and backward compatibility. The normalized files support a cleaner star-schema model:
+The solution emits normalized CSVs alongside the original enriched/audit files. The original enriched files remain for auditability and backward compatibility. The normalized files support a cleaner star-schema model:
 
 | Normalized file | Intended model role |
 | --- | --- |
@@ -250,7 +250,47 @@ The solution now emits normalized CSVs alongside the original enriched/audit fil
 | `dim-meter.csv` | Meter/product/unit dimension. |
 | `dim-retail-sku.csv` | Retail SKU/price dimension. |
 
-During migration, both models coexist. Existing customer-facing visuals still use the established enriched model. Normalized facts, dimensions, and measures are additive until refresh and PBIT behavior are validated in Power BI Desktop.
+The current model uses normalized facts and dimensions for core analysis while preserving enriched/audit tables for traceability.
+
+### Related core model tables
+
+These tables participate in the relationship model and should be used for cross-filtered analytical views:
+
+| Table | Role |
+| --- | --- |
+| `FactCostUsage` | Actual cost and usage fact sourced from `fact-cost-usage.csv`. |
+| `FactRetailPriceMatch` | Retail match and pricing fact sourced from `fact-retail-price-match.csv`. |
+| `DimSubscription` | Subscription dimension. |
+| `DimServiceModel` | Service dimension for normalized facts. |
+| `DimRegionModel` | Region dimension for normalized facts. |
+| `DimMeter` | Meter/product/unit dimension. |
+| `DimRetailSku` | Retail SKU dimension derived from `FactRetailPriceMatch` to avoid a parallel CSV dependency cycle. |
+| `DimRetailMatch` | Match status dimension. |
+| `DimUsageDate` | Usage-date role-playing date dimension. |
+| `DimAgreementStartDate` | Agreement start-date role-playing date dimension. |
+| `DimAgreementEndDate` | Agreement end-date role-playing date dimension. |
+| `DimAgreementAsOfDate` | Agreement as-of date role-playing date dimension. |
+| `DimRetailEffectiveStartDate` | Retail price effective-start role-playing date dimension. |
+| `DimRetailEffectiveEndDate` | Retail price effective-end role-playing date dimension. |
+
+### Standalone tables and why they remain disconnected
+
+Some tables intentionally do not have relationships. This is not a defect. These tables are report-specific audit, evidence, template, or diagnostic tables where relationships can create misleading filters, many-to-many ambiguity, duplicate totals, or circular dependencies.
+
+| Table or group | Why it is standalone |
+| --- | --- |
+| `AgreementPriceAudit` | Row-level calculation evidence. It overlaps with cost, retail, service, region, and meter grain, but is used for audit drilldown rather than primary aggregation. |
+| `RetailPriceSnapshot` | Point-in-time pricing evidence. It may include selected retail price rows without a one-to-one analytical relationship to every cost row. |
+| `RetailMatchExceptions` | Review queue for unmatched/multiple-candidate rows. It supports operational remediation and should not be allowed to cross-filter core cost totals unexpectedly. |
+| `DataQualitySnapshot` | Period-level quality summary. Its grain is intentionally higher than transaction/detail facts. |
+| `ExportRunManifest` | Run metadata and traceability. It describes a run, not a cost grain. |
+| `BillingReconciliation` | Customer-maintained invoice reconciliation template. It is filled manually and may not match Cost Management grain. |
+| `OwnershipMapping` | Customer-maintained business mapping template. It may be incomplete or many-to-many until governed by the customer. |
+| `BillingAudit*` tables | Billing account/profile/invoice/role evidence. Billing APIs expose a different hierarchy than Cost Management usage. |
+| RI/SP, AHB, Spot, and Dev/Test opportunity tables | First-pass opportunity indicators. They are candidate/review views, not authoritative transactional facts. |
+| Legacy enriched/staging tables | Preserved or hidden for backward compatibility, diagnostics, and evidence; core analysis should use normalized facts where possible. |
+
+When using standalone tables, filter them directly on their report pages instead of expecting all core model slicers to affect them.
 
 After any semantic model change, export a fresh `template\Cost-Management.pbit` from Power BI Desktop before publishing a customer release.
 

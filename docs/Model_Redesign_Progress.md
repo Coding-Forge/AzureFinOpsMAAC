@@ -122,3 +122,7 @@ Use this section to capture evidence from the stabilization pass.
 | --- | --- | --- |
 | Documentation updated | Passed | README, technical runbook, and report guide now describe normalized model outputs, normalized history files, and the need to re-export `template\Cost-Management.pbit` after semantic model changes. |
 | PBIT re-export and release | Passed | User confirmed PBIP refresh succeeded after normalized model/date-dimension changes, then exported a fresh `template\Cost-Management.pbit`. Release package was prepared from this refreshed template. |
+
+## Standalone table rationale
+
+Some model tables intentionally remain disconnected because they support audit, evidence, exception, reconciliation, ownership, or opportunity-review pages. They do not always share the same grain as the core cost facts. Keeping them standalone avoids ambiguous relationships, circular dependencies, many-to-many filtering, and duplicate totals while preserving their value for validation and governance.

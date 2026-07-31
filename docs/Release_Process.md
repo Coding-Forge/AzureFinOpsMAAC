@@ -142,6 +142,13 @@ powerbi\Cost-Management.pbip
 
 Confirm the PBIP opens and that parameters can be set to a valid export folder.
 
+When validating a release after semantic model changes, also confirm:
+
+- Main cost totals match the generated Cost Management CSVs.
+- The PBIT refreshes after parameters are filled from `powerbi-storage-settings.json`.
+- Model Technical Tables visuals render named role-playing date dimensions.
+- Standalone audit/template pages render without requiring relationships to the core cost model.
+
 ## Commit release changes
 
 Review the working tree:

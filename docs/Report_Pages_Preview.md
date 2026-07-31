@@ -10,7 +10,6 @@ This report contains the original FinOps cost and retail comparison pages plus d
 | MACC Retail Overview | Current cost versus retail equivalent analysis. |
 | Decomposition Trees | Drill-down paths for cost and savings drivers. |
 | Azure Retail Reference | Azure Retail Prices snapshot reference. |
-| Cost Export Validation | Export completeness and validation checks. |
 | Pipeline Diagnostics | Data pipeline stage diagnostics. |
 | Data Quality Actions | Data quality metrics and remediation guidance. |
 | Model Technical Tables | Technical schema and model support view. |
@@ -27,6 +26,10 @@ This report contains the original FinOps cost and retail comparison pages plus d
 | Billing and Ownership | `ExportRunManifest`, `BillingReconciliation`, `OwnershipMapping` | Export run traceability, invoice reconciliation template, and team/application/accountability mapping. |
 
 Use these pages after a successful launcher run with Cost Management export and Retail Prices lookup enabled. `BillingReconciliation` and `OwnershipMapping` are customer-maintained templates, so those sections remain blank until users fill the corresponding CSV files.
+
+## Model table behavior
+
+The main analytical pages use related facts and dimensions for cost, retail match, service, region, meter, subscription, and date analysis. Some support pages use standalone tables because their data is audit evidence, run metadata, exception queues, or customer-maintained templates. Those tables should be reviewed directly on their pages rather than used as global relationship filters.
 
 ## Recommended MACC Audit Views
 

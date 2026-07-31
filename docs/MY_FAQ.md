@@ -27,3 +27,9 @@ Example threshold logic:
 | **Expired risk** | End date is near and remaining commitment is material |
 
 The most important nuance: **not all Azure cost counts toward MACC**. A good report should separate **total Azure spend** from **MACC-eligible decrementing consumption**. Marketplace, support, taxes, some reservations/savings-plan constructs, credits, and certain offers can behave differently depending on agreement terms and billing data source. So the Agreement tab should define the commitment, but the model still needs a clear rule for what consumption is eligible to burn it down.
+
+## Why are some tables not related in the Power BI model?
+
+Some tables intentionally remain standalone because they are not at the same grain as the core cost facts. Examples include billing audit evidence, exception queues, export manifests, invoice reconciliation templates, ownership mapping templates, and savings-opportunity review outputs.
+
+Relating every table can create ambiguous filters, many-to-many behavior, duplicate totals, or circular dependencies. The core analytical model uses normalized facts and dimensions for cost and retail match analysis. Standalone tables are still important, but they should be used on their dedicated pages for evidence, governance, and remediation workflows.
