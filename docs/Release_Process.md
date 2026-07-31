@@ -28,7 +28,7 @@ Recommended pattern:
 | Format | Purpose |
 | --- | --- |
 | `powerbi\Cost-Management.pbip` | Source-controlled development project. |
-| `powerbi\Cost-Management.pbit` | Customer-facing Power BI template exported before release. |
+| `template\Cost-Management.pbit` | Customer-facing Power BI template exported before release. |
 | `AzureFinOpsMaccRetailSolution-v<version>.zip` | GitHub release bundle containing scripts, docs, and the selected Power BI artifacts. |
 
 Power BI Desktop does not provide a reliable command-line export path for PBIT from PBIP. Export the PBIT manually during release validation:
@@ -39,7 +39,7 @@ Power BI Desktop does not provide a reliable command-line export path for PBIT f
 4. Save it as:
 
 ```text
-powerbi\Cost-Management.pbit
+template\Cost-Management.pbit
 ```
 
 5. Close Power BI Desktop before running the release build.
@@ -78,7 +78,7 @@ For customer releases where the PBIT is required, use:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit
 ```
 
-`-RequirePbit` fails the build if no `.pbit` file exists under `powerbi\`.
+`-RequirePbit` fails the build if no `.pbit` file exists under `template\` or `powerbi\`.
 
 To build a customer-only release that includes the PBIT but omits the PBIP source project, use:
 
@@ -131,10 +131,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-FinOpsDa
 Also open the PBIT if it is included:
 
 ```text
-powerbi\Cost-Management.pbit
+template\Cost-Management.pbit
 ```
 
-Confirm the template opens, prompts for parameters, and can be pointed at a valid export folder. If no PBIT is included, open the PBIP source project:
+Confirm the template opens and prompts for parameters. Before refreshing the template, run `scripts\Start-FinOpsDataPull.ps1` to generate the CSV/JSON data files. Use the generated `powerbi-storage-settings.json` from the run folder to fill the PBIT parameters, including `StorageLocation`, `LocalDataRoot`, `HistoryDataRoot`, and any selected cloud storage root. If no PBIT is included, open the PBIP source project:
 
 ```text
 powerbi\Cost-Management.pbip
@@ -192,7 +192,7 @@ For each new release:
 
 1. Make and validate the solution changes.
 2. Update documentation if user-facing behavior changed.
-3. Export `powerbi\Cost-Management.pbit` from Power BI Desktop when customer template distribution is needed.
+3. Export `template\Cost-Management.pbit` from Power BI Desktop when customer template distribution is needed.
 4. Run `build-release.ps1` with a new version. Use `-RequirePbit` when a PBIT must be included, and add `-ExcludePbip` when the PBIP source should not be included.
 5. Extract and smoke-test the zip.
 6. Commit the final changes.

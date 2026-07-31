@@ -8,7 +8,7 @@ This Power BI project helps customers compare their actual Azure cost from the t
 
 | File or folder | Purpose |
 |---|---|
-| `Cost-Management.pbit` | Recommended customer distribution template when included in a release. |
+| `template\Cost-Management.pbit` | Recommended customer distribution template when included in a release. Run the data pull first, then use the generated `powerbi-storage-settings.json` values when the template prompts for parameters. |
 | `Cost-Management.pbip` | Source-controlled PBIP project for development and troubleshooting. |
 | `Cost-Management.Report` | Report layout pages and visuals. |
 | `Cost-Management.SemanticModel` | TMDL semantic model, tables, measures, relationships, and Power Query definitions. |

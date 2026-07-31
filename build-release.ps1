@@ -136,7 +136,8 @@ $sourceFiles = Get-ChildItem -Path $ScriptRoot -Recurse -File -Force |
 
 $pbitFiles = @(
     $sourceFiles | Where-Object {
-        (Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName) -like "powerbi\*.pbit"
+        $relativePath = Get-RelativeReleasePath -Root $ScriptRoot -Path $_.FullName
+        $relativePath -like "template\*.pbit" -or $relativePath -like "powerbi\*.pbit"
     }
 )
 
@@ -150,11 +151,11 @@ $pbipFiles = @(
 )
 
 if ($RequirePbit -and $pbitFiles.Count -eq 0) {
-    throw "No Power BI template (.pbit) was found under $ScriptRoot\powerbi. Export the customer distribution template from Power BI Desktop before building with -RequirePbit."
+    throw "No Power BI template (.pbit) was found under $ScriptRoot\template or $ScriptRoot\powerbi. Export the customer distribution template before building with -RequirePbit."
 }
 
 if ($ExcludePbip -and $pbitFiles.Count -eq 0) {
-    throw "Cannot build with -ExcludePbip because no Power BI template (.pbit) was found under $ScriptRoot\powerbi. Export a PBIT first or omit -ExcludePbip."
+    throw "Cannot build with -ExcludePbip because no Power BI template (.pbit) was found under $ScriptRoot\template or $ScriptRoot\powerbi. Export a PBIT first or omit -ExcludePbip."
 }
 
 foreach ($file in $sourceFiles) {
@@ -245,7 +246,7 @@ if ($pbitFiles.Count -gt 0) {
     Write-Host "PBIT files:     $($pbitFiles.Count)"
 }
 else {
-    Write-Warning "No .pbit file was found under powerbi. The release still includes the PBIP source, but customer template distribution requires manually exporting a PBIT before building with -RequirePbit."
+    Write-Warning "No .pbit file was found under template or powerbi. The release still includes the PBIP source, but customer template distribution requires manually exporting a PBIT before building with -RequirePbit."
 }
 if ($pbipFiles.Count -gt 0) {
     Write-Host "PBIP files:     $($pbipFiles.Count)"

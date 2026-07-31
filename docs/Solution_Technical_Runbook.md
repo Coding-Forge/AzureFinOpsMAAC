@@ -261,7 +261,7 @@ Create a distributable release folder and zip from the solution root:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0
 ```
 
-For customer releases that must include a Power BI template, first export `powerbi\Cost-Management.pbit` from Power BI Desktop, then run:
+For customer releases that must include a Power BI template, first export `template\Cost-Management.pbit` from Power BI Desktop, then run:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build-release.ps1 -Version 1.0.0 -RequirePbit

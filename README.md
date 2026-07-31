@@ -63,7 +63,7 @@ Then use the launcher to load subscriptions, choose the export options, and run 
 After the run completes, open the customer template if the release includes one:
 
 ```text
-powerbi\Cost-Management.pbit
+template\Cost-Management.pbit
 ```
 
 If the release includes the PBIP source project instead, open:
@@ -72,7 +72,7 @@ If the release includes the PBIP source project instead, open:
 powerbi\Cost-Management.pbip
 ```
 
-Refresh the model using the generated settings in the run folder.
+When the PBIT prompts for parameters, use the values from the generated `powerbi-storage-settings.json` in the run folder. At minimum, set `StorageLocation`, `LocalDataRoot`, and `HistoryDataRoot` for a local run. Then refresh the model.
 
 ## Key outputs
 
