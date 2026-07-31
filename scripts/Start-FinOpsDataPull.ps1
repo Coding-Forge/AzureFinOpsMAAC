@@ -807,6 +807,7 @@ try {
         `$costArgs = @{
             OutputDir = `$outputRoot
             AsOfDate = `$asOfDate
+            AzureCloud = `$azureCloud
         }
         if (`$customRangeEnabled) {
             `$costArgs.CustomStartDate = [datetime]`$customStartDate
@@ -823,6 +824,7 @@ try {
     if (`$runResourceGroups) {
         `$resourceArgs = @{
             OutputDir = `$outputRoot
+            AzureCloud = `$azureCloud
         }
         if (`$installAzureCli) { `$resourceArgs.InstallAzureCli = `$true }
         if (`$subscriptionIds.Count -eq 1) {
@@ -840,6 +842,7 @@ try {
             OutputDir = (Join-Path `$outputRoot "billing-contact-audit")
             SubscriptionId = `$subscriptionIds
             IncludeInvoices = `$true
+            AzureCloud = `$azureCloud
         }
         if (`$tenantId) { `$billingAuditArgs.TenantId = `$tenantId }
         if (`$installAzureCli) { `$billingAuditArgs.InstallAzureCli = `$true }

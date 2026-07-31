@@ -30,6 +30,9 @@ Installs Azure CLI with winget if needed, signs in if needed, then exports all v
 
 [CmdletBinding()]
 param(
+    [ValidateSet("AzureCloud", "AzureUSGovernment")]
+    [string]$AzureCloud = "AzureCloud",
+
     [string]$SubscriptionId,
 
     [switch]$AllSubscriptions,
@@ -70,6 +73,22 @@ function Ensure-AzureCli {
 
     if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
         throw "Azure CLI installation completed, but az is not available on PATH. Open a new PowerShell window and rerun the script."
+    }
+}
+
+function Set-AzureCloud {
+    param(
+        [ValidateSet("AzureCloud", "AzureUSGovernment")]
+        [string]$Name = "AzureCloud"
+    )
+
+    $currentCloud = az cloud show --query name --output tsv 2>$null
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($currentCloud) -or $currentCloud.Trim() -ne $Name) {
+        Write-Host "Setting Azure CLI cloud to $Name..."
+        az cloud set --name $Name | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Could not set Azure CLI cloud to '$Name'."
+        }
     }
 }
 
@@ -122,6 +141,7 @@ function Get-LocationLookup {
 }
 
 Ensure-AzureCli
+Set-AzureCloud -Name $AzureCloud
 Ensure-AzureLogin
 
 if ($SubscriptionId -and $AllSubscriptions) {
