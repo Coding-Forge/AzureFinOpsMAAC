@@ -731,6 +731,231 @@ function New-CostSummaries {
     }
 }
 
+function New-FinOpsMeterKey {
+    param(
+        [string]$ServiceName,
+        [string]$Meter,
+        [string]$Product,
+        [string]$PartNumber,
+        [string]$UnitOfMeasure
+    )
+
+    return @($ServiceName, $Meter, $Product, $PartNumber, $UnitOfMeasure) -join "|"
+}
+
+function New-FinOpsRetailSkuKey {
+    param(
+        [string]$RetailSkuId,
+        [string]$RetailMeterId,
+        [string]$RetailArmRegionName,
+        [string]$RetailUnitOfMeasure
+    )
+
+    if ([string]::IsNullOrWhiteSpace($RetailSkuId) -and [string]::IsNullOrWhiteSpace($RetailMeterId)) {
+        return ""
+    }
+
+    return @($RetailSkuId, $RetailMeterId, $RetailArmRegionName, $RetailUnitOfMeasure) -join "|"
+}
+
+function Export-FinOpsModelCsv {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [Parameter(Mandatory)]
+        [string[]]$Columns,
+
+        [object[]]$Rows = @()
+    )
+
+    $rowsToWrite = @($Rows | Where-Object { $null -ne $_ })
+    if ($rowsToWrite.Count -eq 0) {
+        $header = ($Columns | ForEach-Object { '"' + ($_ -replace '"', '""') + '"' }) -join ","
+        Set-Content -Path $Path -Value $header -Encoding UTF8
+        return
+    }
+
+    $rowsToWrite |
+        Select-Object $Columns |
+        Export-Csv -Path $Path -NoTypeInformation -Encoding UTF8
+}
+
+function New-NormalizedFinOpsModelFiles {
+    param(
+        [Parameter(Mandatory)]
+        [string]$DestinationDir,
+
+        [Parameter(Mandatory)]
+        [string[]]$Prefixes,
+
+        [bool]$IncludeRetailPriceMatch = $true
+    )
+
+    $costRows = @()
+    $retailMatchRows = @()
+
+    foreach ($prefix in $Prefixes) {
+        $periodLabel = switch ($prefix) {
+            "mtd" { "MTD" }
+            "last-month" { "Last Month" }
+            "custom" { "Custom" }
+            default { $prefix }
+        }
+
+        $costPath = Join-Path $DestinationDir "$prefix-cost-by-retail-join-with-arm-region.csv"
+        if (Test-Path $costPath) {
+            $costRows += @(Import-Csv $costPath | ForEach-Object {
+                $meterKey = New-FinOpsMeterKey -ServiceName $_.ServiceName -Meter $_.Meter -Product $_.Product -PartNumber $_.PartNumber -UnitOfMeasure $_.UnitOfMeasure
+                [pscustomobject][ordered]@{
+                    Period = $periodLabel
+                    SubscriptionId = $_.SubscriptionId
+                    SubscriptionName = $_.SubscriptionName
+                    UsageDate = $_.UsageDate
+                    ServiceName = $_.ServiceName
+                    ResourceLocation = $_.ResourceLocation
+                    ArmRegionName = $_.ArmRegionName
+                    MeterKey = $meterKey
+                    Meter = $_.Meter
+                    Product = $_.Product
+                    PartNumber = $_.PartNumber
+                    UnitOfMeasure = $_.UnitOfMeasure
+                    Currency = $_.Currency
+                    UsageQuantity = $_.UsageQuantity
+                    Cost = $_.Cost
+                }
+            })
+        }
+
+        $enrichedPath = Join-Path $DestinationDir "$prefix-cost-by-retail-join-enriched.csv"
+        if ($IncludeRetailPriceMatch -and (Test-Path $enrichedPath)) {
+            $retailMatchRows += @(Import-Csv $enrichedPath | ForEach-Object {
+                $meterKey = New-FinOpsMeterKey -ServiceName $_.ServiceName -Meter $_.Meter -Product $_.Product -PartNumber $_.PartNumber -UnitOfMeasure $_.UnitOfMeasure
+                $retailSkuKey = New-FinOpsRetailSkuKey -RetailSkuId $_.RetailSkuId -RetailMeterId $_.RetailMeterId -RetailArmRegionName $_.RetailArmRegionName -RetailUnitOfMeasure $_.RetailUnitOfMeasure
+                [pscustomobject][ordered]@{
+                    Period = $periodLabel
+                    SubscriptionId = $_.SubscriptionId
+                    UsageDate = $_.UsageDate
+                    ServiceName = $_.ServiceName
+                    ArmRegionName = $_.ArmRegionName
+                    MeterKey = $meterKey
+                    RetailSkuKey = $retailSkuKey
+                    RetailMatchStatus = $_.RetailMatchStatus
+                    RetailCandidateCount = $_.RetailCandidateCount
+                    RetailSkuId = $_.RetailSkuId
+                    RetailMeterId = $_.RetailMeterId
+                    RetailProductId = $_.RetailProductId
+                    RetailArmRegionName = $_.RetailArmRegionName
+                    RetailUnitOfMeasure = $_.RetailUnitOfMeasure
+                    RetailPrice = $_.RetailPrice
+                    RetailUnitPrice = $_.RetailUnitPrice
+                    RetailCurrencyCode = $_.RetailCurrencyCode
+                }
+            })
+        }
+    }
+
+    $subscriptionRows = @(
+        $costRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.SubscriptionId) } |
+            Group-Object SubscriptionId |
+            ForEach-Object {
+                $first = $_.Group | Select-Object -First 1
+                [pscustomobject][ordered]@{
+                    SubscriptionId = $first.SubscriptionId
+                    SubscriptionName = $first.SubscriptionName
+                }
+            } |
+            Sort-Object SubscriptionName, SubscriptionId
+    )
+
+    $serviceRows = @(
+        $costRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.ServiceName) } |
+            Select-Object ServiceName -Unique |
+            Sort-Object ServiceName
+    )
+
+    $regionRows = @(
+        $costRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.ArmRegionName) } |
+            Group-Object ArmRegionName |
+            ForEach-Object {
+                $first = $_.Group | Select-Object -First 1
+                [pscustomobject][ordered]@{
+                    ArmRegionName = $first.ArmRegionName
+                    ResourceLocation = $first.ResourceLocation
+                }
+            } |
+            Sort-Object ArmRegionName
+    )
+
+    $meterRows = @(
+        $costRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.MeterKey) } |
+            Group-Object MeterKey |
+            ForEach-Object {
+                $first = $_.Group | Select-Object -First 1
+                [pscustomobject][ordered]@{
+                    MeterKey = $first.MeterKey
+                    ServiceName = $first.ServiceName
+                    Meter = $first.Meter
+                    Product = $first.Product
+                    PartNumber = $first.PartNumber
+                    UnitOfMeasure = $first.UnitOfMeasure
+                }
+            } |
+            Sort-Object ServiceName, Meter, Product, PartNumber, UnitOfMeasure
+    )
+
+    $retailSkuRows = @(
+        $retailMatchRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.RetailSkuKey) } |
+            Group-Object RetailSkuKey |
+            ForEach-Object {
+                $first = $_.Group | Select-Object -First 1
+                [pscustomobject][ordered]@{
+                    RetailSkuKey = $first.RetailSkuKey
+                    RetailSkuId = $first.RetailSkuId
+                    RetailMeterId = $first.RetailMeterId
+                    RetailProductId = $first.RetailProductId
+                    RetailArmRegionName = $first.RetailArmRegionName
+                    RetailUnitOfMeasure = $first.RetailUnitOfMeasure
+                    RetailPrice = $first.RetailPrice
+                    RetailUnitPrice = $first.RetailUnitPrice
+                    RetailCurrencyCode = $first.RetailCurrencyCode
+                }
+            } |
+            Sort-Object RetailSkuId, RetailMeterId, RetailArmRegionName
+    )
+
+    $outputs = @(
+        @{ Path = Join-Path $DestinationDir "fact-cost-usage.csv"; Columns = @("Period","SubscriptionId","SubscriptionName","UsageDate","ServiceName","ResourceLocation","ArmRegionName","MeterKey","Meter","Product","PartNumber","UnitOfMeasure","Currency","UsageQuantity","Cost"); Rows = $costRows },
+        @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
+        @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
+        @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("ArmRegionName","ResourceLocation"); Rows = $regionRows },
+        @{ Path = Join-Path $DestinationDir "dim-meter.csv"; Columns = @("MeterKey","ServiceName","Meter","Product","PartNumber","UnitOfMeasure"); Rows = $meterRows },
+        @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
+        @{ Path = Join-Path $DestinationDir "dim-retail-sku.csv"; Columns = @("RetailSkuKey","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailSkuRows }
+    )
+
+    foreach ($output in $outputs) {
+        Export-FinOpsModelCsv -Path $output.Path -Columns $output.Columns -Rows $output.Rows
+    }
+
+    return [pscustomobject]@{
+        FactCostUsage = Join-Path $DestinationDir "fact-cost-usage.csv"
+        FactRetailPriceMatch = Join-Path $DestinationDir "fact-retail-price-match.csv"
+        DimSubscription = Join-Path $DestinationDir "dim-subscription.csv"
+        DimService = Join-Path $DestinationDir "dim-service.csv"
+        DimRegion = Join-Path $DestinationDir "dim-region.csv"
+        DimMeter = Join-Path $DestinationDir "dim-meter.csv"
+        DimRetailSku = Join-Path $DestinationDir "dim-retail-sku.csv"
+        CostRows = @($costRows).Count
+        RetailMatchRows = @($retailMatchRows).Count
+    }
+}
+
 Ensure-AzureCli
 Ensure-AzureLogin
 $targetSubscriptions = Get-TargetSubscriptions -TenantId $TenantId -RequestedSubscriptionIds $SubscriptionId
@@ -831,6 +1056,7 @@ foreach ($period in $periods) {
 }
 
 $summaries = New-CostSummaries -DestinationDir $OutputDir -Prefixes @($periods | ForEach-Object { $_.Prefix })
+$normalizedModelOutputs = New-NormalizedFinOpsModelFiles -DestinationDir $OutputDir -Prefixes @($periods | ForEach-Object { $_.Prefix }) -IncludeRetailPriceMatch:(-not $SkipRetailPriceLookup)
 
 Write-Host ""
 Write-Host "Cost exports saved to: $OutputDir"
@@ -851,6 +1077,10 @@ $retailJoinResults |
     Write-Host
 Write-Host "Summary by service: $($summaries.ServiceSummary)"
 Write-Host "Summary by resource group: $($summaries.ResourceGroupSummary)"
+Write-Host "Normalized model files:"
+Write-Host "  Fact cost usage:        $($normalizedModelOutputs.FactCostUsage)"
+Write-Host "  Retail price matches:   $($normalizedModelOutputs.FactRetailPriceMatch)"
+Write-Host "  Dimensions:             $($normalizedModelOutputs.DimSubscription), $($normalizedModelOutputs.DimService), $($normalizedModelOutputs.DimRegion), $($normalizedModelOutputs.DimMeter), $($normalizedModelOutputs.DimRetailSku)"
 Write-Host "Retail join CSVs: $(Join-Path $OutputDir '*-cost-by-retail-join-with-arm-region.csv')"
 if (-not $SkipRetailPriceLookup) {
     Write-Host "Retail enriched CSVs:"
