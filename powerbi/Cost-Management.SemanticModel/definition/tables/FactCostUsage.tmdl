@@ -1,0 +1,117 @@
+table FactCostUsage
+	lineageTag: 4d14fd74-28f9-49aa-a10e-311111110001
+
+	column Period
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110002
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110003
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110004
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110005
+		summarizeBy: none
+		sourceColumn: UsageDate
+
+	column UsageDateAsDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110006
+		summarizeBy: none
+		sourceColumn: UsageDateAsDate
+
+	column ServiceName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110007
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110008
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110009
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column MeterKey
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110010
+		summarizeBy: none
+		sourceColumn: MeterKey
+
+	column Meter
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110011
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110012
+		summarizeBy: none
+		sourceColumn: Product
+
+	column PartNumber
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110013
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110014
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+	column Currency
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110015
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110016
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column Cost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110017
+		summarizeBy: sum
+		sourceColumn: Cost
+
+	partition FactCostUsage = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("fact-cost-usage.csv", 15),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Period", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}}, [MissingField = MissingField.UseNull]),
+				    AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date)
+				in
+				    AddUsageDateAsDate
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
