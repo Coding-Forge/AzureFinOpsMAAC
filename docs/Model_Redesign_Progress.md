@@ -7,15 +7,15 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 19 / 24 complete
-[###################-----] 79%
+Overall progress: 21 / 24 complete
+[#####################---] 88%
 ```
 
 | Phase | Status | Complete | Total |
 | --- | --- | ---: | ---: |
-| Phase 1 - Stabilize current model | In progress | 3 | 5 |
+| Phase 1 - Stabilize current model | In progress | 4 | 5 |
 | Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
-| Phase 3 - Build relationship-based semantic model | In progress | 5 | 7 |
+| Phase 3 - Build relationship-based semantic model | Complete | 7 | 7 |
 | Phase 4 - Retire redundant staging tables | Complete | 4 | 4 |
 | Phase 5 - Release and documentation | In progress | 1 | 2 |
 
@@ -23,7 +23,7 @@ Overall progress: 19 / 24 complete
 
 Purpose: make sure the current release is reliable before changing the data shape.
 
-- [ ] Confirm Power BI refresh is stable with the latest model.
+- [x] Confirm Power BI refresh is stable with the latest model.
 - [ ] Confirm `template\Cost-Management.pbit` opens and prompts for expected parameters.
 - [x] Confirm latest generated Cost Management totals match Azure Cost Management for the selected scope/date range.
 - [x] Confirm Fabric costs appear correctly in the latest generated data and report.
@@ -50,7 +50,7 @@ Purpose: make Power BI responsible for relationships, slicers, reusable dimensio
 - [x] Relate facts to dimensions with single-direction filter paths where possible.
 - [x] Rebuild core measures from normalized facts.
 - [x] Validate totals against the current enriched-file model.
-- [ ] Update PBIT parameters and refresh behavior.
+- [x] Update PBIT parameters and refresh behavior.
 
 ## Phase 4 - Retire redundant staging tables
 
@@ -82,7 +82,7 @@ Use this section to capture evidence from the stabilization pass.
 
 | Check | Result | Evidence / notes |
 | --- | --- | --- |
-| Refresh stable | Pending |  |
+| Refresh stable | Passed | User confirmed PBIP refresh completed without errors after removing cyclic staging dependencies. |
 | PBIT opens and prompts | Pending |  |
 | Cost total matches Azure Cost Management | Passed | Latest checked run: `C:\Projects\Fabric\AuditDumps\run-20260730-105838`. `mtd-cost-by-service-resourcegroup.csv` and `mtd-cost-by-retail-join-enriched.csv` both total `$473.59` for `20260701`-`20260730`. |
 | Fabric cost appears | Passed | Same latest run shows Microsoft Fabric cost of `$127.04` in both MTD service/resource group and enriched retail-join files. Report-level visual confirmation is still part of the refresh/PBIT manual check. |
@@ -108,6 +108,7 @@ Use this section to capture evidence from the stabilization pass.
 | Normalized measures added | Passed | Added additive normalized measures for actual cost, retail equivalent cost, estimated savings, savings rate, matched actual cost, retail match coverage, and cost row count. Existing measures were not replaced. |
 | Normalized history support added | Passed | Generated run scripts now maintain `fact-cost-usage-history.csv` and `fact-retail-price-match-history.csv`; normalized fact tables switch between current files and history files based on `AnalysisMode`. |
 | Normalized totals validated | Passed | Against `C:\Projects\Fabric\AuditDumps\run-20260730-105838`, `FactCostUsage` and `FactRetailPriceMatch` matched enriched-file totals with zero delta: MTD `$473.588895`; Last Month `$1279.839633`. Generated normalized files had 1,134 fact rows, 1 subscription, 7 services, 4 regions, 26 meters, and 27 retail SKUs. |
+| Refresh behavior validated | Passed | User refreshed PBIP successfully after removing `DimRetailSku` semantic import, retiring service-resourcegroup staging queries, and repointing legacy MTD/Last Month measures to `FactCostUsage`. Power BI generated a local date table for `FactCostUsage[UsageDateAsDate]`, which was committed as part of the stable model. |
 
 ## Phase 4 validation notes
 
