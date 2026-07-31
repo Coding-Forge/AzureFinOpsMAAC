@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484"
+                      "Entity": "DimUsageDate"
                     }
                   },
                   "Property": "Date"
                 }
               },
-              "queryRef": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484.Date",
+              "queryRef": "DimUsageDate.Date",
               "nativeQueryRef": "Date"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484"
+                      "Entity": "DimUsageDate"
                     }
                   },
                   "Property": "Year"
                 }
               },
-              "queryRef": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484.Year",
+              "queryRef": "DimUsageDate.Year",
               "nativeQueryRef": "Year"
             },
             {
@@ -48,42 +48,42 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484"
+                      "Entity": "DimUsageDate"
                     }
                   },
-                  "Property": "Month"
+                  "Property": "Month Name"
                 }
               },
-              "queryRef": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484.Month",
-              "nativeQueryRef": "Month"
+              "queryRef": "DimUsageDate.Month Name",
+              "nativeQueryRef": "Month Name"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484"
+                      "Entity": "DimUsageDate"
                     }
                   },
-                  "Property": "Quarter"
+                  "Property": "Fiscal Year Label"
                 }
               },
-              "queryRef": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484.Quarter",
-              "nativeQueryRef": "Quarter"
+              "queryRef": "DimUsageDate.Fiscal Year Label",
+              "nativeQueryRef": "Fiscal Year Label"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484"
+                      "Entity": "DimUsageDate"
                     }
                   },
-                  "Property": "Day"
+                  "Property": "Fiscal Quarter"
                 }
               },
-              "queryRef": "DateTableTemplate_ea3d7644-38b6-4c69-8c6e-4080692c4484.Day",
-              "nativeQueryRef": "Day"
+              "queryRef": "DimUsageDate.Fiscal Quarter",
+              "nativeQueryRef": "Fiscal Quarter"
             }
           ]
         }
@@ -103,7 +103,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'DateTableTemplate'"
+                  "Value": "'DimUsageDate'"
                 }
               }
             }

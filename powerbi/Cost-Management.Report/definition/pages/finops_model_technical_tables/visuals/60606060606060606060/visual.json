@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430"
+                      "Entity": "DimAgreementEndDate"
                     }
                   },
                   "Property": "Date"
                 }
               },
-              "queryRef": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Date",
+              "queryRef": "DimAgreementEndDate.Date",
               "nativeQueryRef": "Date"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430"
+                      "Entity": "DimAgreementEndDate"
                     }
                   },
                   "Property": "Year"
                 }
               },
-              "queryRef": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Year",
+              "queryRef": "DimAgreementEndDate.Year",
               "nativeQueryRef": "Year"
             },
             {
@@ -48,42 +48,42 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430"
+                      "Entity": "DimAgreementEndDate"
                     }
                   },
-                  "Property": "Month"
+                  "Property": "Month Name"
                 }
               },
-              "queryRef": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Month",
-              "nativeQueryRef": "Month"
+              "queryRef": "DimAgreementEndDate.Month Name",
+              "nativeQueryRef": "Month Name"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430"
+                      "Entity": "DimAgreementEndDate"
                     }
                   },
-                  "Property": "Quarter"
+                  "Property": "Fiscal Year Label"
                 }
               },
-              "queryRef": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Quarter",
-              "nativeQueryRef": "Quarter"
+              "queryRef": "DimAgreementEndDate.Fiscal Year Label",
+              "nativeQueryRef": "Fiscal Year Label"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430"
+                      "Entity": "DimAgreementEndDate"
                     }
                   },
-                  "Property": "Day"
+                  "Property": "Fiscal Quarter"
                 }
               },
-              "queryRef": "LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Day",
-              "nativeQueryRef": "Day"
+              "queryRef": "DimAgreementEndDate.Fiscal Quarter",
+              "nativeQueryRef": "Fiscal Quarter"
             }
           ]
         }
@@ -103,7 +103,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'LocalDateTable_8717...'"
+                  "Value": "'DimAgreementEndDate'"
                 }
               }
             }
