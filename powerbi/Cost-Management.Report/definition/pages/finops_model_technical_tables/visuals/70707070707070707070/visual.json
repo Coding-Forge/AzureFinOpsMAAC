@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                      "Entity": "DimRetailEffectiveStartDate"
                     }
                   },
                   "Property": "Date"
                 }
               },
-              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Date",
+              "queryRef": "DimRetailEffectiveStartDate.Date",
               "nativeQueryRef": "Date"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                      "Entity": "DimRetailEffectiveStartDate"
                     }
                   },
                   "Property": "Year"
                 }
               },
-              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Year",
+              "queryRef": "DimRetailEffectiveStartDate.Year",
               "nativeQueryRef": "Year"
             },
             {
@@ -48,42 +48,42 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                      "Entity": "DimRetailEffectiveStartDate"
                     }
                   },
-                  "Property": "Month"
+                  "Property": "Month Name"
                 }
               },
-              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Month",
-              "nativeQueryRef": "Month"
+              "queryRef": "DimRetailEffectiveStartDate.Month Name",
+              "nativeQueryRef": "Month Name"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                      "Entity": "DimRetailEffectiveStartDate"
                     }
                   },
-                  "Property": "Quarter"
+                  "Property": "Fiscal Year Label"
                 }
               },
-              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Quarter",
-              "nativeQueryRef": "Quarter"
+              "queryRef": "DimRetailEffectiveStartDate.Fiscal Year Label",
+              "nativeQueryRef": "Fiscal Year Label"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043"
+                      "Entity": "DimRetailEffectiveStartDate"
                     }
                   },
-                  "Property": "Day"
+                  "Property": "Fiscal Quarter"
                 }
               },
-              "queryRef": "LocalDateTable_90c04e35-8470-4019-bd29-13831954d043.Day",
-              "nativeQueryRef": "Day"
+              "queryRef": "DimRetailEffectiveStartDate.Fiscal Quarter",
+              "nativeQueryRef": "Fiscal Quarter"
             }
           ]
         }
@@ -103,7 +103,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'LocalDateTable_90c0...'"
+                  "Value": "'DimRetailEffectiveStartDate'"
                 }
               }
             }

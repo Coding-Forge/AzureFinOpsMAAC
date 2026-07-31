@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "These are auto-generated/internal date tables (hidden in normal authoring). This page intentionally documents and exposes them for model completeness tracking.",
+                    "value": "These technical tables document the model date dimensions. Role-playing dimensions such as DimAgreementStartDate and DimRetailEffectiveStartDate replace hidden auto-date tables for clearer relationships.",
                     "textStyle": {
                       "fontWeight": "normal",
                       "fontFamily": "Segoe UI",
