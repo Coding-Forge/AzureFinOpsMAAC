@@ -7,14 +7,14 @@ Move the solution from a mostly script-shaped, pre-joined CSV reporting model to
 ## Progress meter
 
 ```text
-Overall progress: 3 / 24 complete
-[###---------------------] 13%
+Overall progress: 9 / 24 complete
+[#########---------------] 38%
 ```
 
 | Phase | Status | Complete | Total |
 | --- | --- | ---: | ---: |
 | Phase 1 - Stabilize current model | In progress | 3 | 5 |
-| Phase 2 - Add normalized CSV outputs | Not started | 0 | 6 |
+| Phase 2 - Add normalized CSV outputs | Complete | 6 | 6 |
 | Phase 3 - Build relationship-based semantic model | Not started | 0 | 7 |
 | Phase 4 - Retire redundant staging tables | Not started | 0 | 4 |
 | Phase 5 - Release and documentation | Not started | 0 | 2 |
@@ -33,12 +33,12 @@ Purpose: make sure the current release is reliable before changing the data shap
 
 Purpose: add model-friendly files without breaking existing audit/report files.
 
-- [ ] Add `fact-cost-usage.csv` from raw Cost Management output.
-- [ ] Add `dim-subscription.csv` from selected subscriptions.
-- [ ] Add `dim-service.csv` from cost/service values.
-- [ ] Add `dim-region.csv` from Azure location metadata and normalized ARM region names.
-- [ ] Add `dim-meter.csv` / product-meter-unit metadata.
-- [ ] Add `fact-retail-price-match.csv` with selected match, candidate count, confidence/status, and retail SKU references.
+- [x] Add `fact-cost-usage.csv` from raw Cost Management output.
+- [x] Add `dim-subscription.csv` from selected subscriptions.
+- [x] Add `dim-service.csv` from cost/service values.
+- [x] Add `dim-region.csv` from Azure location metadata and normalized ARM region names.
+- [x] Add `dim-meter.csv` / product-meter-unit metadata.
+- [x] Add `fact-retail-price-match.csv` with selected match, candidate count, confidence/status, and retail SKU references.
 
 ## Phase 3 - Build relationship-based semantic model
 
@@ -87,3 +87,11 @@ Use this section to capture evidence from the stabilization pass.
 | Cost total matches Azure Cost Management | Passed | Latest checked run: `C:\Projects\Fabric\AuditDumps\run-20260730-105838`. `mtd-cost-by-service-resourcegroup.csv` and `mtd-cost-by-retail-join-enriched.csv` both total `$473.59` for `20260701`-`20260730`. |
 | Fabric cost appears | Passed | Same latest run shows Microsoft Fabric cost of `$127.04` in both MTD service/resource group and enriched retail-join files. Report-level visual confirmation is still part of the refresh/PBIT manual check. |
 | Clean release extraction works | Passed | `v1.0.3` release zip extracted to a clean temp folder. Required files existed: `README.md`, `scripts\Start-FinOpsDataPull.ps1`, `template\Cost-Management.pbit`, `powerbi\Cost-Management.pbip`, and `_release-manifest.json`. Extracted launcher parsed successfully. Manifest showed `hasPbit=True`, `hasPbip=True`, and `dirty=False`. |
+
+## Phase 2 validation notes
+
+| Check | Result | Evidence / notes |
+| --- | --- | --- |
+| Normalized output function parses | Passed | `scripts\Get-CostAnalysis.ps1` parsed successfully after adding normalized output functions. |
+| Synthetic normalized output test | Passed | Focused helper test generated `fact-cost-usage.csv`, `dim-subscription.csv`, `dim-service.csv`, `dim-region.csv`, `dim-meter.csv`, `fact-retail-price-match.csv`, and `dim-retail-sku.csv` from a two-row synthetic dataset. |
+| Existing files preserved | Passed | New outputs are additive. Existing enriched cost, retail join, summary, history, and audit CSV generation remains in place. |
