@@ -188,7 +188,16 @@ Important files include:
 | `*-cost-by-retail-join.csv` | Cost rows grouped for retail-price matching. |
 | `*-cost-by-retail-join-with-arm-region.csv` | Retail-join rows with normalized ARM region names. |
 | `*-cost-by-retail-join-enriched.csv` | Retail-join rows enriched with public retail price fields. |
+| `fact-cost-usage.csv` | Normalized cost fact table for the relationship-based semantic model. |
+| `fact-retail-price-match.csv` | Normalized retail price match fact table for match coverage and savings measures. |
+| `dim-subscription.csv` | Normalized subscription dimension. |
+| `dim-service.csv` | Normalized service dimension. |
+| `dim-region.csv` | Normalized region dimension. |
+| `dim-meter.csv` | Normalized meter/product/unit dimension. |
+| `dim-retail-sku.csv` | Normalized retail SKU/meter/price dimension. |
 | `cost-retail-history.csv` | Durable historical fact file when using History mode. |
+| `fact-cost-usage-history.csv` | Durable normalized cost fact history file when using History mode. |
+| `fact-retail-price-match-history.csv` | Durable normalized retail match fact history file when using History mode. |
 | `agreement-config.csv` | Agreement metadata used for the run. |
 | `macc-agreement-status.csv` | MACC utilization, remaining commitment, burn variance, required run rate, and pacing status. |
 | `macc-benefit-ledger.csv` | Durable ledger of actual cost, retail equivalent, estimated savings, eligibility buckets, and match coverage. |
@@ -213,6 +222,7 @@ History mode:
 - Adds history columns such as `HistoryMonth`, `ExportRunId`, `ExportedUtc`, `Period`, `SubscriptionName`, and `SubscriptionId`.
 - Replaces matching `HistoryMonth` + `Period` slices on rerun to avoid duplicate snapshots.
 - Copies the latest history file into the current run folder for Power BI refresh and upload.
+- Maintains normalized history files for `FactCostUsage` and `FactRetailPriceMatch` so the relationship-based model can use the same `AnalysisMode` parameter.
 
 For one-time analysis, use:
 
@@ -225,6 +235,24 @@ For trend analysis, use:
 ```text
 AnalysisMode = History
 ```
+
+## Relationship-based semantic model migration
+
+The solution now emits normalized CSVs alongside the original enriched/audit files. The original enriched files remain for auditability and backward compatibility. The normalized files support a cleaner star-schema model:
+
+| Normalized file | Intended model role |
+| --- | --- |
+| `fact-cost-usage.csv` | Actual cost and usage fact. |
+| `fact-retail-price-match.csv` | Retail match and pricing fact. |
+| `dim-subscription.csv` | Subscription slicer/dimension. |
+| `dim-service.csv` | Service slicer/dimension. |
+| `dim-region.csv` | Region slicer/dimension. |
+| `dim-meter.csv` | Meter/product/unit dimension. |
+| `dim-retail-sku.csv` | Retail SKU/price dimension. |
+
+During migration, both models coexist. Existing customer-facing visuals still use the established enriched model. Normalized facts, dimensions, and measures are additive until refresh and PBIT behavior are validated in Power BI Desktop.
+
+After any semantic model change, export a fresh `template\Cost-Management.pbit` from Power BI Desktop before publishing a customer release.
 
 ## Common blockers and what they mean
 

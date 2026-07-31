@@ -77,7 +77,7 @@ Important files to upload:
 
 ## Power BI semantic model
 
-The model contains a unified fact table:
+The current customer-facing report still uses the established unified fact table:
 
 ```text
 CostRetailFact
@@ -106,7 +106,7 @@ Key columns:
 
 ## Relationships
 
-The model is partially denormalized because the script already joins Cost Management data with Retail Prices data during retrieval. However, dimension relationships were added for a cleaner star-schema model and consistent filtering.
+The model is partially denormalized because the script already joins Cost Management data with Retail Prices data during retrieval. Normalized fact and dimension tables are being added in parallel so the model can move toward a cleaner star schema without breaking existing report pages.
 
 | From | To | Purpose |
 |---|---|---|
@@ -114,6 +114,20 @@ The model is partially denormalized because the script already joins Cost Manage
 | `CostRetailFact[ServiceName]` | `DimService[ServiceName]` | Service slicers and service-level reporting. |
 | `CostRetailFact[ArmRegionName]` | `DimRegion[ArmRegionName]` | Region slicers and region-level reporting. |
 | `CostRetailFact[RetailMatchStatus]` | `DimRetailMatch[RetailMatchStatus]` | Matched/unmatched data-quality filtering. |
+
+New normalized tables include:
+
+| Table | Purpose |
+|---|---|
+| `FactCostUsage` | Actual cost and usage fact sourced from `fact-cost-usage.csv`. |
+| `FactRetailPriceMatch` | Retail match/pricing fact sourced from `fact-retail-price-match.csv`. |
+| `DimSubscription` | Subscription dimension. |
+| `DimServiceModel` | Normalized service dimension. |
+| `DimRegionModel` | Normalized region dimension. |
+| `DimMeter` | Meter/product/unit dimension. |
+| `DimRetailSku` | Retail SKU and price dimension. |
+
+The normalized model includes additive measures prefixed with `Normalized`. Existing report visuals have not yet been switched to these measures.
 
 ## Measures
 
@@ -129,6 +143,10 @@ Core customer-facing measures:
 | `Unmatched Actual Cost` | Actual cost that could not be confidently matched to Retail Prices. |
 | `Average Effective Unit Cost` | Actual cost divided by usage quantity. |
 | `Average Retail Unit Price` | Average public retail unit price. |
+| `Normalized Actual Cost` | Actual cost from `FactCostUsage`. |
+| `Normalized Retail Equivalent Cost` | Retail equivalent cost calculated from `FactRetailPriceMatch`. |
+| `Normalized Estimated Savings` | Normalized retail equivalent cost minus normalized actual cost. |
+| `Normalized Retail Match Coverage` | Match coverage calculated from the normalized facts. |
 
 ## Report pages
 

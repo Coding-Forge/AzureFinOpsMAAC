@@ -91,6 +91,9 @@ Important outputs include:
 | `cost-summary-by-service.csv` | Service-level cost summary. |
 | `cost-summary-by-resourcegroup.csv` | Resource-group-level cost summary. |
 | `*-cost-by-retail-join-enriched.csv` | Cost data enriched with public retail price matches. |
+| `fact-cost-usage.csv` | Normalized cost fact table for the relationship-based model. |
+| `fact-retail-price-match.csv` | Normalized retail price match fact table. |
+| `dim-*.csv` | Normalized dimension files for subscription, service, region, meter, and retail SKU analysis. |
 | `macc-agreement-status.csv` | MACC commitment, utilization, burn variance, and pacing status. |
 | `macc-benefit-ledger.csv` | Durable benefit ledger for trend and audit review. |
 | `retail-match-exceptions.csv` | Pricing and eligibility rows that need review. |
@@ -114,6 +117,7 @@ More detailed operational and technical information has been moved out of this f
 - **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.
 - **Some opportunity files are first-pass indicators.** RI/SP, Azure Hybrid Benefit, Spot, and Dev/Test outputs should be validated with official entitlement, utilization, and configuration data before making claims.
+- **PBIT files must be re-exported after model changes.** If the PBIP semantic model changes, open the PBIP in Power BI Desktop, validate refresh, and export a fresh `template\Cost-Management.pbit` before publishing a customer release.
 
 ## Disclaimer
 
