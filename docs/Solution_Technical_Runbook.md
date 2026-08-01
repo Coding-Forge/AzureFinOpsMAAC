@@ -248,6 +248,7 @@ Important files include:
 | `*-cost-by-retail-join-enriched.csv` | Retail-join rows enriched with public retail price fields. |
 | `fact-cost-usage.csv` | Normalized cost fact table for the relationship-based semantic model. |
 | `fact-retail-price-match.csv` | Normalized retail price match fact table for match coverage and savings measures. |
+| `dim-azure-cloud.csv` | Normalized cloud dimension with values such as `AzureCloud` and `AzureUSGovernment`. |
 | `dim-subscription.csv` | Normalized subscription dimension. |
 | `dim-service.csv` | Normalized service dimension. |
 | `dim-region.csv` | Normalized region dimension. |
@@ -318,6 +319,7 @@ These tables participate in the relationship model and should be used for cross-
 | --- | --- |
 | `FactCostUsage` | Actual cost and usage fact sourced from `fact-cost-usage.csv`. |
 | `FactRetailPriceMatch` | Retail match and pricing fact sourced from `fact-retail-price-match.csv`. |
+| `DimAzureCloud` | Cloud dimension used to separate commercial and Azure Government data in combined datasets. |
 | `DimSubscription` | Subscription dimension. |
 | `DimServiceModel` | Service dimension for normalized facts. |
 | `DimRegionModel` | Region dimension for normalized facts. |

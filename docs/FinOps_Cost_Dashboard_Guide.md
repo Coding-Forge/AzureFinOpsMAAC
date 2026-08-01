@@ -126,6 +126,7 @@ Core normalized tables include:
 |---|---|
 | `FactCostUsage` | Actual cost and usage fact sourced from `fact-cost-usage.csv`. |
 | `FactRetailPriceMatch` | Retail match/pricing fact sourced from `fact-retail-price-match.csv`. |
+| `DimAzureCloud` | Cloud dimension for separating commercial and Azure Government data. |
 | `DimSubscription` | Subscription dimension. |
 | `DimServiceModel` | Normalized service dimension. |
 | `DimRegionModel` | Normalized region dimension. |
@@ -138,7 +139,7 @@ Core normalized tables include:
 | `DimRetailEffectiveStartDate` | Retail price effective-start date dimension. |
 | `DimRetailEffectiveEndDate` | Retail price effective-end date dimension. |
 
-The normalized model includes additive measures prefixed with `Normalized`.
+The normalized model includes additive measures prefixed with `Normalized`. The main overview page includes Cloud and Subscription slicers so mixed commercial/Azure Government datasets can be reviewed separately.
 
 ## Why some tables do not have relationships
 
@@ -199,6 +200,8 @@ az login --use-device-code --allow-no-subscriptions
 ```
 
 Use `https://portal.azure.us` for Azure Government administration and `https://admin.microsoft.us` / `https://portal.office365.us` for Microsoft 365 government administration.
+
+Retail comparison values for Azure Government use public Azure Retail Prices API metadata as an estimated PAYGO/list-price equivalent. Validate whether that data is appropriate for the customer before using savings estimates externally.
 
 ### Azure subscription / resource scope
 

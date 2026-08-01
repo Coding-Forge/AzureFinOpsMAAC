@@ -23,6 +23,9 @@ This project brings those signals together so a team can answer practical FinOps
 | Which services, regions, or resource groups are driving spend? | Provides Power BI pages and CSV summaries for drilldown and discussion. |
 | Who owns billing, invoice routing, and billing access? | Exports billing account, billing profile, invoice section, invoice, subscription billing property, and billing role evidence where permissions allow. |
 | Where might RI/SP, Azure Hybrid Benefit, Spot, or Dev/Test opportunities exist? | Produces first-pass opportunity files that identify candidates for deeper validation. |
+| How do I separate commercial and Azure Gov data? | Captures `AzureCloud` in generated files and provides Cloud and Subscription slicers on the main overview page. |
+| How do I separate commercial and Azure Gov data? | Captures `AzureCloud` in generated files and provides Cloud and Subscription slicers on the main overview page. |
+| How do I separate commercial and Azure Gov data? | Captures `AzureCloud` in generated files and provides Cloud and Subscription slicers on the main overview page. |
 
 ## What is included
 
@@ -93,7 +96,7 @@ Important outputs include:
 | `*-cost-by-retail-join-enriched.csv` | Cost data enriched with public retail price matches. |
 | `fact-cost-usage.csv` | Normalized cost fact table for the relationship-based model. |
 | `fact-retail-price-match.csv` | Normalized retail price match fact table. |
-| `dim-*.csv` | Normalized dimension files for subscription, service, region, meter, and retail SKU analysis. |
+| `dim-*.csv` | Normalized dimension files for cloud, subscription, service, region, meter, and retail SKU analysis. |
 | `macc-agreement-status.csv` | MACC commitment, utilization, burn variance, and pacing status. |
 | `macc-benefit-ledger.csv` | Durable benefit ledger for trend and audit review. |
 | `retail-match-exceptions.csv` | Pricing and eligibility rows that need review. |
@@ -124,7 +127,7 @@ More detailed operational and technical information has been moved out of this f
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
 - **Azure permissions matter.** Cost data, billing data, and storage uploads may require different permissions.
 - **Azure Government / GCC High requires extra validation.** Choose `AzureUSGovernment` in the launcher, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
-- **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation.
+- **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation. For Azure Government, treat public retail/PAYGO equivalents as estimates and validate whether they are appropriate for the customer discussion.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.
 - **Some opportunity files are first-pass indicators.** RI/SP, Azure Hybrid Benefit, Spot, and Dev/Test outputs should be validated with official entitlement, utilization, and configuration data before making claims.
 - **PBIT files must be re-exported after model changes.** If the PBIP semantic model changes, open the PBIP in Power BI Desktop, validate refresh, and export a fresh `template\Cost-Management.pbit` before publishing a customer release.

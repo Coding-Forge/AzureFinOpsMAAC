@@ -64,3 +64,9 @@ Important caveats:
 - Cost Management and Billing API availability/fields can differ by agreement type and cloud.
 - The solution currently uses the public Azure Retail Prices endpoint for retail enrichment. Confirm it is appropriate for the government tenant and pricing discussion.
 - If government retail matching is incomplete or not appropriate, use the report's actual-cost and billing evidence views, and treat retail-equivalent savings as directional only.
+
+## How do I separate commercial and Azure Government data in the report?
+
+The data pull writes `AzureCloud` into the normalized fact files and cloud dimension. The main overview page includes Cloud and Subscription slicers so mixed datasets can be reviewed separately.
+
+For Azure Government, choose `AzureUSGovernment` in the launcher before loading subscriptions. For commercial Azure, choose `AzureCloud`.
