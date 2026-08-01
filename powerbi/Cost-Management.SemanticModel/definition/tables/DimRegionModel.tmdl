@@ -1,24 +1,6 @@
 table DimRegionModel
 	lineageTag: 03cf8953-8dc9-462f-bb1a-311111150001
 
-	column AzureCloud
-		dataType: string
-		lineageTag: 03cf8953-8dc9-462f-bb1a-311111150004
-		summarizeBy: none
-		sourceColumn: AzureCloud
-
-	column 'Azure Region Name'
-		dataType: string
-		lineageTag: 03cf8953-8dc9-462f-bb1a-311111150005
-		summarizeBy: none
-		sourceColumn: Azure Region Name
-
-	column 'Region Display Name'
-		dataType: string
-		lineageTag: 03cf8953-8dc9-462f-bb1a-311111150006
-		summarizeBy: none
-		sourceColumn: Region Display Name
-
 	column ArmRegionName
 		dataType: string
 		lineageTag: 03cf8953-8dc9-462f-bb1a-311111150002
@@ -35,9 +17,9 @@ table DimRegionModel
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("dim-region.csv", 5),
+				    Source = CsvFromSelectedStorage("dim-region.csv", 2),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}, {"Azure Region Name", type text}, {"Region Display Name", type text}, {"ArmRegionName", type text}, {"ResourceLocation", type text}}, [MissingField = MissingField.UseNull])
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ArmRegionName", type text}, {"ResourceLocation", type text}}, [MissingField = MissingField.UseNull])
 				in
 				    Typed
 

@@ -309,42 +309,108 @@ function Convert-CostManagementLocationToArmRegionName {
     return $ResourceLocation
 }
 
-function Get-FinOpsRegionCloud {
-    param([string]$AzureRegionName)
+function Get-FinOpsAzureRegionMap {
+    $regionCsv = @'
+Display Name,Azure Region,Azure Cloud
+Australia Central,australiacentral,Azure Commercial
+Australia Central 2,australiacentral2,Azure Commercial
+Australia East,australiaeast,Azure Commercial
+Australia Southeast,australiasoutheast,Azure Commercial
+Austria East,austriaeast,Azure Commercial
+Belgium Central,belgiumcentral,Azure Commercial
+Brazil South,brazilsouth,Azure Commercial
+Brazil Southeast,brazilsoutheast,Azure Commercial
+Canada Central,canadacentral,Azure Commercial
+Canada East,canadaeast,Azure Commercial
+Central India,centralindia,Azure Commercial
+South India,southindia,Azure Commercial
+India South Central,indiasouthcentral,Azure Commercial
+West India,westindia,Azure Commercial
+Central US,centralus,Azure Commercial
+East US,eastus,Azure Commercial
+East US 2,eastus2,Azure Commercial
+North Central US,northcentralus,Azure Commercial
+South Central US,southcentralus,Azure Commercial
+West Central US,westcentralus,Azure Commercial
+West US,westus,Azure Commercial
+West US 2,westus2,Azure Commercial
+West US 3,westus3,Azure Commercial
+Chile Central,chilecentral,Azure Commercial
+Denmark East,denmarkeast,Azure Commercial
+East Asia,eastasia,Azure Commercial
+Southeast Asia,southeastasia,Azure Commercial
+France Central,francecentral,Azure Commercial
+France South,francesouth,Azure Commercial
+Germany North,germanynorth,Azure Commercial
+Germany West Central,germanywestcentral,Azure Commercial
+Indonesia Central,indonesiacentral,Azure Commercial
+Israel Central,israelcentral,Azure Commercial
+Italy North,italynorth,Azure Commercial
+Japan East,japaneast,Azure Commercial
+Japan West,japanwest,Azure Commercial
+Korea Central,koreacentral,Azure Commercial
+Korea South,koreasouth,Azure Commercial
+Malaysia West,malaysiawest,Azure Commercial
+Mexico Central,mexicocentral,Azure Commercial
+New Zealand North,newzealandnorth,Azure Commercial
+North Europe,northeurope,Azure Commercial
+West Europe,westeurope,Azure Commercial
+Norway East,norwayeast,Azure Commercial
+Norway West,norwaywest,Azure Commercial
+Poland Central,polandcentral,Azure Commercial
+Qatar Central,qatarcentral,Azure Commercial
+South Africa North,southafricanorth,Azure Commercial
+South Africa West,southafricawest,Azure Commercial
+Spain Central,spaincentral,Azure Commercial
+Sweden Central,swedencentral,Azure Commercial
+Sweden South,swedensouth,Azure Commercial
+Switzerland North,switzerlandnorth,Azure Commercial
+Switzerland West,switzerlandwest,Azure Commercial
+Taiwan North,taiwannorth,Azure Commercial
+UAE Central,uaecentral,Azure Commercial
+UAE North,uaenorth,Azure Commercial
+UK South,uksouth,Azure Commercial
+UK West,ukwest,Azure Commercial
+Arizona,usgovarizona,Azure Government
+Texas,usgovtexas,Azure Government
+Virginia,usgovvirginia,Azure Government
+Iowa (DoD Central),usdodcentral,Azure Government
+Texas (DoD East),usdodeast,Azure Government
+China East,chinaeast,Azure China (21Vianet)
+China East 2,chinaeast2,Azure China (21Vianet)
+China East 3,chinaeast3,Azure China (21Vianet)
+China North,chinanorth,Azure China (21Vianet)
+China North 2,chinanorth2,Azure China (21Vianet)
+China North 3,chinanorth3,Azure China (21Vianet)
+'@
 
-    $normalized = Normalize-LocationKey $AzureRegionName
-    if ($normalized -in @("usgovvirginia", "usgovarizona", "usgovtexas", "usdodcentral", "usdodeast")) {
-        return "AzureGovernment"
-    }
-
-    return "Commercial"
+    return @($regionCsv | ConvertFrom-Csv)
 }
 
-function Get-FinOpsRegionDisplayName {
+function Get-FinOpsRegionInfo {
     param(
         [string]$AzureRegionName,
         [string]$ResourceLocation
     )
 
     $normalized = Normalize-LocationKey $AzureRegionName
-    switch ($normalized) {
-        "usgovvirginia" { return "US Gov Virginia" }
-        "usgovarizona" { return "US Gov Arizona" }
-        "usgovtexas" { return "US Gov Texas" }
-        "usdodcentral" { return "US DoD Central" }
-        "usdodeast" { return "US DoD East" }
+    $mapped = Get-FinOpsAzureRegionMap | Where-Object { (Normalize-LocationKey $_.'Azure Region') -eq $normalized } | Select-Object -First 1
+    if ($mapped) {
+        return $mapped
     }
 
-    if ($normalized -match "^(?<direction>east|west|north|south|central)us(?<suffix>\d*)$") {
-        $suffix = $Matches.suffix
-        return ("{0} US{1}" -f (Get-Culture).TextInfo.ToTitleCase($Matches.direction), $(if ($suffix) { " $suffix" } else { "" }))
+    $displayName = if (-not [string]::IsNullOrWhiteSpace($ResourceLocation)) {
+        (Get-Culture).TextInfo.ToTitleCase(([string]$ResourceLocation).Trim().ToLowerInvariant())
+    }
+    else {
+        $AzureRegionName
     }
 
-    if (-not [string]::IsNullOrWhiteSpace($ResourceLocation)) {
-        return (Get-Culture).TextInfo.ToTitleCase(([string]$ResourceLocation).Trim().ToLowerInvariant())
+    return [pscustomobject][ordered]@{
+        "Display Name" = $displayName
+        "Azure Region" = $AzureRegionName
+        "Azure Cloud" = "Azure Commercial"
     }
-
-    return $AzureRegionName
 }
 
 function Add-ArmRegionName {
@@ -1001,22 +1067,41 @@ function New-NormalizedFinOpsModelFiles {
             Sort-Object ServiceName
     )
 
-    $regionRows = @(
+    $observedRegionRows = @(
         $costRows |
             Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.ArmRegionName) } |
             Group-Object ArmRegionName |
             ForEach-Object {
                 $first = $_.Group | Select-Object -First 1
                 $azureRegionName = Convert-CostManagementLocationToArmRegionName $first.ArmRegionName
+                $regionInfo = Get-FinOpsRegionInfo -AzureRegionName $azureRegionName -ResourceLocation $first.ResourceLocation
                 [pscustomobject][ordered]@{
-                    AzureCloud = Get-FinOpsRegionCloud $azureRegionName
-                    "Azure Region Name" = $azureRegionName
-                    "Region Display Name" = Get-FinOpsRegionDisplayName -AzureRegionName $azureRegionName -ResourceLocation $first.ResourceLocation
+                    "Display Name" = $regionInfo.'Display Name'
+                    "Azure Region" = $regionInfo.'Azure Region'
+                    "Azure Cloud" = $regionInfo.'Azure Cloud'
                     ArmRegionName = $azureRegionName
                     ResourceLocation = $first.ResourceLocation
                 }
-            } |
-            Sort-Object AzureCloud, "Azure Region Name"
+            }
+    )
+
+    $mappedRegionRows = @(
+        Get-FinOpsAzureRegionMap | ForEach-Object {
+            [pscustomobject][ordered]@{
+                "Display Name" = $_.'Display Name'
+                "Azure Region" = $_.'Azure Region'
+                "Azure Cloud" = $_.'Azure Cloud'
+                ArmRegionName = $_.'Azure Region'
+                ResourceLocation = $_.'Azure Region'
+            }
+        }
+    )
+
+    $regionRows = @(
+        @($mappedRegionRows) + @($observedRegionRows) |
+            Group-Object ArmRegionName |
+            ForEach-Object { $_.Group | Select-Object -First 1 } |
+            Sort-Object "Azure Cloud", "Azure Region"
     )
 
     $meterRows = @(
@@ -1063,7 +1148,7 @@ function New-NormalizedFinOpsModelFiles {
         @{ Path = Join-Path $DestinationDir "dim-azure-cloud.csv"; Columns = @("AzureCloud"); Rows = $cloudRows },
         @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("AzureCloud","SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
         @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
-        @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("AzureCloud","Azure Region Name","Region Display Name","ArmRegionName","ResourceLocation"); Rows = $regionRows },
+        @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("Display Name","Azure Region","Azure Cloud","ArmRegionName","ResourceLocation"); Rows = $regionRows },
         @{ Path = Join-Path $DestinationDir "dim-meter.csv"; Columns = @("MeterKey","ServiceName","Meter","Product","PartNumber","UnitOfMeasure"); Rows = $meterRows },
         @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","AzureCloud","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
         @{ Path = Join-Path $DestinationDir "dim-retail-sku.csv"; Columns = @("RetailSkuKey","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailSkuRows }
