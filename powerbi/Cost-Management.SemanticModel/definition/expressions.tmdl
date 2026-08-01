@@ -15,7 +15,7 @@ expression AnalysisMode = "History" meta [IsParameterQuery=true, List={"Current"
 	annotation PBI_ResultType = Text
 
 /// Local folder that contains the generated CSV files. Include the trailing slash or backslash.
-expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260731-134809\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression LocalDataRoot = "C:\Projects\Fabric\AuditDumps\run-20260731-193315\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 977cdcb8-7cbf-4b71-b544-57e8d7a7bf85
 
 	annotation PBI_NavigationStepName = Navigation
