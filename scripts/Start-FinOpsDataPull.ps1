@@ -626,6 +626,7 @@ function Select-FinOpsHistoryRows {
             ExportRunId = `$RunId
             ExportedUtc = `$ExportedUtc
             Period = `$Period
+            AzureCloud = `$_.AzureCloud
             SubscriptionName = `$_.SubscriptionName
             SubscriptionId = `$_.SubscriptionId
             UsageQuantity = `$_.UsageQuantity

@@ -7,6 +7,12 @@ table FactRetailPriceMatch
 		summarizeBy: none
 		sourceColumn: Period
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120025
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
 	column SubscriptionId
 		dataType: string
 		lineageTag: 1eacacfd-4d06-451e-8279-311111120003
@@ -148,14 +154,14 @@ table FactRetailPriceMatch
 		mode: import
 		source =
 				let
-				    CurrentSource = CsvFromSelectedStorage("fact-retail-price-match.csv", 20),
+				    CurrentSource = CsvFromSelectedStorage("fact-retail-price-match.csv", 21),
 				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
-				    HistorySource = CsvFromHistoryStorage("fact-retail-price-match-history.csv", 23),
+				    HistorySource = CsvFromHistoryStorage("fact-retail-price-match-history.csv", 24),
 				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
 				    Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
 				    RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc"},
 				    WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
-				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionId", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"RetailSkuKey", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionId", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"RetailSkuKey", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
 				in
 				    Typed
 

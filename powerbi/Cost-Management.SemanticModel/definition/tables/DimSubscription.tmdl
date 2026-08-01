@@ -7,6 +7,12 @@ table DimSubscription
 		summarizeBy: none
 		sourceColumn: SubscriptionId
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 7e6f3e96-e503-46ac-b381-311111130004
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
 	column SubscriptionName
 		dataType: string
 		lineageTag: 7e6f3e96-e503-46ac-b381-311111130003
@@ -17,9 +23,9 @@ table DimSubscription
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("dim-subscription.csv", 2),
+				    Source = CsvFromSelectedStorage("dim-subscription.csv", 3),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"SubscriptionId", type text}, {"SubscriptionName", type text}}, [MissingField = MissingField.UseNull])
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}}, [MissingField = MissingField.UseNull])
 				in
 				    Typed
 

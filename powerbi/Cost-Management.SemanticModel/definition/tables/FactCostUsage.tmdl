@@ -7,6 +7,12 @@ table FactCostUsage
 		summarizeBy: none
 		sourceColumn: Period
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110021
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
 	column SubscriptionId
 		dataType: string
 		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110003
@@ -131,14 +137,14 @@ table FactCostUsage
 		mode: import
 		source =
 				let
-				    CurrentSource = CsvFromSelectedStorage("fact-cost-usage.csv", 15),
+				    CurrentSource = CsvFromSelectedStorage("fact-cost-usage.csv", 16),
 				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
-				    HistorySource = CsvFromHistoryStorage("fact-cost-usage-history.csv", 18),
+				    HistorySource = CsvFromHistoryStorage("fact-cost-usage-history.csv", 19),
 				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
 				    Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
 				    RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc"},
 				    WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
-				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}}, [MissingField = MissingField.UseNull]),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}}, [MissingField = MissingField.UseNull]),
 				    AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date)
 				in
 				    AddUsageDateAsDate

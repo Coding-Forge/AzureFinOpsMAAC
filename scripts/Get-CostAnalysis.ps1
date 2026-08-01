@@ -668,6 +668,8 @@ function Invoke-CostQueryAcrossSubscriptions {
     foreach ($sub in $Subscriptions) {
         $subId = [string]$sub.id
         $subName = [string]$sub.name
+        $subCloud = if ($sub.PSObject.Properties.Name -contains "cloudName") { [string]$sub.cloudName } elseif ($sub.PSObject.Properties.Name -contains "environmentName") { [string]$sub.environmentName } else { [string]$AzureCloud }
+        if ([string]::IsNullOrWhiteSpace($subCloud)) { $subCloud = [string]$AzureCloud }
         $subDestinationDir = Join-Path $subscriptionOutputRoot $subId
         New-Item -ItemType Directory -Path $subDestinationDir -Force | Out-Null
 
@@ -685,6 +687,7 @@ function Invoke-CostQueryAcrossSubscriptions {
 
         $subRows = @(Import-Csv $subResult.Csv)
         foreach ($row in $subRows) {
+            $row | Add-Member -NotePropertyName AzureCloud -NotePropertyValue $subCloud -Force
             $row | Add-Member -NotePropertyName SubscriptionId -NotePropertyValue $subId -Force
             $row | Add-Member -NotePropertyName SubscriptionName -NotePropertyValue $subName -Force
             $combinedRows += $row
@@ -872,6 +875,7 @@ function New-NormalizedFinOpsModelFiles {
                 $meterKey = New-FinOpsMeterKey -ServiceName $_.ServiceName -Meter $_.Meter -Product $_.Product -PartNumber $_.PartNumber -UnitOfMeasure $_.UnitOfMeasure
                 [pscustomobject][ordered]@{
                     Period = $periodLabel
+                    AzureCloud = $_.AzureCloud
                     SubscriptionId = $_.SubscriptionId
                     SubscriptionName = $_.SubscriptionName
                     UsageDate = $_.UsageDate
@@ -897,6 +901,7 @@ function New-NormalizedFinOpsModelFiles {
                 $retailSkuKey = New-FinOpsRetailSkuKey -RetailSkuId $_.RetailSkuId -RetailMeterId $_.RetailMeterId -RetailArmRegionName $_.RetailArmRegionName -RetailUnitOfMeasure $_.RetailUnitOfMeasure
                 [pscustomobject][ordered]@{
                     Period = $periodLabel
+                    AzureCloud = $_.AzureCloud
                     SubscriptionId = $_.SubscriptionId
                     UsageDate = $_.UsageDate
                     ServiceName = $_.ServiceName
@@ -921,6 +926,13 @@ function New-NormalizedFinOpsModelFiles {
         }
     }
 
+    $cloudRows = @(
+        $costRows |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.AzureCloud) } |
+            Select-Object AzureCloud -Unique |
+            Sort-Object AzureCloud
+    )
+
     $subscriptionRows = @(
         $costRows |
             Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.SubscriptionId) } |
@@ -928,6 +940,7 @@ function New-NormalizedFinOpsModelFiles {
             ForEach-Object {
                 $first = $_.Group | Select-Object -First 1
                 [pscustomobject][ordered]@{
+                    AzureCloud = $first.AzureCloud
                     SubscriptionId = $first.SubscriptionId
                     SubscriptionName = $first.SubscriptionName
                 }
@@ -996,12 +1009,13 @@ function New-NormalizedFinOpsModelFiles {
     )
 
     $outputs = @(
-        @{ Path = Join-Path $DestinationDir "fact-cost-usage.csv"; Columns = @("Period","SubscriptionId","SubscriptionName","UsageDate","ServiceName","ResourceLocation","ArmRegionName","MeterKey","Meter","Product","PartNumber","UnitOfMeasure","Currency","UsageQuantity","Cost"); Rows = $costRows },
-        @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
+        @{ Path = Join-Path $DestinationDir "fact-cost-usage.csv"; Columns = @("Period","AzureCloud","SubscriptionId","SubscriptionName","UsageDate","ServiceName","ResourceLocation","ArmRegionName","MeterKey","Meter","Product","PartNumber","UnitOfMeasure","Currency","UsageQuantity","Cost"); Rows = $costRows },
+        @{ Path = Join-Path $DestinationDir "dim-azure-cloud.csv"; Columns = @("AzureCloud"); Rows = $cloudRows },
+        @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("AzureCloud","SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
         @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
         @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("ArmRegionName","ResourceLocation"); Rows = $regionRows },
         @{ Path = Join-Path $DestinationDir "dim-meter.csv"; Columns = @("MeterKey","ServiceName","Meter","Product","PartNumber","UnitOfMeasure"); Rows = $meterRows },
-        @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
+        @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","AzureCloud","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
         @{ Path = Join-Path $DestinationDir "dim-retail-sku.csv"; Columns = @("RetailSkuKey","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailSkuRows }
     )
 
@@ -1013,6 +1027,7 @@ function New-NormalizedFinOpsModelFiles {
         FactCostUsage = Join-Path $DestinationDir "fact-cost-usage.csv"
         FactRetailPriceMatch = Join-Path $DestinationDir "fact-retail-price-match.csv"
         DimSubscription = Join-Path $DestinationDir "dim-subscription.csv"
+        DimAzureCloud = Join-Path $DestinationDir "dim-azure-cloud.csv"
         DimService = Join-Path $DestinationDir "dim-service.csv"
         DimRegion = Join-Path $DestinationDir "dim-region.csv"
         DimMeter = Join-Path $DestinationDir "dim-meter.csv"

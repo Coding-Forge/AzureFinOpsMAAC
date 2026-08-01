@@ -15,6 +15,10 @@ relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
 	fromColumn: CostRetailFact.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
 
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030001
+	fromColumn: CostRetailFact.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
+
 relationship 9aaa4e25-bad5-4072-9dd6-f2377e6ad780
 	joinOnDateBehavior: datePartOnly
 	fromColumn: CostRetailFact.UsageDateAsDate
@@ -27,6 +31,10 @@ relationship fcf68f58-e812-7a83-a2fa-37b649477977
 relationship 8da193e6-5e86-46db-9e96-311111180001
 	fromColumn: FactCostUsage.SubscriptionId
 	toColumn: DimSubscription.SubscriptionId
+
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030002
+	fromColumn: FactCostUsage.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
 
 relationship 8da193e6-5e86-46db-9e96-311111180002
 	fromColumn: FactCostUsage.ServiceName
@@ -43,6 +51,10 @@ relationship 8da193e6-5e86-46db-9e96-311111180004
 relationship 8da193e6-5e86-46db-9e96-311111180005
 	fromColumn: FactRetailPriceMatch.SubscriptionId
 	toColumn: DimSubscription.SubscriptionId
+
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030003
+	fromColumn: FactRetailPriceMatch.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
 
 relationship 8da193e6-5e86-46db-9e96-311111180006
 	fromColumn: FactRetailPriceMatch.ServiceName

@@ -7,6 +7,12 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: Period
 
+	column AzureCloud
+		dataType: string
+		lineageTag: ad7c0301-2d91-4de6-b0e0-311113020001
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
 	column UsageQuantity
 		dataType: double
 		lineageTag: 509ca7c7-2bf9-4741-944f-c8e42496f731
@@ -245,9 +251,9 @@ table CostRetailFact
 				HistorySource = CsvFromHistoryStorage("cost-retail-history.csv", 30),
 				HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
 				Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
-				RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc", "Period", "SubscriptionName", "SubscriptionId"},
+				RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc", "Period", "AzureCloud", "SubscriptionName", "SubscriptionId"},
 				WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
-				Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
+				Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
 				AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
 				AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
 				AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),

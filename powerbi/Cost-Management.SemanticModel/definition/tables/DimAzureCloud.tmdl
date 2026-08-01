@@ -1,0 +1,23 @@
+table DimAzureCloud
+	lineageTag: 5f6c87f6-fb27-4f4c-84b7-311113010001
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 5f6c87f6-fb27-4f4c-84b7-311113010002
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+	partition DimAzureCloud = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("dim-azure-cloud.csv", 1),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}}, [MissingField = MissingField.UseNull])
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
