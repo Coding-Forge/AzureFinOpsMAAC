@@ -35,6 +35,16 @@ This project brings those signals together so a team can answer practical FinOps
 - CSV/JSON outputs that can be stored locally, in Azure Blob Storage, in ADLS Gen2, or copied to SharePoint.
 - Audit files for price matching, MACC agreement status, benefit ledger history, billing review, and data-quality follow-up.
 
+## Minimum access required
+
+The person running the data pull needs Azure RBAC access that can read Cost Management data for the selected scope. The recommended least-privilege role is:
+
+```text
+Cost Management Reader
+```
+
+Assign it at the subscription, management group, or billing scope being analyzed. Some environments may also require billing-reader style permissions for billing profile, invoice, and billing-role evidence.
+
 ## How it works at a high level
 
 1. Run the launcher from PowerShell.
@@ -125,7 +135,7 @@ More detailed operational and technical information has been moved out of this f
 ## Important things to watch
 
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
-- **Azure permissions matter.** Cost data, billing data, and storage uploads may require different permissions.
+- **Azure permissions matter.** The runner needs at least `Cost Management Reader` RBAC for Cost Management exports. Billing data and storage uploads may require additional permissions.
 - **Azure Government / GCC High requires extra validation.** Choose `AzureUSGovernment` in the launcher, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
 - **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation. For Azure Government, treat public retail/PAYGO equivalents as estimates and validate whether they are appropriate for the customer discussion.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.

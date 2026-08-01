@@ -29,7 +29,7 @@ This runbook contains the operational and technical details that were previously
 - Azure CLI available on PATH.
 - Azure CLI signed into the target tenant.
 - Power BI Desktop with PBIP support. PBIT export for customer releases is done manually from Power BI Desktop.
-- Access to read Azure Cost Management data for the selected subscriptions.
+- Azure RBAC access to read Azure Cost Management data for the selected subscriptions. `Cost Management Reader` is the preferred least-privilege role.
 - Additional billing permissions when running the billing contact audit.
 - Storage data-plane permissions when uploading to Azure Blob Storage or ADLS Gen2.
 

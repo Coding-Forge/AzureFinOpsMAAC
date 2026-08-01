@@ -34,6 +34,16 @@ Some tables intentionally remain standalone because they are not at the same gra
 
 Relating every table can create ambiguous filters, many-to-many behavior, duplicate totals, or circular dependencies. The core analytical model uses normalized facts and dimensions for cost and retail match analysis. Standalone tables are still important, but they should be used on their dedicated pages for evidence, governance, and remediation workflows.
 
+## What Azure permissions are required?
+
+The person running the data pull needs Azure RBAC access that can read Cost Management data for the selected scope. The recommended least-privilege role is:
+
+```text
+Cost Management Reader
+```
+
+Assign it at the subscription, management group, or billing scope being analyzed. Billing contact audit, invoice details, role assignments, and storage uploads may require additional billing or storage permissions.
+
 ## Can I use this with Azure Government / GCC High?
 
 Yes, but validate the endpoints and available APIs before using the outputs externally. In the launcher, choose:
