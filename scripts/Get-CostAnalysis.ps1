@@ -298,7 +298,53 @@ function Convert-CostManagementLocationToArmRegionName {
         return "$($Matches.direction)us$suffix"
     }
 
+    if ($value -match "^us\s+gov\s+(?<region>virginia|arizona|texas)$") {
+        return "usgov$($Matches.region)"
+    }
+
+    if ($value -match "^us\s+dod\s+(?<region>central|east)$") {
+        return "usdod$($Matches.region)"
+    }
+
     return $ResourceLocation
+}
+
+function Get-FinOpsRegionCloud {
+    param([string]$AzureRegionName)
+
+    $normalized = Normalize-LocationKey $AzureRegionName
+    if ($normalized -in @("usgovvirginia", "usgovarizona", "usgovtexas", "usdodcentral", "usdodeast")) {
+        return "AzureGovernment"
+    }
+
+    return "Commercial"
+}
+
+function Get-FinOpsRegionDisplayName {
+    param(
+        [string]$AzureRegionName,
+        [string]$ResourceLocation
+    )
+
+    $normalized = Normalize-LocationKey $AzureRegionName
+    switch ($normalized) {
+        "usgovvirginia" { return "US Gov Virginia" }
+        "usgovarizona" { return "US Gov Arizona" }
+        "usgovtexas" { return "US Gov Texas" }
+        "usdodcentral" { return "US DoD Central" }
+        "usdodeast" { return "US DoD East" }
+    }
+
+    if ($normalized -match "^(?<direction>east|west|north|south|central)us(?<suffix>\d*)$") {
+        $suffix = $Matches.suffix
+        return ("{0} US{1}" -f (Get-Culture).TextInfo.ToTitleCase($Matches.direction), $(if ($suffix) { " $suffix" } else { "" }))
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($ResourceLocation)) {
+        return (Get-Culture).TextInfo.ToTitleCase(([string]$ResourceLocation).Trim().ToLowerInvariant())
+    }
+
+    return $AzureRegionName
 }
 
 function Add-ArmRegionName {
@@ -961,12 +1007,16 @@ function New-NormalizedFinOpsModelFiles {
             Group-Object ArmRegionName |
             ForEach-Object {
                 $first = $_.Group | Select-Object -First 1
+                $azureRegionName = Convert-CostManagementLocationToArmRegionName $first.ArmRegionName
                 [pscustomobject][ordered]@{
-                    ArmRegionName = $first.ArmRegionName
+                    AzureCloud = Get-FinOpsRegionCloud $azureRegionName
+                    "Azure Region Name" = $azureRegionName
+                    "Region Display Name" = Get-FinOpsRegionDisplayName -AzureRegionName $azureRegionName -ResourceLocation $first.ResourceLocation
+                    ArmRegionName = $azureRegionName
                     ResourceLocation = $first.ResourceLocation
                 }
             } |
-            Sort-Object ArmRegionName
+            Sort-Object AzureCloud, "Azure Region Name"
     )
 
     $meterRows = @(
@@ -1013,7 +1063,7 @@ function New-NormalizedFinOpsModelFiles {
         @{ Path = Join-Path $DestinationDir "dim-azure-cloud.csv"; Columns = @("AzureCloud"); Rows = $cloudRows },
         @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("AzureCloud","SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
         @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
-        @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("ArmRegionName","ResourceLocation"); Rows = $regionRows },
+        @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("AzureCloud","Azure Region Name","Region Display Name","ArmRegionName","ResourceLocation"); Rows = $regionRows },
         @{ Path = Join-Path $DestinationDir "dim-meter.csv"; Columns = @("MeterKey","ServiceName","Meter","Product","PartNumber","UnitOfMeasure"); Rows = $meterRows },
         @{ Path = Join-Path $DestinationDir "fact-retail-price-match.csv"; Columns = @("Period","AzureCloud","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailMatchRows },
         @{ Path = Join-Path $DestinationDir "dim-retail-sku.csv"; Columns = @("RetailSkuKey","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode"); Rows = $retailSkuRows }

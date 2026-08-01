@@ -129,7 +129,7 @@ Core normalized tables include:
 | `DimAzureCloud` | Cloud dimension for separating commercial and Azure Government data. |
 | `DimSubscription` | Subscription dimension. |
 | `DimServiceModel` | Normalized service dimension. |
-| `DimRegionModel` | Normalized region dimension. |
+| `DimRegionModel` | Normalized region dimension with `AzureCloud`, `Azure Region Name`, and `Region Display Name`. |
 | `DimMeter` | Meter/product/unit dimension. |
 | `DimRetailSku` | Retail SKU and price reference table. It is intentionally disconnected because it is derived from `FactRetailPriceMatch`; Retail SKU fields are also available directly on the fact for filtering/drilldown. |
 | `DimUsageDate` | Usage-date role-playing date dimension. |

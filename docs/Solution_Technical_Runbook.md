@@ -251,7 +251,7 @@ Important files include:
 | `dim-azure-cloud.csv` | Normalized cloud dimension with values such as `AzureCloud` and `AzureUSGovernment`. |
 | `dim-subscription.csv` | Normalized subscription dimension. |
 | `dim-service.csv` | Normalized service dimension. |
-| `dim-region.csv` | Normalized region dimension. |
+| `dim-region.csv` | Normalized region dimension with `AzureCloud`, `Azure Region Name`, and `Region Display Name`. US Gov regions are classified as `AzureGovernment`; other regions are classified as `Commercial`. |
 | `dim-meter.csv` | Normalized meter/product/unit dimension. |
 | `dim-retail-sku.csv` | Normalized retail SKU/meter/price dimension. |
 | `cost-retail-history.csv` | Durable historical fact file when using History mode. |
@@ -322,7 +322,7 @@ These tables participate in the relationship model and should be used for cross-
 | `DimAzureCloud` | Cloud dimension used to separate commercial and Azure Government data in combined datasets. |
 | `DimSubscription` | Subscription dimension. |
 | `DimServiceModel` | Service dimension for normalized facts. |
-| `DimRegionModel` | Region dimension for normalized facts. |
+| `DimRegionModel` | Region dimension for normalized facts. Includes `AzureCloud`, `Azure Region Name`, and `Region Display Name` so region slicers can distinguish commercial and Azure Government regions. |
 | `DimMeter` | Meter/product/unit dimension. |
 | `DimRetailMatch` | Match status dimension. |
 | `DimUsageDate` | Usage-date role-playing date dimension. |

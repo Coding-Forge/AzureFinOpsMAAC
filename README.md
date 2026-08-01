@@ -106,7 +106,7 @@ Important outputs include:
 | `*-cost-by-retail-join-enriched.csv` | Cost data enriched with public retail price matches. |
 | `fact-cost-usage.csv` | Normalized cost fact table for the relationship-based model. |
 | `fact-retail-price-match.csv` | Normalized retail price match fact table. |
-| `dim-*.csv` | Normalized dimension files for cloud, subscription, service, region, meter, and retail SKU analysis. |
+| `dim-*.csv` | Normalized dimension files for cloud, subscription, service, region, meter, and retail SKU analysis. `dim-region.csv` includes `AzureCloud`, `Azure Region Name`, and `Region Display Name`. |
 | `macc-agreement-status.csv` | MACC commitment, utilization, burn variance, and pacing status. |
 | `macc-benefit-ledger.csv` | Durable benefit ledger for trend and audit review. |
 | `retail-match-exceptions.csv` | Pricing and eligibility rows that need review. |
