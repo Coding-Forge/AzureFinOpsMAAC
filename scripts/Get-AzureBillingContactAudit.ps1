@@ -172,15 +172,31 @@ function Invoke-AzRestJson {
 
         $raw = az rest --method get --uri $resolvedUri --resource $resourceManagerEndpoint --only-show-errors 2>&1
         if ($LASTEXITCODE -ne 0) {
+            $errorText = ($raw | Out-String).Trim()
             if ($AllowFailure) {
                 return [pscustomobject]@{
                     Ok = $false
                     Uri = $resolvedUri
-                    Error = ($raw | Out-String).Trim()
+                    Error = $errorText
                     Data = $null
                 }
             }
-            throw "az rest failed for $resolvedUri`n$raw"
+
+            if ($errorText -match "RBACAccessDenied") {
+                throw @"
+Azure Billing REST call failed because the signed-in identity does not currently have active RBAC/billing permission.
+
+If your access is granted through PIM, activate the required role first, then force a fresh Azure CLI token:
+  az logout
+  az login --tenant <tenant-id>
+  az account set --subscription <subscription-id>
+
+Original Azure CLI response:
+$errorText
+"@
+            }
+
+            throw "az rest failed for $resolvedUri`n$errorText"
         }
 
         $data = if ([string]::IsNullOrWhiteSpace($raw)) { $null } else { $raw | ConvertFrom-Json }

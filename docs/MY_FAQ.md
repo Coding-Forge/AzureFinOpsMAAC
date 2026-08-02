@@ -44,6 +44,20 @@ Cost Management Reader
 
 Assign it at the subscription, management group, or billing scope being analyzed. Billing contact audit, invoice details, role assignments, and storage uploads may require additional billing or storage permissions.
 
+## Why does the data pull still fail after I activate PIM?
+
+If you attempted the data pull before your PIM role was active, Azure CLI may have cached an access token that does not include the newly activated role. Activating PIM does not always update an already-issued token.
+
+After activating PIM, force a fresh login:
+
+```powershell
+az logout
+az login --tenant "<tenant-id>"
+az account set --subscription "<subscription-id>"
+```
+
+Then rerun the data pull. This is especially important for Cost Management API calls that require active RBAC such as `Cost Management Reader`.
+
 ## Can I use this with Azure Government / GCC High?
 
 Yes, but validate the endpoints and available APIs before using the outputs externally. In the launcher, choose:

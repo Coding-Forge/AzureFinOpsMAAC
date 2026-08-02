@@ -670,6 +670,22 @@ function Invoke-AzRestWithRetry {
             return $message
         }
 
+        if ($message -match "RBACAccessDenied") {
+            throw @"
+Azure REST call failed because the signed-in identity does not currently have active RBAC permission for this Cost Management query.
+
+If your access is granted through PIM, activate the required role first, then force a fresh Azure CLI token:
+  az logout
+  az login --tenant <tenant-id>
+  az account set --subscription <subscription-id>
+
+Minimum recommended role: Cost Management Reader at the subscription, management group, or billing scope being analyzed.
+
+Original Azure CLI response:
+$message
+"@
+        }
+
         $isRetryable = $message -match "Too Many Requests|429|temporarily unavailable|timeout|timed out|503|504"
         if (-not $isRetryable -or $attempt -eq $MaxAttempts) {
             throw "Azure REST call failed after $attempt attempt(s): $message"

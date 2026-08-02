@@ -364,6 +364,7 @@ After any semantic model change, export a fresh `template\Cost-Management.pbit` 
 | Azure CLI missing | The scripts depend on `az`. | Install Azure CLI or rerun with the launcher install option. |
 | Device-code login prompt | No active Azure CLI session exists. | Complete the sign-in in the browser/device-code flow. |
 | No enabled subscriptions found | The signed-in identity cannot see target subscriptions. | Confirm tenant, account, role assignments, and subscription IDs. |
+| `RBACAccessDenied` after PIM activation | Azure CLI may still be using a token issued before the PIM role became active. | Activate PIM, then run `az logout`, `az login --tenant <tenant-id>`, and `az account set --subscription <subscription-id>` before rerunning. |
 | Cost Management API throttling | Azure asked the script to slow down. | Let retry/backoff continue; reduce scope if failures persist. |
 | Retail Prices lookup is slow | Many cost rows require public retail-price matching. | Let it run, or skip Retail Prices lookup for a faster but less complete run. |
 | History mode fails when retail lookup is skipped | History depends on enriched retail-join files. | Rerun without `Skip Retail Prices lookup`. |
