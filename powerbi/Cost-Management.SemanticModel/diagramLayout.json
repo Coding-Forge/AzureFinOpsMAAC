@@ -182,7 +182,7 @@
             "x": 2069.0485207383067,
             "y": 152.25894860847643
           },
-          "nodeIndex": "DimRegion",
+          "nodeIndex": "DimAzureRegion",
           "nodeLineageTag": "59900d69-512f-4b90-9272-d09dc1e2ccdd",
           "size": {
             "height": 128,
@@ -244,45 +244,6 @@
         },
         {
           "location": {
-            "x": 1293.0485207383067,
-            "y": 1180.4375
-          },
-          "nodeIndex": "last-month-cost-by-retail-join",
-          "nodeLineageTag": "6d828175-0034-47b2-8178-99165bd9f046",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 29
-        },
-        {
-          "location": {
-            "x": 1348.0485207383067,
-            "y": 1539.4375
-          },
-          "nodeIndex": "last-month-cost-by-retail-join-enriched",
-          "nodeLineageTag": "0f5e83fa-40ac-4dc0-adad-11093fc22272",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 30
-        },
-        {
-          "location": {
-            "x": 0,
-            "y": 830.4375
-          },
-          "nodeIndex": "last-month-cost-by-retail-join-with-arm-region",
-          "nodeLineageTag": "75ad8869-79c6-4f96-bff1-4c2414d02cea",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 31
-        },
-        {
-          "location": {
             "x": 2440.1156273928482,
             "y": 505.66026177763092
           },
@@ -319,45 +280,6 @@
             "width": 234
           },
           "zIndex": 33
-        },
-        {
-          "location": {
-            "x": 553.759817141453,
-            "y": 840.80231616660751
-          },
-          "nodeIndex": "mtd-cost-by-retail-join",
-          "nodeLineageTag": "5c0dbb80-6185-42a5-98c9-f7017e7f61f2",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 34
-        },
-        {
-          "location": {
-            "x": 828.41787834315392,
-            "y": 847.80877026533187
-          },
-          "nodeIndex": "mtd-cost-by-retail-join-enriched",
-          "nodeLineageTag": "2faf5600-e388-445b-931f-538403e1f470",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 35
-        },
-        {
-          "location": {
-            "x": 1113.5856206929413,
-            "y": 837.29908911724544
-          },
-          "nodeIndex": "mtd-cost-by-retail-join-with-arm-region",
-          "nodeLineageTag": "de842c12-7593-47f6-a881-94d3ef1f12d1",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 36
         },
         {
           "location": {

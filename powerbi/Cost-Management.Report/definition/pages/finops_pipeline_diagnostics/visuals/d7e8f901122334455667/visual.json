@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "UsageDate"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.UsageDate",
+              "queryRef": "FactRetailPriceMatch.UsageDate",
               "nativeQueryRef": "UsageDate"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "ServiceName"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.ServiceName",
+              "queryRef": "FactRetailPriceMatch.ServiceName",
               "nativeQueryRef": "ServiceName"
             },
             {
@@ -48,13 +48,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "ArmRegionName"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.ArmRegionName",
+              "queryRef": "FactRetailPriceMatch.ArmRegionName",
               "nativeQueryRef": "ArmRegionName"
             },
             {
@@ -62,13 +62,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailMatchStatus"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.RetailMatchStatus",
+              "queryRef": "FactRetailPriceMatch.RetailMatchStatus",
               "nativeQueryRef": "RetailMatchStatus"
             },
             {
@@ -76,13 +76,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailCandidateCount"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.RetailCandidateCount",
+              "queryRef": "FactRetailPriceMatch.RetailCandidateCount",
               "nativeQueryRef": "RetailCandidateCount"
             },
             {
@@ -90,13 +90,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailSkuId"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.RetailSkuId",
+              "queryRef": "FactRetailPriceMatch.RetailSkuId",
               "nativeQueryRef": "RetailSkuId"
             },
             {
@@ -104,13 +104,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailMeterId"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.RetailMeterId",
+              "queryRef": "FactRetailPriceMatch.RetailMeterId",
               "nativeQueryRef": "RetailMeterId"
             },
             {
@@ -118,13 +118,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailPrice"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.RetailPrice",
+              "queryRef": "FactRetailPriceMatch.RetailPrice",
               "nativeQueryRef": "RetailPrice"
             },
             {
@@ -132,13 +132,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "Cost"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join-enriched.Cost",
+              "queryRef": "FactRetailPriceMatch.Cost",
               "nativeQueryRef": "Cost"
             }
           ]

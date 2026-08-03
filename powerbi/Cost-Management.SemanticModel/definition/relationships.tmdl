@@ -3,8 +3,8 @@ relationship 9ccb68f6-7c38-44b8-9837-8b3c5075358f
 	toColumn: DimService.ServiceName
 
 relationship e0cdc8b1-0e2a-4625-8fff-47b44f5b741f
-	fromColumn: CostRetailFact.ArmRegionName
-	toColumn: DimRegion.ArmRegionName
+	fromColumn: CostRetailFact.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
 
 relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
 	fromColumn: CostRetailFact.RetailMatchStatus
@@ -23,8 +23,8 @@ relationship 8da193e6-5e86-46db-9e96-311111180002
 	toColumn: DimServiceModel.ServiceName
 
 relationship 8da193e6-5e86-46db-9e96-311111180003
-	fromColumn: FactCostUsage.ArmRegionName
-	toColumn: DimRegion.ArmRegionName
+	fromColumn: FactCostUsage.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
 
 relationship 8da193e6-5e86-46db-9e96-311111180004
 	fromColumn: FactCostUsage.MeterKey
@@ -39,8 +39,8 @@ relationship 8da193e6-5e86-46db-9e96-311111180006
 	toColumn: DimServiceModel.ServiceName
 
 relationship 8da193e6-5e86-46db-9e96-311111180007
-	fromColumn: FactRetailPriceMatch.ArmRegionName
-	toColumn: DimRegion.ArmRegionName
+	fromColumn: FactRetailPriceMatch.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
 
 relationship 8da193e6-5e86-46db-9e96-311111180008
 	fromColumn: FactRetailPriceMatch.MeterKey
@@ -88,20 +88,7 @@ relationship 18f0a345-c782-43f0-b3c0-311112070008
 	fromColumn: MaccAgreementStatus.AsOfDate
 	toColumn: DimAgreementAsOfDate.Date
 
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030001
-	fromColumn: CostRetailFact.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
-
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030002
-	fromColumn: FactCostUsage.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
-
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030003
-	fromColumn: FactRetailPriceMatch.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
-
 relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030004
-	isActive: false
-	fromColumn: DimRegion.'Azure Cloud'
+	fromColumn: DimAzureRegion.'Azure Cloud'
 	toColumn: DimAzureCloud.'Azure Cloud'
 

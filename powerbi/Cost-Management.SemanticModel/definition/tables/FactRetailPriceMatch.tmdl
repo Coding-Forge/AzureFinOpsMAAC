@@ -150,6 +150,12 @@ table FactRetailPriceMatch
 		summarizeBy: none
 		sourceColumn: AzureCloud
 
+	column AzureRegionKey
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120026
+		summarizeBy: none
+		sourceColumn: AzureRegionKey
+
 	partition FactRetailPriceMatch = m
 		mode: import
 		source =
@@ -166,9 +172,11 @@ table FactRetailPriceMatch
 				    NormalizedRegions = Table.TransformColumns(Typed, {{"ArmRegionName", each NormalizeArmRegionName(_), type text}, {"RetailArmRegionName", each NormalizeArmRegionName(_), type text}}, null, MissingField.Ignore),
 				    AddNormalizedCloud = Table.AddColumn(NormalizedRegions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
 				    RemoveOriginalCloud = Table.RemoveColumns(AddNormalizedCloud, {"AzureCloud"}, MissingField.Ignore),
-				    RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}})
+				    RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}}),
+				    AzureCloudDisplayName = (cloud as nullable any) as text => let technical = if cloud = null then "" else Text.Trim(Text.From(cloud)) in if technical = "AzureCloud" then "Azure Commercial" else if technical = "AzureUSGovernment" then "Azure Government" else if technical = "AzureChinaCloud" then "Azure China (21Vianet)" else if technical = "AzureGermanCloud" then "Azure Germany" else technical,
+				    AddAzureRegionKey = Table.AddColumn(RenameNormalizedCloud, "AzureRegionKey", each AzureCloudDisplayName([AzureCloud]) & "|" & Text.Trim(Text.From([ArmRegionName])), type text)
 				in
-				    RenameNormalizedCloud
+				    AddAzureRegionKey
 
 	annotation PBI_NavigationStepName = Navigation
 

@@ -232,6 +232,12 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: AzureCloud
 
+	column AzureRegionKey
+		dataType: string
+		lineageTag: ad7c0301-2d91-4de6-b0e0-311113020002
+		summarizeBy: none
+		sourceColumn: AzureRegionKey
+
 	partition CostRetailFact = m
 		mode: import
 		source =
@@ -254,7 +260,9 @@ table CostRetailFact
 				AddNormalizedCloud = Table.AddColumn(NormalizedRegions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
 				RemoveOriginalCloud = Table.RemoveColumns(AddNormalizedCloud, {"AzureCloud"}, MissingField.Ignore),
 				RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}}),
-				AddUsageDateAsDate = Table.AddColumn(RenameNormalizedCloud, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
+				AzureCloudDisplayName = (cloud as nullable any) as text => let technical = if cloud = null then "" else Text.Trim(Text.From(cloud)) in if technical = "AzureCloud" then "Azure Commercial" else if technical = "AzureUSGovernment" then "Azure Government" else if technical = "AzureChinaCloud" then "Azure China (21Vianet)" else if technical = "AzureGermanCloud" then "Azure Germany" else technical,
+				AddAzureRegionKey = Table.AddColumn(RenameNormalizedCloud, "AzureRegionKey", each AzureCloudDisplayName([AzureCloud]) & "|" & Text.Trim(Text.From([ArmRegionName])), type text),
+				AddUsageDateAsDate = Table.AddColumn(AddAzureRegionKey, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
 				AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
 				AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),
 				AddSavings = Table.AddColumn(AddRetailEquivalent, "EstimatedSavings", each if [RetailEquivalentCost] = null then null else [RetailEquivalentCost] - [Cost], type number)

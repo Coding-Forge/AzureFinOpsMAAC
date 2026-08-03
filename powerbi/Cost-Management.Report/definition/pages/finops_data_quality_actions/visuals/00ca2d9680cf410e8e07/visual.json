@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRegion"
+                      "Entity": "DimAzureRegion"
                     }
                   },
                   "Property": "ArmRegionName"
                 }
               },
-              "queryRef": "DimRegion.ArmRegionName",
+              "queryRef": "DimAzureRegion.ArmRegionName",
               "nativeQueryRef": "ArmRegionName",
               "active": true
             }

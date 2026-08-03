@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "last-month-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "UsageDate"
                 }
               },
-              "queryRef": "last-month-cost-by-retail-join-enriched.UsageDate",
+              "queryRef": "FactRetailPriceMatch.UsageDate",
               "nativeQueryRef": "UsageDate"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "last-month-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "ServiceName"
                 }
               },
-              "queryRef": "last-month-cost-by-retail-join-enriched.ServiceName",
+              "queryRef": "FactRetailPriceMatch.ServiceName",
               "nativeQueryRef": "ServiceName"
             },
             {
@@ -48,13 +48,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "last-month-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailMatchStatus"
                 }
               },
-              "queryRef": "last-month-cost-by-retail-join-enriched.RetailMatchStatus",
+              "queryRef": "FactRetailPriceMatch.RetailMatchStatus",
               "nativeQueryRef": "RetailMatchStatus"
             },
             {
@@ -62,13 +62,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "last-month-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "RetailSkuId"
                 }
               },
-              "queryRef": "last-month-cost-by-retail-join-enriched.RetailSkuId",
+              "queryRef": "FactRetailPriceMatch.RetailSkuId",
               "nativeQueryRef": "RetailSkuId"
             },
             {
@@ -76,13 +76,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "last-month-cost-by-retail-join-enriched"
+                      "Entity": "FactRetailPriceMatch"
                     }
                   },
                   "Property": "Cost"
                 }
               },
-              "queryRef": "last-month-cost-by-retail-join-enriched.Cost",
+              "queryRef": "FactRetailPriceMatch.Cost",
               "nativeQueryRef": "Cost"
             }
           ]

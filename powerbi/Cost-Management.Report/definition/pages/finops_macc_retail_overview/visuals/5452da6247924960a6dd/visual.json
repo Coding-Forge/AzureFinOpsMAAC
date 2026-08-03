@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRegion"
+                      "Entity": "DimAzureRegion"
                     }
                   },
                   "Property": "Display Name"
                 }
               },
-              "queryRef": "DimRegion.Display Name",
+              "queryRef": "DimAzureRegion.Display Name",
               "nativeQueryRef": "Display Name",
               "active": true
             }
@@ -39,13 +39,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRegion"
+                      "Entity": "DimAzureRegion"
                     }
                   },
                   "Property": "Display Name"
                 }
               },
-              "queryRef": "DimRegion.Display Name",
+              "queryRef": "DimAzureRegion.Display Name",
               "nativeQueryRef": "Display Name"
             }
           ]

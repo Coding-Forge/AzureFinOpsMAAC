@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "UsageDate"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.UsageDate",
+              "queryRef": "FactCostUsage.UsageDate",
               "nativeQueryRef": "UsageDate"
             },
             {
@@ -34,13 +34,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "ServiceName"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.ServiceName",
+              "queryRef": "FactCostUsage.ServiceName",
               "nativeQueryRef": "ServiceName"
             },
             {
@@ -48,13 +48,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "ResourceLocation"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.ResourceLocation",
+              "queryRef": "FactCostUsage.ResourceLocation",
               "nativeQueryRef": "ResourceLocation"
             },
             {
@@ -62,13 +62,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "Meter"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.Meter",
+              "queryRef": "FactCostUsage.Meter",
               "nativeQueryRef": "Meter"
             },
             {
@@ -76,13 +76,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "Product"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.Product",
+              "queryRef": "FactCostUsage.Product",
               "nativeQueryRef": "Product"
             },
             {
@@ -90,13 +90,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "PartNumber"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.PartNumber",
+              "queryRef": "FactCostUsage.PartNumber",
               "nativeQueryRef": "PartNumber"
             },
             {
@@ -104,13 +104,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "UnitOfMeasure"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.UnitOfMeasure",
+              "queryRef": "FactCostUsage.UnitOfMeasure",
               "nativeQueryRef": "UnitOfMeasure"
             },
             {
@@ -118,13 +118,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "UsageQuantity"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.UsageQuantity",
+              "queryRef": "FactCostUsage.UsageQuantity",
               "nativeQueryRef": "UsageQuantity"
             },
             {
@@ -132,13 +132,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "mtd-cost-by-retail-join"
+                      "Entity": "FactCostUsage"
                     }
                   },
                   "Property": "Cost"
                 }
               },
-              "queryRef": "mtd-cost-by-retail-join.Cost",
+              "queryRef": "FactCostUsage.Cost",
               "nativeQueryRef": "Cost"
             }
           ]
