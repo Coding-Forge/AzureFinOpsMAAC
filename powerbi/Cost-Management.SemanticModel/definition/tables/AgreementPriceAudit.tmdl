@@ -258,7 +258,7 @@ table AgreementPriceAudit
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("agreement-price-audit.csv", 36),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("agreement-price-audit-history.csv", 40) else CsvFromSelectedStorage("agreement-price-audit.csv", 36),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"RunId", type text}, {"ExportedUtc", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageDate", type text}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"ActualCost", type number}, {"EffectiveUnitCost", type number}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}, {"RetailEquivalentCost", type number}, {"EstimatedSavings", type number}, {"IsMaccEligible", type text}, {"MaccEligibilityCategory", type text}})
 				in

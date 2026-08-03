@@ -78,7 +78,7 @@ table BillingReconciliation
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("billing-reconciliation.csv", 11),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("billing-reconciliation-history.csv", 15) else CsvFromSelectedStorage("billing-reconciliation.csv", 11),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"BillingPeriod", type text}, {"InvoiceId", type text}, {"BillingAccount", type text}, {"BillingProfile", type text}, {"Currency", type text}, {"InvoiceTotal", type number}, {"ExportActualCost", type number}, {"Variance", type number}, {"ReviewStatus", type text}, {"Notes", type text}})
 				in

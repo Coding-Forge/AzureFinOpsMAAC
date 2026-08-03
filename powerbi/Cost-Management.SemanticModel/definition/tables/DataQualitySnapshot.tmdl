@@ -112,7 +112,7 @@ table DataQualitySnapshot
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("data-quality-snapshot.csv", 14),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("data-quality-snapshot-history.csv", 18) else CsvFromSelectedStorage("data-quality-snapshot.csv", 14),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"Currency", type text}, {"RowCount", Int64.Type}, {"ActualCost", type number}, {"MatchedActualCost", type number}, {"UnmatchedActualCost", type number}, {"RetailMatchCoverage", type number}, {"UnmatchedRowCount", Int64.Type}, {"MultipleCandidateRowCount", Int64.Type}, {"ReviewEligibilityCost", type number}, {"CalculationVersion", type text}})
 				in

@@ -264,6 +264,21 @@ Each run creates a timestamped run folder such as:
 run-YYYYMMDD-HHMMSS
 ```
 
+Run folders are audit/debug evidence for a single fetch. In History mode, the Power BI model reads durable files under `HistoryDataRoot` so separate Commercial and Government runs can be analyzed together. The launcher upserts current run rows into the durable history store using cloud, tenant, subscription, period, and row identity keys rather than appending blindly.
+
+Key durable files include:
+
+| Durable file | Purpose |
+| --- | --- |
+| `cost-retail-history.csv` | Legacy enriched cost + selected retail match history for `CostRetailFact`. |
+| `fact-cost-usage-history.csv` | Normalized actual usage history. |
+| `fact-retail-price-match-history.csv` | Normalized retail match history. |
+| `export-run-manifest-history.csv` | One row per fetch, including cloud, tenant, run folder, and totals. |
+| `billing-*-history.csv` | Durable billing account/profile/invoice/role/subscription-property evidence across clouds. |
+| `agreement-price-audit-history.csv` | Durable row-level cost + retail match audit evidence. |
+
+For mixed-cloud customers, run one fetch with `AzureCloud` and one fetch with `AzureUSGovernment`. The latest run folder will represent only that fetch, but History mode reads the durable history files and can show both clouds together.
+
 Important files include:
 
 | File or folder | Purpose |

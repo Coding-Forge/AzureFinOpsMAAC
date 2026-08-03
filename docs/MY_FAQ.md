@@ -114,3 +114,5 @@ Important caveats:
 The data pull writes `AzureCloud` into the normalized fact files and cloud dimension. The main overview page includes Cloud and Subscription slicers so mixed datasets can be reviewed separately.
 
 For Azure Government, choose `AzureUSGovernment` in the launcher before loading subscriptions. For commercial Azure, choose `AzureCloud`.
+
+For mixed-cloud customers, run the fetch once per cloud. Each run folder contains only that cloud's current evidence, but the launcher upserts the results into durable history files under the configured History root. In History mode, Power BI reads those durable files so Commercial and Government data can coexist in one report without requiring a single combined fetch.

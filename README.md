@@ -119,6 +119,7 @@ The Power BI model now uses a hybrid design:
 
 - **Related model tables** support the core analytical experience. Normalized facts such as `FactCostUsage` and `FactRetailPriceMatch` connect to dimensions for subscription, service, region, meter, retail SKU, match status, and role-playing dates.
 - **Standalone audit and template tables** remain intentionally disconnected when forcing a relationship would create ambiguous filters, duplicate totals, or misleading cross-filter behavior.
+- **Durable history files** are the analytical source of truth for multi-cloud History mode. Each fetch still creates a timestamped run folder for evidence/debugging, but durable history files under the configured history root preserve Commercial and Government runs side by side.
 
 Disconnected tables are still important. They support evidence review, exception management, billing reconciliation, ownership mapping, export traceability, and diagnostics. Use them as report-specific detail/evidence tables rather than as universal slicer targets.
 
@@ -137,6 +138,7 @@ More detailed operational and technical information has been moved out of this f
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
 - **Azure permissions matter.** The runner needs at least `Cost Management Reader` RBAC for Cost Management exports. Billing data and storage uploads may require additional permissions.
 - **Azure Government / GCC High requires extra validation.** Choose `AzureUSGovernment` in the launcher, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.
+- **Mixed-cloud customers should run one fetch per cloud.** The run folder is evidence for that fetch; History mode reads durable cloud-aware history files so Commercial and Government data can coexist without one run overwriting the other.
 - **Retail price matching is directional.** Public retail price estimates are useful for analysis but are not an official invoice reconciliation. For Azure Government, treat public retail/PAYGO equivalents as estimates and validate whether they are appropriate for the customer discussion.
 - **Billing data can be sensitive.** Treat exported billing contact, PO, role, and invoice files carefully.
 - **Some opportunity files are first-pass indicators.** RI/SP, Azure Hybrid Benefit, Spot, and Dev/Test outputs should be validated with official entitlement, utilization, and configuration data before making claims.

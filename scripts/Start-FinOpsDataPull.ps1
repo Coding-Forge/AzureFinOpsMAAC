@@ -625,6 +625,7 @@ function Select-FinOpsHistoryRows {
             HistoryMonth = `$historyMonth
             ExportRunId = `$RunId
             ExportedUtc = `$ExportedUtc
+            TenantId = `$tenantId
             Period = `$Period
             AzureCloud = `$_.AzureCloud
             SubscriptionName = `$_.SubscriptionName
@@ -687,12 +688,13 @@ function Update-FinOpsCostHistory {
     `$existingRows = if (Test-Path `$HistoryPath) { @(Import-Csv -Path `$HistoryPath) } else { @() }
     `$replaceKeys = @{}
     foreach (`$row in `$newRows) {
-        `$replaceKeys["`$(`$row.HistoryMonth)|`$(`$row.Period)"] = `$true
+        `$replaceKeys["`$(`$row.AzureCloud)|`$(`$row.TenantId)|`$(`$row.SubscriptionId)|`$(`$row.HistoryMonth)|`$(`$row.Period)"] = `$true
     }
 
     `$keptRows = @(
         `$existingRows | Where-Object {
-            -not `$replaceKeys.ContainsKey("`$(`$_.HistoryMonth)|`$(`$_.Period)")
+            `$existingTenant = if (`$_.PSObject.Properties.Name -contains "TenantId") { `$_.TenantId } else { "" }
+            -not `$replaceKeys.ContainsKey("`$(`$_.AzureCloud)|`$existingTenant|`$(`$_.SubscriptionId)|`$(`$_.HistoryMonth)|`$(`$_.Period)")
         }
     )
 
@@ -735,6 +737,51 @@ function Select-FinOpsNormalizedHistoryRows {
     }
 }
 
+function Get-FinOpsHistoryReplaceKey {
+    param(
+        [Parameter(Mandatory)]
+        [object]`$Row
+    )
+
+    `$tenantValue = if (`$Row.PSObject.Properties.Name -contains "TenantId") { [string]`$Row.TenantId } else { [string]`$tenantId }
+    `$cloudValue = if (`$Row.PSObject.Properties.Name -contains "AzureCloud") { [string]`$Row.AzureCloud } else { [string]`$azureCloud }
+    `$subscriptionValue = if (`$Row.PSObject.Properties.Name -contains "SubscriptionId") { [string]`$Row.SubscriptionId } else { "" }
+    `$historyMonthValue = if (`$Row.PSObject.Properties.Name -contains "HistoryMonth") { [string]`$Row.HistoryMonth } else { "" }
+    `$periodValue = if (`$Row.PSObject.Properties.Name -contains "Period") { [string]`$Row.Period } else { "" }
+
+    return "`$cloudValue|`$tenantValue|`$subscriptionValue|`$historyMonthValue|`$periodValue"
+}
+
+function Add-FinOpsHistoryMetadata {
+    param(
+        [Parameter(Mandatory)]
+        [object[]]`$Rows,
+
+        [Parameter(Mandatory)]
+        [string]`$RunId,
+
+        [Parameter(Mandatory)]
+        [string]`$ExportedUtc
+    )
+
+    foreach (`$row in `$Rows) {
+        if (-not (`$row.PSObject.Properties.Name -contains "ExportRunId")) {
+            `$row | Add-Member -NotePropertyName ExportRunId -NotePropertyValue `$RunId -Force
+        }
+        if (-not (`$row.PSObject.Properties.Name -contains "ExportedUtc")) {
+            `$row | Add-Member -NotePropertyName ExportedUtc -NotePropertyValue `$ExportedUtc -Force
+        }
+        if (-not (`$row.PSObject.Properties.Name -contains "TenantId")) {
+            `$row | Add-Member -NotePropertyName TenantId -NotePropertyValue `$tenantId -Force
+        }
+        if (-not (`$row.PSObject.Properties.Name -contains "AzureCloud")) {
+            `$row | Add-Member -NotePropertyName AzureCloud -NotePropertyValue `$azureCloud -Force
+        }
+
+        `$row
+    }
+}
+
 function Update-FinOpsNormalizedHistoryFile {
     param(
         [Parameter(Mandatory)]
@@ -761,15 +808,16 @@ function Update-FinOpsNormalizedHistoryFile {
     `$runId = Split-Path -Leaf `$OutputRoot
     `$exportedUtc = (Get-Date).ToUniversalTime().ToString("o")
     `$newRows = @(Select-FinOpsNormalizedHistoryRows -CsvPath `$currentPath -RunId `$runId -ExportedUtc `$exportedUtc)
+    `$newRows = @(Add-FinOpsHistoryMetadata -Rows `$newRows -RunId `$runId -ExportedUtc `$exportedUtc)
     `$existingRows = if (Test-Path `$historyFilePath) { @(Import-Csv -Path `$historyFilePath) } else { @() }
     `$replaceKeys = @{}
     foreach (`$row in `$newRows) {
-        `$replaceKeys["`$(`$row.HistoryMonth)|`$(`$row.Period)"] = `$true
+        `$replaceKeys[(Get-FinOpsHistoryReplaceKey -Row `$row)] = `$true
     }
 
     `$keptRows = @(
         `$existingRows | Where-Object {
-            -not `$replaceKeys.ContainsKey("`$(`$_.HistoryMonth)|`$(`$_.Period)")
+            -not `$replaceKeys.ContainsKey((Get-FinOpsHistoryReplaceKey -Row `$_))
         }
     )
 
@@ -783,6 +831,58 @@ function Update-FinOpsNormalizedHistoryFile {
     Write-Host "Normalized history file copied to: `$((Join-Path `$OutputRoot `$HistoryFileName))"
 }
 
+function Update-FinOpsDurableHistoryFile {
+    param(
+        [Parameter(Mandatory)]
+        [string]`$OutputRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$FileName,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryFileName,
+
+        [Parameter(Mandatory)]
+        [string[]]`$KeyColumns
+    )
+
+    `$currentPath = Join-Path `$OutputRoot `$FileName
+    if (-not (Test-Path `$currentPath)) {
+        Write-Warning "Durable history file was skipped because the current run file was not found: `$currentPath"
+        return
+    }
+
+    New-Item -ItemType Directory -Path `$HistoryRoot -Force | Out-Null
+    `$historyFilePath = Join-Path `$HistoryRoot `$HistoryFileName
+    `$runId = Split-Path -Leaf `$OutputRoot
+    `$exportedUtc = (Get-Date).ToUniversalTime().ToString("o")
+    `$newRows = @(Import-Csv -Path `$currentPath)
+    `$newRows = @(Add-FinOpsHistoryMetadata -Rows `$newRows -RunId `$runId -ExportedUtc `$exportedUtc)
+    `$existingRows = if (Test-Path `$historyFilePath) { @(Import-Csv -Path `$historyFilePath) } else { @() }
+
+    `$replaceKeys = @{}
+    foreach (`$row in `$newRows) {
+        `$key = (`$KeyColumns | ForEach-Object { if (`$row.PSObject.Properties.Name -contains `$_) { [string]`$row.PSObject.Properties[`$_].Value } else { "" } }) -join "|"
+        `$replaceKeys[`$key] = `$true
+    }
+
+    `$keptRows = @(
+        `$existingRows | Where-Object {
+            `$existingRow = `$_
+            `$key = (`$KeyColumns | ForEach-Object { if (`$existingRow.PSObject.Properties.Name -contains `$_) { [string]`$existingRow.PSObject.Properties[`$_].Value } else { "" } }) -join "|"
+            -not `$replaceKeys.ContainsKey(`$key)
+        }
+    )
+
+    `$allRows = @(`$keptRows) + @(`$newRows)
+    `$allRows | Export-Csv -Path `$historyFilePath -NoTypeInformation -Encoding UTF8
+    Copy-Item -Path `$historyFilePath -Destination (Join-Path `$OutputRoot `$HistoryFileName) -Force
+    Write-Host "Durable history file updated: `$historyFilePath"
+}
+
 function Update-FinOpsNormalizedHistories {
     param(
         [Parameter(Mandatory)]
@@ -794,6 +894,33 @@ function Update-FinOpsNormalizedHistories {
 
     Update-FinOpsNormalizedHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "fact-cost-usage.csv" -HistoryFileName "fact-cost-usage-history.csv"
     Update-FinOpsNormalizedHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "fact-retail-price-match.csv" -HistoryFileName "fact-retail-price-match-history.csv"
+}
+
+function Update-FinOpsDurableAuditHistories {
+    param(
+        [Parameter(Mandatory)]
+        [string]`$OutputRoot,
+
+        [Parameter(Mandatory)]
+        [string]`$HistoryRoot
+    )
+
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "export-run-manifest.csv" -HistoryFileName "export-run-manifest-history.csv" -KeyColumns @("ExportRunId")
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "agreement-price-audit.csv" -HistoryFileName "agreement-price-audit-history.csv" -KeyColumns @("AzureCloud","TenantId","SubscriptionId","HistoryMonth","Period","UsageDate","ServiceName","ArmRegionName","Meter","Product","PartNumber","UnitOfMeasure")
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "retail-price-snapshot.csv" -HistoryFileName "retail-price-snapshot-history.csv" -KeyColumns @("AzureCloud","TenantId","RetailSkuId","RetailMeterId","RetailArmRegionName","RetailUnitOfMeasure")
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "retail-match-exceptions.csv" -HistoryFileName "retail-match-exceptions-history.csv" -KeyColumns @("AzureCloud","TenantId","ExceptionId")
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "data-quality-snapshot.csv" -HistoryFileName "data-quality-snapshot-history.csv" -KeyColumns @("AzureCloud","TenantId","AgreementId","Period","Currency")
+    Update-FinOpsDurableHistoryFile -OutputRoot `$OutputRoot -HistoryRoot `$HistoryRoot -FileName "billing-reconciliation.csv" -HistoryFileName "billing-reconciliation-history.csv" -KeyColumns @("AzureCloud","TenantId","AgreementId","BillingPeriod")
+
+    `$billingRoot = Join-Path `$OutputRoot "billing-contact-audit"
+    if (Test-Path `$billingRoot) {
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "subscription-billing-properties.csv" -HistoryFileName "billing-subscription-properties-history.csv" -KeyColumns @("AzureCloud","TenantId","SubscriptionId")
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "billing-accounts.csv" -HistoryFileName "billing-accounts-history.csv" -KeyColumns @("AzureCloud","TenantId","BillingAccountName")
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "billing-profiles.csv" -HistoryFileName "billing-profiles-history.csv" -KeyColumns @("AzureCloud","TenantId","BillingProfileName","BillingAccountName")
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "invoice-sections.csv" -HistoryFileName "billing-invoice-sections-history.csv" -KeyColumns @("AzureCloud","TenantId","InvoiceSectionName","BillingProfileName","BillingAccountName")
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "invoices.csv" -HistoryFileName "billing-invoices-history.csv" -KeyColumns @("AzureCloud","TenantId","InvoiceName","BillingAccountName","BillingProfileName")
+        Update-FinOpsDurableHistoryFile -OutputRoot `$billingRoot -HistoryRoot `$HistoryRoot -FileName "billing-role-assignments.csv" -HistoryFileName "billing-role-assignments-history.csv" -KeyColumns @("AzureCloud","TenantId","Scope","PrincipalId","RoleDefinitionId")
+    }
 }
 
 Start-Transcript -Path (Join-Path `$outputRoot "finops-data-pull.log") -Force
@@ -851,13 +978,14 @@ try {
         & (Join-Path `$scriptRoot "Get-AzureBillingContactAudit.ps1") @billingAuditArgs
     }
 
-    if (`$analysisMode -eq "History" -and -not `$onlyBillingContactAudit) {
-        if (-not `$runCostAnalysis) {
-            throw "History mode requires the Cost Management export."
-        }
-
-        Update-FinOpsCostHistory -OutputRoot `$outputRoot -HistoryPath `$historyPath
+    if (`$runCostAnalysis) {
         Update-FinOpsNormalizedHistories -OutputRoot `$outputRoot -HistoryRoot `$historyRoot
+        if (-not `$skipRetailPriceLookup) {
+            Update-FinOpsCostHistory -OutputRoot `$outputRoot -HistoryPath `$historyPath
+        }
+        elseif (`$analysisMode -eq "History") {
+            Write-Warning "cost-retail-history.csv requires Retail Prices enrichment. Clear 'Skip Retail Prices lookup' to maintain retail-equivalent history."
+        }
     }
 
     if (`$runCostAnalysis -and -not `$skipRetailPriceLookup) {
@@ -884,6 +1012,10 @@ try {
     }
     elseif (`$runCostAnalysis) {
         Write-Warning "MACC audit artifacts require Retail Prices enrichment. Clear 'Skip Retail Prices lookup' to generate agreement, ledger, exception, and price evidence files."
+    }
+
+    if (`$runCostAnalysis -or `$runBillingContactAudit) {
+        Update-FinOpsDurableAuditHistories -OutputRoot `$outputRoot -HistoryRoot `$historyRoot
     }
 
     if (`$storageLocation -eq "AzureBlob") {

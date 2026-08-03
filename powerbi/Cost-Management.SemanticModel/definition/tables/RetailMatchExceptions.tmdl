@@ -130,7 +130,7 @@ table RetailMatchExceptions
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("retail-match-exceptions.csv", 20),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("retail-match-exceptions-history.csv", 24) else CsvFromSelectedStorage("retail-match-exceptions.csv", 20),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"ExceptionId", type text}, {"AgreementId", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Meter", type text}, {"Product", type text}, {"ActualCost", type number}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"IsMaccEligible", type text}, {"MaccEligibilityCategory", type text}, {"ReviewStatus", type text}, {"Owner", type text}, {"Resolution", type text}, {"Notes", type text}})
 				in

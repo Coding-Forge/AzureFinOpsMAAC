@@ -124,7 +124,7 @@ table ExportRunManifest
 		mode: import
 		source =
 				let
-				    Source = CsvFromSelectedStorage("export-run-manifest.csv", 16),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("export-run-manifest-history.csv", 20) else CsvFromSelectedStorage("export-run-manifest.csv", 16),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"ExportRunId", type text}, {"ExportedUtc", type text}, {"AnalysisMode", type text}, {"StorageLocation", type text}, {"TenantId", type text}, {"SubscriptionCount", Int64.Type}, {"AsOfDate", type text}, {"AgreementId", type text}, {"SettingsPath", type text}, {"OutputRoot", type text}, {"HistoryRoot", type text}, {"FileCount", Int64.Type}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedSavings", type number}, {"CalculationVersion", type text}})
 				in

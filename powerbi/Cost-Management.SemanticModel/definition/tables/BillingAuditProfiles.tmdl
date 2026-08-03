@@ -66,7 +66,7 @@ table BillingAuditProfiles
 		source =
 				let
 				    ExpectedColumns = {"BillingAccountName", "BillingProfileName", "DisplayName", "Status", "BillTo", "InvoiceEmailOptIn", "InvoiceDay", "PoNumber", "Currency", "RawJson"},
-				    Source = OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/billing-profiles.csv", 10),
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("billing-profiles-history.csv", 14) else OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/billing-profiles.csv", 10),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
 				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
