@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Power BI Report Page Guide</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.5; }
+    a { color: var(--cp-link); }
+    code { font-family: Consolas, "Courier New", Courier, monospace; }
+    header { background: var(--cp-bg-elevated); border-bottom: 1px solid var(--cp-border); padding: 32px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    h1 { margin: 0 0 12px; font-size: 34px; line-height: 1.1; }
+    h2 { margin: 32px 0 12px; font-size: 24px; }
+    h3 { margin: 0 0 8px; font-size: 18px; }
+    .brand { color: var(--cp-text-muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .lead { color: var(--cp-text-muted); max-width: 900px; font-size: 18px; }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .nav a { border: 1px solid var(--cp-border); border-radius: 0.625rem; padding: 8px 12px; background: var(--cp-surface); color: var(--cp-text); text-decoration: none; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14); padding: 18px; }
+    .tag { display: inline-block; margin: 4px 4px 4px 0; padding: 4px 8px; border-radius: 0.625rem; background: var(--cp-accent-soft); color: var(--cp-accent); font-size: 12px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; overflow: hidden; margin: 16px 0; }
+    th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--cp-border); }
+    th { background: var(--cp-surface-soft); }
+    tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 4px solid var(--cp-accent); background: var(--cp-accent-soft); border-radius: 0.625rem; padding: 14px 16px; margin: 18px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Azure FinOps MACC Retail Solution</div>
+    <h1>Power BI Report Page Guide</h1>
+    <p class="lead">A simple explanation of each report page: what it is for, why it exists, who should use it, and what questions it answers.</p>
+    <div class="nav">
+      <a href="index.html">User guide</a>
+      <a href="technical-security.html">Technical and security guide</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+  </header>
+  <main>
+    <section>
+      <h2>How to use the report</h2>
+      <div class="callout">Start with overview pages for leadership conversations, then use audit and exception pages when someone asks, "How did we calculate that?" or "Can we trust this number?"</div>
+      <table>
+        <thead><tr><th>Audience</th><th>Recommended pages</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Executives and account teams</td><td>MACC Retail Overview, MACC Commitment Overview, MACC Benefit Ledger</td><td>Shows current savings, commitment health, and long-term value.</td></tr>
+          <tr><td>FinOps and cloud cost owners</td><td>Decomposition Trees, Coverage and Exceptions, Billing and Ownership</td><td>Finds drivers, exceptions, ownership, and monthly review actions.</td></tr>
+          <tr><td>Analysts and engineers</td><td>Agreement Price Audit, Granular Drillthrough, Pipeline Diagnostics, Model Technical Tables</td><td>Explains data lineage, matching logic, and detailed row-level evidence.</td></tr>
+          <tr><td>Security and governance reviewers</td><td>Billing and Ownership, Pipeline Diagnostics, Model Technical Tables</td><td>Shows run traceability, source files, ownership templates, and model structure.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Page-by-page guide</h2>
+      <div class="grid">
+        <article class="card">
+          <span class="tag">Start here</span>
+          <h3>Report Landing</h3>
+          <p><strong>What it is for:</strong> Introduces the report and helps users navigate.</p>
+          <p><strong>Why it was created:</strong> New users need a simple entry point before seeing detailed cost data.</p>
+          <p><strong>Who uses it:</strong> Everyone.</p>
+          <p><strong>Answers:</strong> What is this report? Where should I go next?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Executive</span>
+          <h3>FinOps MACC vs Retail Overview</h3>
+          <p><strong>What it is for:</strong> Shows actual Azure cost compared to estimated public retail cost.</p>
+          <p><strong>Why it was created:</strong> Customers need a fast way to understand directional value from negotiated pricing and MACC-related benefits.</p>
+          <p><strong>Who uses it:</strong> Executives, account teams, FinOps leads.</p>
+          <p><strong>Answers:</strong> What did we spend? What would retail have looked like? What is the estimated savings?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Executive</span>
+          <h3>Enterprise Agreement Savings</h3>
+          <p><strong>What it is for:</strong> Highlights estimated EA or negotiated agreement savings using actual cost compared to public retail equivalent cost.</p>
+          <p><strong>Why it was created:</strong> Customers asked for savings mechanisms beyond MACC. EA pricing is the first expanded mechanism because it can be estimated from the same actual-vs-retail foundation.</p>
+          <p><strong>Who uses it:</strong> Executives, account teams, FinOps leads, and finance reviewers.</p>
+          <p><strong>Answers:</strong> How much lower is actual cost than public retail? Which subscriptions, services, and regions drive estimated EA savings? What is the match coverage?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Optimization</span>
+          <h3>Reservation and Savings Plan Coverage</h3>
+          <p><strong>What it is for:</strong> Shows first-pass reservation and savings plan coverage or opportunity review using actual-vs-retail rows.</p>
+          <p><strong>Why it was created:</strong> Customers need to understand commitment benefit opportunities beyond agreement pricing and MACC burn-down.</p>
+          <p><strong>Who uses it:</strong> FinOps practitioners, cloud optimization teams, finance analysts, and service owners.</p>
+          <p><strong>Answers:</strong> Which services should be reviewed for reservations or savings plans? What cost is in scope? What official utilization data still needs to be added?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Optimization</span>
+          <h3>Azure Hybrid Benefit Opportunities</h3>
+          <p><strong>What it is for:</strong> Identifies possible Windows Server and SQL Server workloads that may need AHB entitlement/configuration review.</p>
+          <p><strong>Why it was created:</strong> AHB can reduce licensing cost, but confirming it requires workload and license entitlement validation.</p>
+          <p><strong>Who uses it:</strong> FinOps practitioners, licensing specialists, cloud engineers, and SQL/Windows workload owners.</p>
+          <p><strong>Answers:</strong> Which workloads should be checked for AHB? What cost is associated with those candidates? What inventory needs owner review?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Optimization</span>
+          <h3>Spot Pricing Opportunities</h3>
+          <p><strong>What it is for:</strong> Reviews workloads that may already use Spot pricing or may be suitable for interruptible Spot capacity.</p>
+          <p><strong>Why it was created:</strong> Spot can reduce compute cost, but it is only appropriate for workloads that tolerate interruption.</p>
+          <p><strong>Who uses it:</strong> Cloud optimization teams, workload owners, engineering teams, and FinOps practitioners.</p>
+          <p><strong>Answers:</strong> Which workloads should be reviewed for Spot? What cost is in scope? Who needs to validate interruption tolerance?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Optimization</span>
+          <h3>Dev/Test Pricing Opportunities</h3>
+          <p><strong>What it is for:</strong> Reviews subscriptions and workloads that may be eligible for Dev/Test pricing.</p>
+          <p><strong>Why it was created:</strong> Non-production workloads can sometimes use discounted Dev/Test offers, but eligibility must be validated.</p>
+          <p><strong>Who uses it:</strong> Subscription owners, engineering teams, FinOps teams, and licensing/governance reviewers.</p>
+          <p><strong>Answers:</strong> Which subscriptions look like dev/test? Which costs should be reviewed? Is the correct offer or subscription type in use?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Executive</span>
+          <h3>MACC Commitment Overview</h3>
+          <p><strong>What it is for:</strong> Shows agreement health, commitment utilization, remaining commitment, expected burn, and pacing.</p>
+          <p><strong>Why it was created:</strong> MACC discussions require agreement-level governance, not only service-level cost details.</p>
+          <p><strong>Who uses it:</strong> Executives, account teams, customer sponsors, FinOps leads.</p>
+          <p><strong>Answers:</strong> Are we on track? How much commitment remains? What monthly run rate is needed?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Trend</span>
+          <h3>MACC Benefit Ledger</h3>
+          <p><strong>What it is for:</strong> Tracks monthly actual cost, retail equivalent cost, estimated savings, eligible spend, review spend, and match coverage.</p>
+          <p><strong>Why it was created:</strong> Customers need a durable, audit-friendly history of MACC value over time.</p>
+          <p><strong>Who uses it:</strong> FinOps teams, finance teams, account teams.</p>
+          <p><strong>Answers:</strong> How are benefits trending? Which services contribute most? How much spend needs review?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Investigation</span>
+          <h3>Decomposition Trees</h3>
+          <p><strong>What it is for:</strong> Breaks cost and savings down by service, region, subscription, and other drivers.</p>
+          <p><strong>Why it was created:</strong> Users need a guided way to discover what is driving changes.</p>
+          <p><strong>Who uses it:</strong> FinOps analysts, cloud operations, customer engineers.</p>
+          <p><strong>Answers:</strong> What is driving spend? Which services or regions explain the largest changes?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Evidence</span>
+          <h3>Agreement Price Audit</h3>
+          <p><strong>What it is for:</strong> Shows row-level evidence behind retail price matching and savings estimates.</p>
+          <p><strong>Why it was created:</strong> Savings claims must be explainable and defensible.</p>
+          <p><strong>Who uses it:</strong> Analysts, engineers, finance reviewers, customer stakeholders who ask for calculation detail.</p>
+          <p><strong>Answers:</strong> Which retail price was used? What meter and SKU matched? How was estimated savings calculated?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Quality</span>
+          <h3>Coverage and Exceptions</h3>
+          <p><strong>What it is for:</strong> Prioritizes unmatched rows, multiple-candidate matches, and eligibility review items.</p>
+          <p><strong>Why it was created:</strong> Users need to know where savings estimates are strong and where review is required.</p>
+          <p><strong>Who uses it:</strong> FinOps teams, data quality owners, analysts.</p>
+          <p><strong>Answers:</strong> Can we trust the match coverage? What should be reviewed before sharing savings externally?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Governance</span>
+          <h3>Billing and Ownership</h3>
+          <p><strong>What it is for:</strong> Connects export traceability, invoice reconciliation, and ownership/accountability mapping.</p>
+          <p><strong>Why it was created:</strong> Monthly governance requires both numbers and owners.</p>
+          <p><strong>Who uses it:</strong> Finance, FinOps, service owners, governance teams.</p>
+          <p><strong>Answers:</strong> Which run produced these numbers? Do invoice totals reconcile? Who owns follow-up?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Reference</span>
+          <h3>Azure Retail Reference</h3>
+          <p><strong>What it is for:</strong> Provides a snapshot of Azure Retail Prices data used for comparisons.</p>
+          <p><strong>Why it was created:</strong> Users need a source reference for retail prices, meters, services, and regions.</p>
+          <p><strong>Who uses it:</strong> Analysts and engineers.</p>
+          <p><strong>Answers:</strong> What public retail price data is available? Which meter, SKU, or region is being referenced?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Validation</span>
+          <h3>Cost Export Validation</h3>
+          <p><strong>What it is for:</strong> Checks whether expected export files and row counts are present.</p>
+          <p><strong>Why it was created:</strong> Users need confidence that the report is based on a complete run.</p>
+          <p><strong>Who uses it:</strong> Report owners, analysts, support teams.</p>
+          <p><strong>Answers:</strong> Did the export complete? Are expected files present? Are there obvious data gaps?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Support</span>
+          <h3>Pipeline Diagnostics</h3>
+          <p><strong>What it is for:</strong> Shows each data pipeline stage: raw cost, normalized region, retail join, enriched output, and audit outputs.</p>
+          <p><strong>Why it was created:</strong> Troubleshooting requires seeing where data entered or failed in the pipeline.</p>
+          <p><strong>Who uses it:</strong> Support engineers, analysts, developers.</p>
+          <p><strong>Answers:</strong> Where did a row appear? Where did it stop? Which transformation changed it?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Technical</span>
+          <h3>Model Technical Tables</h3>
+          <p><strong>What it is for:</strong> Shows model tables and schema-oriented support information.</p>
+          <p><strong>Why it was created:</strong> Engineers need to understand model structure without opening every TMDL file.</p>
+          <p><strong>Who uses it:</strong> Developers, support engineers, security reviewers.</p>
+          <p><strong>Answers:</strong> What tables exist? What data is imported? How does the model organize report data?</p>
+        </article>
+        <article class="card">
+          <span class="tag">Drillthrough</span>
+          <h3>Granular Detail / Drillthrough</h3>
+          <p><strong>What it is for:</strong> Provides filtered row-level detail from overview selections.</p>
+          <p><strong>Why it was created:</strong> Users often need to move from an executive number to the exact rows behind it.</p>
+          <p><strong>Who uses it:</strong> Analysts, customer engineers, FinOps practitioners.</p>
+          <p><strong>Answers:</strong> What exact usage rows make up this service, region, or savings value?</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

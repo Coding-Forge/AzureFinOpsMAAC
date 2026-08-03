@@ -1,0 +1,202 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "devtest_inventory",
+  "position": {
+    "x": 40,
+    "y": 680,
+    "z": 0,
+    "height": 300,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "SubscriptionId"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.SubscriptionId",
+              "nativeQueryRef": "SubscriptionId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "OfferType"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.OfferType",
+              "nativeQueryRef": "OfferType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "Environment"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.Environment",
+              "nativeQueryRef": "Environment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "BusinessUnit"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.BusinessUnit",
+              "nativeQueryRef": "BusinessUnit"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "Owner"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.Owner",
+              "nativeQueryRef": "Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "EligibleForDevTest"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.EligibleForDevTest",
+              "nativeQueryRef": "EligibleForDevTest"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "DevTestEnabled"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.DevTestEnabled",
+              "nativeQueryRef": "DevTestEnabled"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "ReviewStatus"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.ReviewStatus",
+              "nativeQueryRef": "ReviewStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DevTestSubscriptionInventory"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "DevTestSubscriptionInventory.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer-Maintained Dev/Test Subscription Inventory'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

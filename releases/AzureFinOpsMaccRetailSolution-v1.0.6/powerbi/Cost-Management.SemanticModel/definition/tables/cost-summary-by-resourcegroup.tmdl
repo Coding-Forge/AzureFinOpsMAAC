@@ -1,0 +1,51 @@
+table cost-summary-by-resourcegroup
+	lineageTag: cb14ccc5-3c6d-47e4-9f0b-dc294583f82e
+
+	column Period
+		dataType: string
+		lineageTag: 10910b8e-9cf3-4709-9a8e-bd39f4f51d3c
+		summarizeBy: none
+		sourceColumn: Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: e1cb0bef-1e8b-478f-85e1-5e58e42f00fa
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cost
+		dataType: double
+		lineageTag: 67d50356-46f5-4f78-902e-41692dc54b1b
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Currency
+		dataType: string
+		lineageTag: 1348ea46-6871-45d5-a02d-406bb7940d76
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cost-summary-by-resourcegroup = m
+		mode: import
+		source =
+				let
+				Source = CsvFromSelectedStorage("cost-summary-by-resourcegroup.csv", 4),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ResourceGroupName", type text}, {"Cost", type number}, {"Currency", type text}})
+				in
+				#"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

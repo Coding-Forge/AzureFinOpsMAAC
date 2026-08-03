@@ -1,0 +1,80 @@
+table BillingAuditSubscriptionProperties
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117301
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117302
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117303
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column State
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117304
+		summarizeBy: none
+		sourceColumn: State
+
+	column BillingAccountId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117305
+		summarizeBy: none
+		sourceColumn: BillingAccountId
+
+	column BillingProfileId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117306
+		summarizeBy: none
+		sourceColumn: BillingProfileId
+
+	column InvoiceSectionId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117307
+		summarizeBy: none
+		sourceColumn: InvoiceSectionId
+
+	column ProductId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117308
+		summarizeBy: none
+		sourceColumn: ProductId
+
+	column ProductName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117309
+		summarizeBy: none
+		sourceColumn: ProductName
+
+	column SkuId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117310
+		summarizeBy: none
+		sourceColumn: SkuId
+
+	column RawJson
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117311
+		summarizeBy: none
+		sourceColumn: RawJson
+
+	partition BillingAuditSubscriptionProperties = m
+		mode: import
+		source =
+				let
+				    ExpectedColumns = {"SubscriptionName", "SubscriptionId", "State", "BillingAccountId", "BillingProfileId", "InvoiceSectionId", "ProductId", "ProductName", "SkuId", "RawJson"},
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("billing-subscription-properties-history.csv", 14) else OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/subscription-billing-properties.csv", 10),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
+				    Typed = Table.TransformColumnTypes(Selected, {{"SubscriptionName", type text}, {"SubscriptionId", type text}, {"State", type text}, {"BillingAccountId", type text}, {"BillingProfileId", type text}, {"InvoiceSectionId", type text}, {"ProductId", type text}, {"ProductName", type text}, {"SkuId", type text}, {"RawJson", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

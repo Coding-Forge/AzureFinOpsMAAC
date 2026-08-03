@@ -1,0 +1,89 @@
+table MaccAgreementConfig
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111101
+
+	column AgreementId
+		dataType: string
+		lineageTag: f91d3728-4658-4bb6-b1e9-e93dd58b7a35
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column CustomerName
+		dataType: string
+		lineageTag: 1c54dd74-4615-4b33-b63f-e714007faebe
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+	column AgreementStartDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 1cac5c4f-936e-424d-8991-1537e3a5901c
+		summarizeBy: none
+		sourceColumn: AgreementStartDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AgreementEndDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: aeb5f70f-057c-4d28-82f2-f9cc89b59b9d
+		summarizeBy: none
+		sourceColumn: AgreementEndDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CommitmentAmount
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 6f41ddfc-88c8-4667-914a-0885a6a58038
+		summarizeBy: sum
+		sourceColumn: CommitmentAmount
+
+	column CommitmentCurrency
+		dataType: string
+		lineageTag: 71bf2bfa-5f47-4a46-936b-f4aaec7de78c
+		summarizeBy: none
+		sourceColumn: CommitmentCurrency
+
+	column PacingWarningPercent
+		dataType: double
+		formatString: 0.0
+		lineageTag: 1a6f9af3-b6d9-4ecf-9719-1515c3182623
+		summarizeBy: sum
+		sourceColumn: PacingWarningPercent
+
+	column PacingCriticalPercent
+		dataType: double
+		formatString: 0.0
+		lineageTag: 2a788407-1cfc-486e-bb49-89be6503ec14
+		summarizeBy: sum
+		sourceColumn: PacingCriticalPercent
+
+	column AsOfDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 835db502-0f67-4c23-b778-fbc35c731de1
+		summarizeBy: none
+		sourceColumn: AsOfDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Notes
+		dataType: string
+		lineageTag: 8c18f40b-8861-4b28-8950-b090c0e2792f
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition MaccAgreementConfig = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("agreement-config.csv", 10),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"CustomerName", type text}, {"AgreementStartDate", type date}, {"AgreementEndDate", type date}, {"CommitmentAmount", type number}, {"CommitmentCurrency", type text}, {"PacingWarningPercent", type number}, {"PacingCriticalPercent", type number}, {"AsOfDate", type date}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

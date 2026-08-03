@@ -1,0 +1,56 @@
+table DimAzureRegion
+	lineageTag: 59900d69-512f-4b90-9272-d09dc1e2ccdd
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: ecb5d3e6-ac47-474d-8eff-a50fc53b56bb
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 3a278f9b-1903-4583-9b42-e6fe90f29844
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+	column 'Display Name'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040001
+		summarizeBy: none
+		sourceColumn: Display Name
+
+	column 'Azure Region'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040002
+		summarizeBy: none
+		sourceColumn: Azure Region
+
+	column 'Azure Cloud'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040003
+		summarizeBy: none
+		sourceColumn: Azure Cloud
+
+	column AzureRegionKey
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040004
+		summarizeBy: none
+		sourceColumn: AzureRegionKey
+
+	partition DimAzureRegion = m
+		mode: import
+		source =
+				let
+				  Source = CsvFromSelectedStorage("dim-region.csv", 5),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Display Name", type text}, {"Azure Region", type text}, {"Azure Cloud", type text}, {"ArmRegionName", type text}, {"ResourceLocation", type text}}, [MissingField = MissingField.UseNull]),
+				  NonBlank = Table.SelectRows(Typed, each [ArmRegionName] <> null and Text.Trim(Text.From([ArmRegionName])) <> ""),
+				  AddRegionKey = Table.AddColumn(NonBlank, "AzureRegionKey", each Text.Trim(Text.From([#"Azure Cloud"])) & "|" & Text.Trim(Text.From([ArmRegionName])), type text),
+				  SortedRows = Table.Sort(AddRegionKey, {{"Azure Cloud", Order.Ascending}, {"Azure Region", Order.Ascending}})
+				in
+				  SortedRows
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

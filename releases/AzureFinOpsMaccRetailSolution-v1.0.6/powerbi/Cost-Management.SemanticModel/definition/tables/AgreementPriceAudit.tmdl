@@ -1,0 +1,294 @@
+table AgreementPriceAudit
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111104
+
+	column AgreementId
+		dataType: string
+		lineageTag: 0187dd3d-87d0-4573-bed0-f7bd6ef4c9e9
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column RunId
+		dataType: string
+		lineageTag: b09d5615-7c05-4055-bdc2-1727b0bbfc91
+		summarizeBy: none
+		sourceColumn: RunId
+
+	column Period
+		dataType: string
+		lineageTag: 161197ff-120b-4e10-86c1-4aac98ecd70e
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: ed9efcae-c246-4858-b379-495bdd62ae21
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column ServiceName
+		dataType: string
+		lineageTag: 3e3559e2-98cf-4c94-83d9-9cc7b117c118
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 6f3e2213-5c40-40cb-b9b1-9c56c9accee1
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Meter
+		dataType: string
+		lineageTag: ab14c330-d2cb-4235-a85d-750024d6806e
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: f4736b7d-3cce-40ea-8d78-97cfd74adb2a
+		summarizeBy: none
+		sourceColumn: Product
+
+	column Currency
+		dataType: string
+		lineageTag: bdaff6de-eb8c-46ad-8101-94b84bbef99b
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 7f700af5-1ea7-4cde-803a-7737fd33b1ca
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 92b63c0f-e63f-4ba9-b233-df582035e275
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column EffectiveUnitCost
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: ac340513-aee6-4876-b57e-f91e6baee67d
+		summarizeBy: sum
+		sourceColumn: EffectiveUnitCost
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: 0ab51e1f-f34b-4b17-9429-95c6254c631c
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+	column RetailCandidateCount
+		dataType: int64
+		lineageTag: 9e2bc820-bb82-4a86-bbde-fdc3d2f3e0ad
+		summarizeBy: sum
+		sourceColumn: RetailCandidateCount
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: 6bb24895-a99c-4bf9-9301-f19300563383
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: 40d83a74-a3b0-40c7-a9bf-8b5c16c85102
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+	column RetailPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 82dafc4d-e1aa-4b0c-b8c3-42481db5167d
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5561c5d2-a2fe-4879-ae83-feb69de75699
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 38bfc9ac-1c6e-4c3b-8732-2f55cb3ede50
+		summarizeBy: sum
+		sourceColumn: EstimatedSavings
+
+	column IsMaccEligible
+		dataType: string
+		lineageTag: cb887472-3d05-49ac-ad31-968d59cd9699
+		summarizeBy: none
+		sourceColumn: IsMaccEligible
+
+	column MaccEligibilityCategory
+		dataType: string
+		lineageTag: 3595572a-7ea5-4737-9442-1ec11068bcc0
+		summarizeBy: none
+		sourceColumn: MaccEligibilityCategory
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 3eb43611-5bb6-4ba3-afd8-66fc66a3fdde
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 99a17c51-bab4-4044-8ca8-3bd3af26222e
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: d430fbfc-20db-4094-8b78-50a2e226708e
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column UsageDate
+		dataType: string
+		lineageTag: 16e62065-10d9-4120-b704-00818ff73fde
+		summarizeBy: none
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 94be0f23-99a6-4416-b16c-cb5ddcc721b3
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column PartNumber
+		dataType: string
+		lineageTag: 4fd2d21a-b557-4c64-a171-6212a9b4dc48
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: bb46469c-3261-4118-a6cc-4db8fcd68df5
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailProductId
+		dataType: string
+		lineageTag: e255a88c-ff84-4df8-926d-6511225a7976
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailProductName
+		dataType: string
+		lineageTag: 39a84b01-5e71-4972-b368-0915db194157
+		summarizeBy: none
+		sourceColumn: RetailProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailSkuName
+		dataType: string
+		lineageTag: cee0483e-4b50-4760-8069-26ddca7ece73
+		summarizeBy: none
+		sourceColumn: RetailSkuName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailMeterName
+		dataType: string
+		lineageTag: b290a98a-6871-4ff8-8d02-4df09569e35b
+		summarizeBy: none
+		sourceColumn: RetailMeterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: 0a7f153c-4b3c-4b71-ac70-0145213b5e86
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: d5877545-1b19-4d57-8da8-e5c4d4acfc11
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetailUnitPrice
+		dataType: double
+		lineageTag: 7075e8f9-2ab8-4973-8857-98de8ac029af
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: fabb2a9c-e3f9-47d5-95b4-b2cf811d6916
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExportRunId
+		dataType: string
+		lineageTag: f1047459-6c0e-43f8-b73a-80956172438a
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+		annotation SummarizationSetBy = Automatic
+
+	column AzureCloud
+		dataType: string
+		lineageTag: fcd3aa96-0f84-400a-bdf3-49fe68f4b5f9
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: 30f8daa3-cec2-4197-8e7f-0605814d5984
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AgreementPriceAudit = m
+		mode: import
+		source =
+				let
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("agreement-price-audit-history.csv", 40) else CsvFromSelectedStorage("agreement-price-audit.csv", 36),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AgreementId", type text}, {"RunId", type text}, {"ExportedUtc", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageDate", type text}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"ActualCost", type number}, {"EffectiveUnitCost", type number}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}, {"RetailEquivalentCost", type number}, {"EstimatedSavings", type number}, {"IsMaccEligible", type text}, {"MaccEligibilityCategory", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

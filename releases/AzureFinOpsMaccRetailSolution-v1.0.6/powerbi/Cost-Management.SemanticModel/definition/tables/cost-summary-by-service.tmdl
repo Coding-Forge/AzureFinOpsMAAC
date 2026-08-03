@@ -1,0 +1,51 @@
+table cost-summary-by-service
+	lineageTag: 502c735a-d5af-41a5-a71a-2a204bf87dc3
+
+	column Period
+		dataType: string
+		lineageTag: 373c388a-2d72-4383-8cb3-708e0a8a2595
+		summarizeBy: none
+		sourceColumn: Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceName
+		dataType: string
+		lineageTag: a3a54cb4-c008-4d4c-bd82-7a9ac7474134
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cost
+		dataType: double
+		lineageTag: 224cca5e-754e-4a1d-9736-9807e235adb8
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Currency
+		dataType: string
+		lineageTag: d322715e-c92a-47f7-81db-d991247b5f06
+		summarizeBy: none
+		sourceColumn: Currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cost-summary-by-service = m
+		mode: import
+		source =
+				let
+				Source = CsvFromSelectedStorage("cost-summary-by-service.csv", 4),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Period", type text}, {"ServiceName", type text}, {"Cost", type number}, {"Currency", type text}})
+				in
+				#"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

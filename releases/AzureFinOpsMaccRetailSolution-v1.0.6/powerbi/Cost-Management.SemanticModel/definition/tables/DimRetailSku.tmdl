@@ -1,0 +1,81 @@
+table DimRetailSku
+	lineageTag: 2ea32237-c302-47f7-a0d4-311111170001
+
+	column RetailSkuKey
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170002
+		summarizeBy: none
+		sourceColumn: RetailSkuKey
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170003
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170004
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+	column RetailProductId
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170005
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170006
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170007
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+	column RetailPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170008
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+	column RetailUnitPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170009
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: 2ea32237-c302-47f7-a0d4-311111170010
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+	partition DimRetailSku = m
+		mode: import
+		source =
+				let
+				    CurrentSource = CsvFromSelectedStorage("dim-retail-sku.csv", 9),
+				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
+				    HistorySource = CsvFromHistoryStorage("fact-retail-price-match-history.csv", 24),
+				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				    HistoryRequiredColumns = {"RetailSkuKey", "RetailSkuId", "RetailMeterId", "RetailProductId", "RetailArmRegionName", "RetailUnitOfMeasure", "RetailPrice", "RetailUnitPrice", "RetailCurrencyCode"},
+				    HistoryWithRequiredColumns = List.Accumulate(HistoryRequiredColumns, HistoryRows, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    HistoryKeep = Table.SelectColumns(HistoryWithRequiredColumns, HistoryRequiredColumns),
+				    Combined = Table.Combine({CurrentRows, HistoryKeep}),
+				    NonBlank = Table.SelectRows(Combined, each [RetailSkuKey] <> null and Text.Trim(Text.From([RetailSkuKey])) <> ""),
+				    DistinctRows = Table.Distinct(NonBlank, {"RetailSkuKey"}),
+				    Typed = Table.TransformColumnTypes(DistinctRows, {{"RetailSkuKey", type text}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

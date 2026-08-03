@@ -1,0 +1,152 @@
+table EnterpriseAgreementSavings
+	lineageTag: 3f4ea191-4147-4fb1-a201-111111112001
+
+	column SavingsMechanism
+		dataType: string
+		lineageTag: 8bf84c1c-8a54-42d6-8ece-eafe35968341
+		summarizeBy: none
+		sourceColumn: SavingsMechanism
+
+	column AgreementId
+		dataType: string
+		lineageTag: ad143681-5118-4401-8c6e-4390662c8c6f
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 6dab0204-aaa8-4547-bf69-6fb648a0024c
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: bd139a77-7148-4fdd-8b20-90eba15a4bf8
+		summarizeBy: none
+		sourceColumn: Period
+
+	column ExportRunId
+		dataType: string
+		lineageTag: c819a072-071c-49f2-aa28-251294004fa6
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 0a33fa7d-8f05-49e4-ae2c-d9f50e55370d
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: b78c0bba-1b1b-47b1-9bd0-8df639db738f
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: fb4deb8c-95ee-4b7a-8af9-effb0e5199ad
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: 34cc3a52-9bf6-4e38-b23f-0eadcccfe752
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 2e869df0-6473-4bcb-9fbc-1eec57a56cf7
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: 003f057b-6bae-4e7d-9fe5-aba692dda907
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: d4a01c16-8eae-4306-9dfa-93cc8ff90ab7
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: fbef4ede-f9ef-4de7-9ae9-9f102a112dbd
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedEaSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a7e1f792-b7f1-4e45-b680-a806d287f17a
+		summarizeBy: sum
+		sourceColumn: EstimatedEaSavings
+
+	column EaSavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 407a409f-4dc9-40d3-9864-2e8d05388867
+		summarizeBy: sum
+		sourceColumn: EaSavingsRate
+
+	column EligibleSpend
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c4e23754-91c4-4bd1-bd4f-08a6850af115
+		summarizeBy: sum
+		sourceColumn: EligibleSpend
+
+	column ReviewSpend
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8de6dc8d-e519-4125-8949-6b0cbd2f26cd
+		summarizeBy: sum
+		sourceColumn: ReviewSpend
+
+	column RetailMatchCoverage
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: b1aafe6a-5b0b-4421-9ba2-8008d3bc7a8c
+		summarizeBy: sum
+		sourceColumn: RetailMatchCoverage
+
+	column RowCount
+		dataType: int64
+		lineageTag: 2ff9ed03-c254-4198-81ee-e59351ff4595
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 483e46ff-5406-4d8d-a624-e8c0b7d4a7d1
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column Notes
+		dataType: string
+		lineageTag: c19010b2-8531-45c1-83cb-391e5a686857
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition EnterpriseAgreementSavings = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("enterprise-agreement-savings.csv", 21),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"SavingsMechanism", "AgreementId", "HistoryMonth", "Period", "ExportRunId", "ExportedUtc", "SubscriptionName", "SubscriptionId", "ServiceName", "ArmRegionName", "Currency", "ActualCost", "RetailEquivalentCost", "EstimatedEaSavings", "EaSavingsRate", "EligibleSpend", "ReviewSpend", "RetailMatchCoverage", "RowCount", "CalculationVersion", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"SavingsMechanism", type text}, {"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedEaSavings", type number}, {"EaSavingsRate", type number}, {"EligibleSpend", type number}, {"ReviewSpend", type number}, {"RetailMatchCoverage", type number}, {"RowCount", Int64.Type}, {"CalculationVersion", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

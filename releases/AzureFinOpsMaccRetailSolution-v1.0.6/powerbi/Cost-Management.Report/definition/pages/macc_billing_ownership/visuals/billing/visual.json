@@ -1,0 +1,172 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "billing",
+  "position": {
+    "x": 20,
+    "y": 300,
+    "z": 0,
+    "height": 360,
+    "width": 590,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "AgreementId"
+                }
+              },
+              "queryRef": "BillingReconciliation.AgreementId",
+              "nativeQueryRef": "AgreementId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "BillingPeriod"
+                }
+              },
+              "queryRef": "BillingReconciliation.BillingPeriod",
+              "nativeQueryRef": "BillingPeriod"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "InvoiceId"
+                }
+              },
+              "queryRef": "BillingReconciliation.InvoiceId",
+              "nativeQueryRef": "InvoiceId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "Currency"
+                }
+              },
+              "queryRef": "BillingReconciliation.Currency",
+              "nativeQueryRef": "Currency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "InvoiceTotal"
+                }
+              },
+              "queryRef": "BillingReconciliation.InvoiceTotal",
+              "nativeQueryRef": "InvoiceTotal"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "ExportActualCost"
+                }
+              },
+              "queryRef": "BillingReconciliation.ExportActualCost",
+              "nativeQueryRef": "ExportActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "Variance"
+                }
+              },
+              "queryRef": "BillingReconciliation.Variance",
+              "nativeQueryRef": "Variance"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "ReviewStatus"
+                }
+              },
+              "queryRef": "BillingReconciliation.ReviewStatus",
+              "nativeQueryRef": "ReviewStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingReconciliation"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "BillingReconciliation.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Billing Reconciliation'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

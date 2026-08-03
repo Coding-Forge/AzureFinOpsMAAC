@@ -1,0 +1,158 @@
+table RetailMatchExceptions
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111105
+
+	column ExceptionId
+		dataType: string
+		lineageTag: e1cf260c-2780-459e-bad8-032876ce92dd
+		summarizeBy: none
+		sourceColumn: ExceptionId
+
+	column AgreementId
+		dataType: string
+		lineageTag: b5fcaed1-5ff6-4248-aeef-f2de458a9098
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column ExportRunId
+		dataType: string
+		lineageTag: b49667ec-f6fc-40d1-81f4-88b96817581e
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column Period
+		dataType: string
+		lineageTag: d06cbc1d-4bc5-45a3-b7c2-b87946121c0a
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: f5167ec6-202d-474e-b8f7-e8f92daa6527
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column ServiceName
+		dataType: string
+		lineageTag: a5cb116e-1725-4e89-9b14-fe145ad8518c
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: fff628c1-19db-42d4-9734-6d9c9dc9f7f1
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Meter
+		dataType: string
+		lineageTag: b765cf18-ed1a-43dd-9a42-0d201b94696e
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: a3984fbb-b4db-4603-84a0-a29f85426874
+		summarizeBy: none
+		sourceColumn: Product
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 2447fbb8-3783-45ce-8b7b-aef1115e93dd
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: ebd98ccb-e1b7-4169-ac1b-f1adb4e4559a
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+	column RetailCandidateCount
+		dataType: int64
+		lineageTag: d5f58395-1d36-43fe-95d9-6955cec3bd63
+		summarizeBy: sum
+		sourceColumn: RetailCandidateCount
+
+	column IsMaccEligible
+		dataType: string
+		lineageTag: 6c35494b-8888-4385-b97f-13d706b57057
+		summarizeBy: none
+		sourceColumn: IsMaccEligible
+
+	column MaccEligibilityCategory
+		dataType: string
+		lineageTag: 5cd365d8-3e00-476c-9f1f-28921753313d
+		summarizeBy: none
+		sourceColumn: MaccEligibilityCategory
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: c048ac50-aab6-4fa8-bb81-b8a5109d07ff
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Owner
+		dataType: string
+		lineageTag: 8c9fcc45-4ef2-48ce-83ca-2b3ac915e760
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column Resolution
+		dataType: string
+		lineageTag: 5a6babe3-3449-41cc-927b-346e22d95b2a
+		summarizeBy: none
+		sourceColumn: Resolution
+
+	column Notes
+		dataType: string
+		lineageTag: ea606f96-1202-4e31-953d-73fa1ac5c8a5
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: e3fe0aea-6157-4b11-b8f7-ea215a6966aa
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 350f80ba-b857-4f28-a3b1-baa26ddb3a56
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column AzureCloud
+		dataType: string
+		lineageTag: e7fa2954-aab4-4613-bbcf-4ec6e52eaa4c
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: 2f6f00d9-b2fa-401b-b976-43d1b2809c90
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
+	partition RetailMatchExceptions = m
+		mode: import
+		source =
+				let
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("retail-match-exceptions-history.csv", 24) else CsvFromSelectedStorage("retail-match-exceptions.csv", 20),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ExceptionId", type text}, {"AgreementId", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Meter", type text}, {"Product", type text}, {"ActualCost", type number}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"IsMaccEligible", type text}, {"MaccEligibilityCategory", type text}, {"ReviewStatus", type text}, {"Owner", type text}, {"Resolution", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

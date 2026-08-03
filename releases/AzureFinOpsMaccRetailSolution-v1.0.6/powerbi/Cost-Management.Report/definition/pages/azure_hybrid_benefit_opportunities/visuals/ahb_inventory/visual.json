@@ -1,0 +1,244 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "ahb_inventory",
+  "position": {
+    "x": 40,
+    "y": 680,
+    "z": 0,
+    "height": 300,
+    "width": 1840,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "SubscriptionId"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.SubscriptionId",
+              "nativeQueryRef": "SubscriptionId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "ResourceGroupName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.ResourceGroupName",
+              "nativeQueryRef": "ResourceGroupName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "ResourceName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.ResourceName",
+              "nativeQueryRef": "ResourceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "WorkloadType"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.WorkloadType",
+              "nativeQueryRef": "WorkloadType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "OperatingSystem"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.OperatingSystem",
+              "nativeQueryRef": "OperatingSystem"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "SqlEdition"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.SqlEdition",
+              "nativeQueryRef": "SqlEdition"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "LicenseSource"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.LicenseSource",
+              "nativeQueryRef": "LicenseSource"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "AHBEnabled"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.AHBEnabled",
+              "nativeQueryRef": "AHBEnabled"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "EligibleForAHB"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.EligibleForAHB",
+              "nativeQueryRef": "EligibleForAHB"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "Owner"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.Owner",
+              "nativeQueryRef": "Owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "ReviewStatus"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.ReviewStatus",
+              "nativeQueryRef": "ReviewStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureHybridBenefitInventory"
+                    }
+                  },
+                  "Property": "Notes"
+                }
+              },
+              "queryRef": "AzureHybridBenefitInventory.Notes",
+              "nativeQueryRef": "Notes"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer-Maintained AHB License and Workload Inventory'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

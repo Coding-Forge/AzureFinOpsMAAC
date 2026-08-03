@@ -1,0 +1,79 @@
+table DevTestSubscriptionInventory
+	lineageTag: a5a80f78-a261-4afd-a250-111111116002
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 4f227f73-4f10-4e16-98f7-a8d21afd83f3
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 3d6ce270-24bb-452f-a68d-d19a9a716f26
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column OfferType
+		dataType: string
+		lineageTag: 04cff837-fdc9-43ba-93f2-e9da0fc06961
+		summarizeBy: none
+		sourceColumn: OfferType
+
+	column Environment
+		dataType: string
+		lineageTag: e27b5c28-56bc-4b61-9145-5f310548e586
+		summarizeBy: none
+		sourceColumn: Environment
+
+	column BusinessUnit
+		dataType: string
+		lineageTag: 5b7a44b0-1363-4617-b3be-d7457b380988
+		summarizeBy: none
+		sourceColumn: BusinessUnit
+
+	column Owner
+		dataType: string
+		lineageTag: 89bd8af5-6661-4a26-bcb0-8aba4bc8d24c
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column EligibleForDevTest
+		dataType: string
+		lineageTag: cc9e00f1-d485-4a5d-a55e-c42b3c4fc7e2
+		summarizeBy: none
+		sourceColumn: EligibleForDevTest
+
+	column DevTestEnabled
+		dataType: string
+		lineageTag: 29a6cff0-cece-4881-a63d-7e0a0168cb6c
+		summarizeBy: none
+		sourceColumn: DevTestEnabled
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: 77420ceb-1273-4fdf-8480-ac94785073ff
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Notes
+		dataType: string
+		lineageTag: c43ebccd-b45a-4676-896e-7e4604b6a082
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition DevTestSubscriptionInventory = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("devtest-subscription-inventory.csv", 10),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"SubscriptionId", "SubscriptionName", "OfferType", "Environment", "BusinessUnit", "Owner", "EligibleForDevTest", "DevTestEnabled", "ReviewStatus", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"SubscriptionId", type text}, {"SubscriptionName", type text}, {"OfferType", type text}, {"Environment", type text}, {"BusinessUnit", type text}, {"Owner", type text}, {"EligibleForDevTest", type text}, {"DevTestEnabled", type text}, {"ReviewStatus", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

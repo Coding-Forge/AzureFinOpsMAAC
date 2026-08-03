@@ -1,0 +1,272 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "ea_service_summary",
+  "position": {
+    "x": 40,
+    "y": 240,
+    "z": 2000,
+    "height": 360,
+    "width": 1840,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "SavingsMechanism"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.SavingsMechanism",
+              "nativeQueryRef": "SavingsMechanism"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "HistoryMonth"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.HistoryMonth",
+              "nativeQueryRef": "HistoryMonth"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "Period"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.Period",
+              "nativeQueryRef": "Period"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "Currency"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.Currency",
+              "nativeQueryRef": "Currency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "EstimatedEaSavings"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.EstimatedEaSavings",
+              "nativeQueryRef": "EstimatedEaSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "EaSavingsRate"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.EaSavingsRate",
+              "nativeQueryRef": "EaSavingsRate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "EligibleSpend"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.EligibleSpend",
+              "nativeQueryRef": "EligibleSpend"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "ReviewSpend"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.ReviewSpend",
+              "nativeQueryRef": "ReviewSpend"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "RetailMatchCoverage"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.RetailMatchCoverage",
+              "nativeQueryRef": "RetailMatchCoverage"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "EnterpriseAgreementSavings"
+                    }
+                  },
+                  "Property": "CalculationVersion"
+                }
+              },
+              "queryRef": "EnterpriseAgreementSavings.CalculationVersion",
+              "nativeQueryRef": "CalculationVersion"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Estimated EA Savings by Service, Subscription, and Region'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

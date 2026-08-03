@@ -1,0 +1,193 @@
+table ReservationSavingsPlanCoverage
+	lineageTag: 7d5f8ce3-6fd0-4f97-b1c0-111111113001
+
+	column AgreementId
+		dataType: string
+		lineageTag: 083566c9-149e-4769-adb2-dfdf10c4f236
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 2ed50dee-3614-4f87-b16c-406463611c66
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: e0a7d5dd-a8e3-4047-97e5-143e6fcd4e6f
+		summarizeBy: none
+		sourceColumn: Period
+
+	column ExportRunId
+		dataType: string
+		lineageTag: e5e9cf0c-3441-466d-b35b-57faba9df0a6
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 09162bdf-926a-414f-acba-8cf89ae41939
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 33835ea6-08e3-483a-88ef-dbf3290f309c
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: 59f5cca8-26ae-447b-993f-422d299805da
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 35a3c555-1eab-4c62-8084-8703d8d88c81
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: c8b3d627-41ae-4c47-b75d-321e14eee9f7
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column BenefitType
+		dataType: string
+		lineageTag: 69b13d42-5c7e-4c41-af59-0b2226f4ef5b
+		summarizeBy: none
+		sourceColumn: BenefitType
+
+	column PricingModel
+		dataType: string
+		lineageTag: 0cb981e6-8886-41c9-b872-33d8426446a6
+		summarizeBy: none
+		sourceColumn: PricingModel
+
+	column ChargeType
+		dataType: string
+		lineageTag: c507beb1-1a17-4362-9080-7e9cd3a349a7
+		summarizeBy: none
+		sourceColumn: ChargeType
+
+	column CoverageStatus
+		dataType: string
+		lineageTag: 5bc5597f-03a2-494d-8742-b9cc773a6f74
+		summarizeBy: none
+		sourceColumn: CoverageStatus
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 22a79972-9561-4e7e-bed7-c55e2f06b418
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 81ba8aa9-4e07-4f5b-8b76-f876f1af7f28
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedRateSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 34307e3d-312f-4c6d-9661-293049c2c186
+		summarizeBy: sum
+		sourceColumn: EstimatedRateSavings
+
+	column SavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2d67c61a-9efe-4f2f-ae57-2d150467b40e
+		summarizeBy: sum
+		sourceColumn: SavingsRate
+
+	column RetailMatchCoverage
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: b06b045c-539a-4042-bd47-fbad45599785
+		summarizeBy: sum
+		sourceColumn: RetailMatchCoverage
+
+	column SourceConfidence
+		dataType: string
+		lineageTag: 030ce8c1-cf37-4ae1-b9f9-5bce188aec57
+		summarizeBy: none
+		sourceColumn: SourceConfidence
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 8243994d-5019-4636-a530-2d00f3bc31c6
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+	column Notes
+		dataType: string
+		lineageTag: 6ab26eda-6f50-4dd5-82ee-e5d1b2f5b49f
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: e4fcbbde-3b46-4c04-9db4-cfc85e696ec0
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column BenefitId
+		dataType: string
+		lineageTag: 24dab224-d6ee-4b6f-8209-6e5e7f6aca8e
+		summarizeBy: none
+		sourceColumn: BenefitId
+
+		annotation SummarizationSetBy = Automatic
+
+	column BenefitName
+		dataType: string
+		lineageTag: aa474be3-829a-4b1d-93f3-adc141a800b4
+		summarizeBy: none
+		sourceColumn: BenefitName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MatchedActualCost
+		dataType: double
+		lineageTag: 717b42fc-4c2b-4faa-9dd1-9f7f34966ba6
+		summarizeBy: sum
+		sourceColumn: MatchedActualCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RowCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cd5d165-f296-41ee-a26a-8ce88b1f6bc2
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ReservationSavingsPlanCoverage = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("reservation-savings-plan-coverage.csv", 26),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"AgreementId", "HistoryMonth", "Period", "ExportRunId", "ExportedUtc", "SubscriptionName", "SubscriptionId", "ServiceName", "ArmRegionName", "Currency", "BenefitType", "PricingModel", "ChargeType", "BenefitId", "BenefitName", "CoverageStatus", "ActualCost", "RetailEquivalentCost", "EstimatedRateSavings", "SavingsRate", "MatchedActualCost", "RetailMatchCoverage", "RowCount", "SourceConfidence", "CalculationVersion", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"BenefitType", type text}, {"PricingModel", type text}, {"ChargeType", type text}, {"BenefitId", type text}, {"BenefitName", type text}, {"CoverageStatus", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedRateSavings", type number}, {"SavingsRate", type number}, {"MatchedActualCost", type number}, {"RetailMatchCoverage", type number}, {"RowCount", Int64.Type}, {"SourceConfidence", type text}, {"CalculationVersion", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

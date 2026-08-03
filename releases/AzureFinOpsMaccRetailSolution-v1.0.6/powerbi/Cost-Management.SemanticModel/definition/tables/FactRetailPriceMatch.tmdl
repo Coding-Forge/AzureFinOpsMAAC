@@ -1,0 +1,184 @@
+table FactRetailPriceMatch
+	lineageTag: 1eacacfd-4d06-451e-8279-311111120001
+
+	column Period
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120002
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120003
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120004
+		summarizeBy: none
+		sourceColumn: UsageDate
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120022
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120023
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120024
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column ServiceName
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120005
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120006
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column MeterKey
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120007
+		summarizeBy: none
+		sourceColumn: MeterKey
+
+	column Currency
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120019
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120020
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column Cost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120021
+		summarizeBy: sum
+		sourceColumn: Cost
+
+	column RetailSkuKey
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120008
+		summarizeBy: none
+		sourceColumn: RetailSkuKey
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120009
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+	column RetailCandidateCount
+		dataType: int64
+		formatString: 0
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120010
+		summarizeBy: sum
+		sourceColumn: RetailCandidateCount
+
+	column RetailSkuId
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120011
+		summarizeBy: none
+		sourceColumn: RetailSkuId
+
+	column RetailMeterId
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120012
+		summarizeBy: none
+		sourceColumn: RetailMeterId
+
+	column RetailProductId
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120013
+		summarizeBy: none
+		sourceColumn: RetailProductId
+
+	column RetailArmRegionName
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120014
+		summarizeBy: none
+		sourceColumn: RetailArmRegionName
+
+	column RetailUnitOfMeasure
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120015
+		summarizeBy: none
+		sourceColumn: RetailUnitOfMeasure
+
+	column RetailPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120016
+		summarizeBy: sum
+		sourceColumn: RetailPrice
+
+	column RetailUnitPrice
+		dataType: double
+		formatString: \$#,0.000000;(\$#,0.000000);\$#,0.000000
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120017
+		summarizeBy: sum
+		sourceColumn: RetailUnitPrice
+
+	column RetailCurrencyCode
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120018
+		summarizeBy: none
+		sourceColumn: RetailCurrencyCode
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120025
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+	column AzureRegionKey
+		dataType: string
+		lineageTag: 1eacacfd-4d06-451e-8279-311111120026
+		summarizeBy: none
+		sourceColumn: AzureRegionKey
+
+	partition FactRetailPriceMatch = m
+		mode: import
+		source =
+				let
+				    CurrentSource = CsvFromSelectedStorage("fact-retail-price-match.csv", 21),
+				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
+				    HistorySource = CsvFromHistoryStorage("fact-retail-price-match-history.csv", 24),
+				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				    Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
+				    RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc"},
+				    WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionId", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"RetailSkuKey", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull]),
+				    NormalizeArmRegionName = (value as nullable any) as nullable text => let raw = if value = null then null else Text.Lower(Text.Trim(Text.From(value))), parts = if raw = null then {} else List.Select(Text.SplitAny(raw, " -_()"), each _ <> ""), compact = Text.Combine(parts, ""), normalized = if raw = null or raw = "" then null else if raw = "global" then "global" else if compact = "usgovvirginia" then "usgovvirginia" else if compact = "usgovtexas" then "usgovtexas" else if compact = "usgovarizona" then "usgovarizona" else if compact = "usdodcentral" then "usdodcentral" else if compact = "usdodeast" then "usdodeast" else if List.Count(parts) >= 2 and parts{0} = "us" and List.Contains({"east","west","north","south","central"}, parts{1}) then parts{1} & "us" & Text.Combine(List.Skip(parts, 2), "") else compact in normalized,
+				    NormalizedRegions = Table.TransformColumns(Typed, {{"ArmRegionName", each NormalizeArmRegionName(_), type text}, {"RetailArmRegionName", each NormalizeArmRegionName(_), type text}}, null, MissingField.Ignore),
+				    AddNormalizedCloud = Table.AddColumn(NormalizedRegions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
+				    RemoveOriginalCloud = Table.RemoveColumns(AddNormalizedCloud, {"AzureCloud"}, MissingField.Ignore),
+				    RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}}),
+				    AzureCloudDisplayName = (cloud as nullable any) as text => let technical = if cloud = null then "" else Text.Trim(Text.From(cloud)) in if technical = "AzureCloud" then "Azure Commercial" else if technical = "AzureUSGovernment" then "Azure Government" else if technical = "AzureChinaCloud" then "Azure China (21Vianet)" else if technical = "AzureGermanCloud" then "Azure Germany" else technical,
+				    AddAzureRegionKey = Table.AddColumn(RenameNormalizedCloud, "AzureRegionKey", each AzureCloudDisplayName([AzureCloud]) & "|" & Text.Trim(Text.From([ArmRegionName])), type text)
+				in
+				    AddAzureRegionKey
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "70707070707070707070",
+  "position": {
+    "x": 980,
+    "y": 640,
+    "z": 7000,
+    "height": 360,
+    "width": 900,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureRetail"
+                    }
+                  },
+                  "Property": "Items.effectiveStartDate"
+                }
+              },
+              "queryRef": "AzureRetail.Items.effectiveStartDate",
+              "nativeQueryRef": "Items.effectiveStartDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureRetail"
+                    }
+                  },
+                  "Property": "Items.effectiveEndDate"
+                }
+              },
+              "queryRef": "AzureRetail.Items.effectiveEndDate",
+              "nativeQueryRef": "Items.effectiveEndDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureRetail"
+                    }
+                  },
+                  "Property": "Items.armRegionName"
+                }
+              },
+              "queryRef": "AzureRetail.Items.armRegionName",
+              "nativeQueryRef": "Items.armRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureRetail"
+                    }
+                  },
+                  "Property": "Items.serviceName"
+                }
+              },
+              "queryRef": "AzureRetail.Items.serviceName",
+              "nativeQueryRef": "Items.serviceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AzureRetail"
+                    }
+                  },
+                  "Property": "Items.meterName"
+                }
+              },
+              "queryRef": "AzureRetail.Items.meterName",
+              "nativeQueryRef": "Items.meterName"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'AzureRetail effective dates'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

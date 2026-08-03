@@ -1,0 +1,200 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "manifest",
+  "position": {
+    "x": 20,
+    "y": 80,
+    "z": 1000,
+    "height": 190,
+    "width": 1210,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "ExportRunId"
+                }
+              },
+              "queryRef": "ExportRunManifest.ExportRunId",
+              "nativeQueryRef": "ExportRunId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "ExportedUtc"
+                }
+              },
+              "queryRef": "ExportRunManifest.ExportedUtc",
+              "nativeQueryRef": "ExportedUtc"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "AnalysisMode"
+                }
+              },
+              "queryRef": "ExportRunManifest.AnalysisMode",
+              "nativeQueryRef": "AnalysisMode"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "StorageLocation"
+                }
+              },
+              "queryRef": "ExportRunManifest.StorageLocation",
+              "nativeQueryRef": "StorageLocation"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "SubscriptionCount"
+                }
+              },
+              "queryRef": "ExportRunManifest.SubscriptionCount",
+              "nativeQueryRef": "SubscriptionCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "AgreementId"
+                }
+              },
+              "queryRef": "ExportRunManifest.AgreementId",
+              "nativeQueryRef": "AgreementId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "FileCount"
+                }
+              },
+              "queryRef": "ExportRunManifest.FileCount",
+              "nativeQueryRef": "FileCount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "ExportRunManifest.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "ExportRunManifest.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "EstimatedSavings"
+                }
+              },
+              "queryRef": "ExportRunManifest.EstimatedSavings",
+              "nativeQueryRef": "EstimatedSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ExportRunManifest"
+                    }
+                  },
+                  "Property": "CalculationVersion"
+                }
+              },
+              "queryRef": "ExportRunManifest.CalculationVersion",
+              "nativeQueryRef": "CalculationVersion"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Export Run Manifest'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

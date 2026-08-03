@@ -1,0 +1,146 @@
+table DevTestPricingOpportunities
+	lineageTag: a5a80f78-a261-4afd-a250-111111116001
+
+	column AgreementId
+		dataType: string
+		lineageTag: bf20f6d3-fa20-40d2-954b-582e12603e4e
+		summarizeBy: none
+		sourceColumn: AgreementId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 2d5effc4-a0fe-41a6-9e77-3ac88e688616
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column Period
+		dataType: string
+		lineageTag: 514ea04e-abfe-4b09-b16f-5ca539f98fac
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 49d926fb-41ee-4dcf-84c2-018cd317ef28
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: b0fadd50-3f7c-475a-9bf2-0e39a63e8068
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ServiceName
+		dataType: string
+		lineageTag: 6f09a2a5-cb0e-41d6-8536-b358d4e5b9b3
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: c5815ab0-5568-47ab-8a80-dc67b9a5e32e
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column Currency
+		dataType: string
+		lineageTag: a4c828b2-709b-42f7-b66d-f628f2e7a5d3
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column DevTestStatus
+		dataType: string
+		lineageTag: 0e4f0c12-e79b-4012-8812-ce751ea5a733
+		summarizeBy: none
+		sourceColumn: DevTestStatus
+
+	column ActualCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 46791f6f-5dae-4d9f-8f86-6940848b2d8a
+		summarizeBy: sum
+		sourceColumn: ActualCost
+
+	column RetailEquivalentCost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 61f0bc46-7e23-4555-9fdc-4ef1af975789
+		summarizeBy: sum
+		sourceColumn: RetailEquivalentCost
+
+	column EstimatedRateSavings
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: be5bc00a-0f58-4bfe-8deb-2083e00f64ec
+		summarizeBy: sum
+		sourceColumn: EstimatedRateSavings
+
+	column SavingsRate
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 594bbcc0-1dcc-477b-a2c8-b94b56255d31
+		summarizeBy: sum
+		sourceColumn: SavingsRate
+
+	column SourceConfidence
+		dataType: string
+		lineageTag: 385d874c-0ddd-4e90-b16d-01e9f03c55df
+		summarizeBy: none
+		sourceColumn: SourceConfidence
+
+	column Notes
+		dataType: string
+		lineageTag: 398f33ee-6603-43ad-a876-9188f8cd18aa
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 76dade12-f962-4a03-afe5-a0062432be8a
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: df7565c5-1ae4-46da-86f3-b44d595326ed
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column RowCount
+		dataType: int64
+		formatString: 0
+		lineageTag: a36b1497-8e25-459d-8f9a-907e2157c836
+		summarizeBy: sum
+		sourceColumn: RowCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalculationVersion
+		dataType: string
+		lineageTag: 96fed720-875e-45f7-ad90-f18c1133050a
+		summarizeBy: none
+		sourceColumn: CalculationVersion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DevTestPricingOpportunities = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("devtest-pricing-opportunities.csv", 19),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"AgreementId", "HistoryMonth", "Period", "ExportRunId", "ExportedUtc", "SubscriptionName", "SubscriptionId", "ServiceName", "ArmRegionName", "Currency", "DevTestStatus", "ActualCost", "RetailEquivalentCost", "EstimatedRateSavings", "SavingsRate", "RowCount", "SourceConfidence", "CalculationVersion", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"AgreementId", type text}, {"HistoryMonth", type text}, {"Period", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"ServiceName", type text}, {"ArmRegionName", type text}, {"Currency", type text}, {"DevTestStatus", type text}, {"ActualCost", type number}, {"RetailEquivalentCost", type number}, {"EstimatedRateSavings", type number}, {"SavingsRate", type number}, {"RowCount", Int64.Type}, {"SourceConfidence", type text}, {"CalculationVersion", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,127 @@
+table DimUsageDate
+	lineageTag: 0cf35b78-b843-44ce-a45e-311112010001
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010002
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010003
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010004
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010005
+		summarizeBy: sum
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010006
+		summarizeBy: none
+		sourceColumn: Month Name
+
+	column Year-Month
+		dataType: string
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010007
+		summarizeBy: none
+		sourceColumn: Year-Month
+
+	column 'Fiscal Year Label'
+		dataType: string
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010008
+		summarizeBy: none
+		sourceColumn: Fiscal Year Label
+
+	column 'Fiscal Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010009
+		summarizeBy: sum
+		sourceColumn: Fiscal Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 0cf35b78-b843-44ce-a45e-311112010010
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 694a8c0a-f7e3-4ff8-995b-bebd2b5352c4
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b735c5e5-eb7b-437a-9fe4-c7c6cbb46c3a
+		summarizeBy: count
+		sourceColumn: YearMonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: fae9a2f1-4312-4d08-b11a-34dc35ec0dd3
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimUsageDate = m
+		mode: import
+		source =
+				let
+				    StartDate = #date(2020, 1, 1),
+				    EndDate = #date(2030, 12, 31),
+				    FiscalYearStartMonth = 7,
+				    ValidFiscalMonth = if FiscalYearStartMonth >= 1 and FiscalYearStartMonth <= 12 then FiscalYearStartMonth else error "FiscalYearStartMonth must be a number between 1 and 12.",
+				    DayCount = Duration.Days(EndDate - StartDate) + 1,
+				    DateList = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+				    DateTable = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}),
+				    ChangedType = Table.TransformColumnTypes(DateTable, {{"Date", type date}}),
+				    AddedDateKey = Table.AddColumn(ChangedType, "DateKey", each Date.Year([Date]) * 10000 + Date.Month([Date]) * 100 + Date.Day([Date]), Int64.Type),
+				    AddedYear = Table.AddColumn(AddedDateKey, "Year", each Date.Year([Date]), Int64.Type),
+				    AddedMonth = Table.AddColumn(AddedYear, "Month", each Date.Month([Date]), Int64.Type),
+				    AddedDay = Table.AddColumn(AddedMonth, "Day", each Date.Day([Date]), Int64.Type),
+				    AddedMonthName = Table.AddColumn(AddedDay, "Month Name", each Date.MonthName([Date]), type text),
+				    AddedYearMonth = Table.AddColumn(AddedMonthName, "Year-Month", each Text.From(Date.Year([Date])) & "-" & Text.PadStart(Text.From(Date.Month([Date])), 2, "0"), type text),
+				    AddedYearMonthKey = Table.AddColumn(AddedYearMonth, "YearMonthKey", each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
+				    AddedFiscalYear = Table.AddColumn(AddedYearMonthKey, "Fiscal Year", each if Date.Month([Date]) >= ValidFiscalMonth then Date.Year([Date]) + 1 else Date.Year([Date]), Int64.Type),
+				    AddedFiscalYearLabel = Table.AddColumn(AddedFiscalYear, "Fiscal Year Label", each "FY" & Text.From([Fiscal Year]), type text),
+				    AddedFiscalMonth = Table.AddColumn(AddedFiscalYearLabel, "Fiscal Month", each Number.Mod(Date.Month([Date]) - ValidFiscalMonth, 12) + 1, Int64.Type),
+				    Source = Table.AddColumn(AddedFiscalMonth, "Fiscal Quarter", each "FQ" & Text.From(Number.RoundUp([Fiscal Month] / 3)), type text)
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

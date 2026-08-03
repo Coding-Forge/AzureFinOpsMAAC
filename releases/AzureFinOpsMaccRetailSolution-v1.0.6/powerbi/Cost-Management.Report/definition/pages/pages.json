@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "finops_report_landing",
+    "finops_macc_retail_overview",
+    "finops_decomposition_trees",
+    "finops_azure_retail_reference",
+    "finops_pipeline_diagnostics",
+    "finops_data_quality_actions",
+    "finops_model_technical_tables",
+    "finops_granular_drillthrough",
+    "macc_commitment_overview",
+    "macc_benefit_ledger",
+    "macc_price_audit",
+    "macc_coverage_exceptions",
+    "macc_billing_ownership",
+    "azure_billing_contact_audit",
+    "ea_savings_overview",
+    "reservation_savings_plan_coverage",
+    "azure_hybrid_benefit_opportunities",
+    "spot_pricing_opportunities",
+    "devtest_pricing_opportunities"
+  ],
+  "activePageName": "finops_macc_retail_overview"
+}

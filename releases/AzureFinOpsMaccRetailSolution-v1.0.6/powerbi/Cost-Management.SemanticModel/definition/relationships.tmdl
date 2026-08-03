@@ -1,0 +1,94 @@
+relationship 9ccb68f6-7c38-44b8-9837-8b3c5075358f
+	fromColumn: CostRetailFact.ServiceName
+	toColumn: DimService.ServiceName
+
+relationship e0cdc8b1-0e2a-4625-8fff-47b44f5b741f
+	fromColumn: CostRetailFact.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
+
+relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
+	fromColumn: CostRetailFact.RetailMatchStatus
+	toColumn: DimRetailMatch.RetailMatchStatus
+
+relationship fcf68f58-e812-7a83-a2fa-37b649477977
+	fromColumn: CostRetailFact.UsageDate
+	toColumn: DimUsageDate.DateKey
+
+relationship 8da193e6-5e86-46db-9e96-311111180001
+	fromColumn: FactCostUsage.SubscriptionId
+	toColumn: DimSubscription.SubscriptionId
+
+relationship 8da193e6-5e86-46db-9e96-311111180002
+	fromColumn: FactCostUsage.ServiceName
+	toColumn: DimServiceModel.ServiceName
+
+relationship 8da193e6-5e86-46db-9e96-311111180003
+	fromColumn: FactCostUsage.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
+
+relationship 8da193e6-5e86-46db-9e96-311111180004
+	fromColumn: FactCostUsage.MeterKey
+	toColumn: DimMeter.MeterKey
+
+relationship 8da193e6-5e86-46db-9e96-311111180005
+	fromColumn: FactRetailPriceMatch.SubscriptionId
+	toColumn: DimSubscription.SubscriptionId
+
+relationship 8da193e6-5e86-46db-9e96-311111180006
+	fromColumn: FactRetailPriceMatch.ServiceName
+	toColumn: DimServiceModel.ServiceName
+
+relationship 8da193e6-5e86-46db-9e96-311111180007
+	fromColumn: FactRetailPriceMatch.AzureRegionKey
+	toColumn: DimAzureRegion.AzureRegionKey
+
+relationship 8da193e6-5e86-46db-9e96-311111180008
+	fromColumn: FactRetailPriceMatch.MeterKey
+	toColumn: DimMeter.MeterKey
+
+relationship 8da193e6-5e86-46db-9e96-311111180010
+	fromColumn: FactRetailPriceMatch.RetailMatchStatus
+	toColumn: DimRetailMatch.RetailMatchStatus
+
+relationship 18f0a345-c782-43f0-b3c0-311112070001
+	fromColumn: FactCostUsage.UsageDate
+	toColumn: DimUsageDate.DateKey
+
+relationship 18f0a345-c782-43f0-b3c0-311112070002
+	fromColumn: FactRetailPriceMatch.UsageDate
+	toColumn: DimUsageDate.DateKey
+
+relationship 18f0a345-c782-43f0-b3c0-311112070003
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AgreementStartDate
+	toColumn: DimAgreementStartDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070004
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AgreementStartDate
+	toColumn: DimAgreementStartDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070005
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AgreementEndDate
+	toColumn: DimAgreementEndDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070006
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AgreementEndDate
+	toColumn: DimAgreementEndDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070007
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementConfig.AsOfDate
+	toColumn: DimAgreementAsOfDate.Date
+
+relationship 18f0a345-c782-43f0-b3c0-311112070008
+	joinOnDateBehavior: datePartOnly
+	fromColumn: MaccAgreementStatus.AsOfDate
+	toColumn: DimAgreementAsOfDate.Date
+
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030004
+	fromColumn: DimAzureRegion.'Azure Cloud'
+	toColumn: DimAzureCloud.'Azure Cloud'
+

@@ -1,0 +1,200 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "agreement_status",
+  "position": {
+    "x": 20,
+    "y": 80,
+    "z": 0,
+    "height": 280,
+    "width": 600,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "AgreementId"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.AgreementId",
+              "nativeQueryRef": "AgreementId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "CustomerName"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.CustomerName",
+              "nativeQueryRef": "CustomerName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "PacingStatus"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.PacingStatus",
+              "nativeQueryRef": "PacingStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "CommitmentAmount"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.CommitmentAmount",
+              "nativeQueryRef": "CommitmentAmount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "EligibleSpendToDate"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.EligibleSpendToDate",
+              "nativeQueryRef": "EligibleSpendToDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "RemainingCommitment"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.RemainingCommitment",
+              "nativeQueryRef": "RemainingCommitment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "CommitmentUtilizationPercent"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.CommitmentUtilizationPercent",
+              "nativeQueryRef": "CommitmentUtilizationPercent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "ExpectedBurnToDate"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.ExpectedBurnToDate",
+              "nativeQueryRef": "ExpectedBurnToDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "BurnVariance"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.BurnVariance",
+              "nativeQueryRef": "BurnVariance"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "RequiredMonthlyRunRate"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.RequiredMonthlyRunRate",
+              "nativeQueryRef": "RequiredMonthlyRunRate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAgreementStatus"
+                    }
+                  },
+                  "Property": "AsOfDate"
+                }
+              },
+              "queryRef": "MaccAgreementStatus.AsOfDate",
+              "nativeQueryRef": "AsOfDate"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Agreement Status and Pacing'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "spot_measures",
+  "position": {
+    "x": 40,
+    "y": 40,
+    "z": 1000,
+    "height": 160,
+    "width": 1840,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Spot Opportunity Actual Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Spot Opportunity Actual Cost",
+              "nativeQueryRef": "Spot Opportunity Actual Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Spot Retail Equivalent Cost"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Spot Retail Equivalent Cost",
+              "nativeQueryRef": "Spot Retail Equivalent Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Estimated Spot Rate Savings"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Estimated Spot Rate Savings",
+              "nativeQueryRef": "Estimated Spot Rate Savings"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccAuditMeasures"
+                    }
+                  },
+                  "Property": "Spot Opportunity Savings Rate"
+                }
+              },
+              "queryRef": "MaccAuditMeasures.Spot Opportunity Savings Rate",
+              "nativeQueryRef": "Spot Opportunity Savings Rate"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Spot Pricing KPI Measures'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

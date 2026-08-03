@@ -1,0 +1,23 @@
+table DimServiceModel
+	lineageTag: 58055d38-564f-4c0b-9397-311111140001
+
+	column ServiceName
+		dataType: string
+		lineageTag: 58055d38-564f-4c0b-9397-311111140002
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	partition DimServiceModel = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("dim-service.csv", 1),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ServiceName", type text}}, [MissingField = MissingField.UseNull])
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

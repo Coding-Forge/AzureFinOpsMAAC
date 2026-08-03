@@ -1,0 +1,68 @@
+table BillingAuditRoleAssignments
+	lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117401
+
+	column Scope
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117402
+		summarizeBy: none
+		sourceColumn: Scope
+
+	column BillingAccountName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117403
+		summarizeBy: none
+		sourceColumn: BillingAccountName
+
+	column Parent
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117404
+		summarizeBy: none
+		sourceColumn: Parent
+
+	column PrincipalId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117405
+		summarizeBy: none
+		sourceColumn: PrincipalId
+
+	column PrincipalName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117406
+		summarizeBy: none
+		sourceColumn: PrincipalName
+
+	column PrincipalEmail
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117407
+		summarizeBy: none
+		sourceColumn: PrincipalEmail
+
+	column RoleDefinitionId
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117408
+		summarizeBy: none
+		sourceColumn: RoleDefinitionId
+
+	column RoleAssignmentName
+		dataType: string
+		lineageTag: 5b0e8a70-489d-4bb8-bd37-111111117409
+		summarizeBy: none
+		sourceColumn: RoleAssignmentName
+
+	partition BillingAuditRoleAssignments = m
+		mode: import
+		source =
+				let
+				    ExpectedColumns = {"Scope", "BillingAccountName", "Parent", "PrincipalId", "PrincipalName", "PrincipalEmail", "RoleDefinitionId", "RoleAssignmentName"},
+				    Source = if AnalysisMode = "History" then CsvFromHistoryStorage("billing-role-assignments-history.csv", 12) else OptionalBillingAuditCsvFromSelectedStorage("billing-contact-audit/billing-role-assignments.csv", 8),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    WithColumns = List.Accumulate(ExpectedColumns, Promoted, (state, columnName) => if Table.HasColumns(state, {columnName}) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Selected = Table.SelectColumns(WithColumns, ExpectedColumns),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Scope", type text}, {"BillingAccountName", type text}, {"Parent", type text}, {"PrincipalId", type text}, {"PrincipalName", type text}, {"PrincipalEmail", type text}, {"RoleDefinitionId", type text}, {"RoleAssignmentName", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

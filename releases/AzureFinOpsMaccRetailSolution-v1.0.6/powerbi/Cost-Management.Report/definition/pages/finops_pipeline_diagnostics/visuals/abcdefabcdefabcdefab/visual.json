@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "abcdefabcdefabcdefab",
+  "position": {
+    "x": 40,
+    "y": 150,
+    "z": 3000,
+    "height": 280,
+    "width": 900,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCostUsage"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "FactCostUsage.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCostUsage"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "FactCostUsage.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCostUsage"
+                    }
+                  },
+                  "Property": "ResourceLocation"
+                }
+              },
+              "queryRef": "FactCostUsage.ResourceLocation",
+              "nativeQueryRef": "ResourceLocation"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCostUsage"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "FactCostUsage.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCostUsage"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "FactCostUsage.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MTD raw retail-join'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

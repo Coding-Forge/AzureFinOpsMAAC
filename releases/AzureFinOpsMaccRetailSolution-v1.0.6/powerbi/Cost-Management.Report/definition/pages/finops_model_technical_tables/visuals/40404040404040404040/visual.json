@@ -1,0 +1,117 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "40404040404040404040",
+  "position": {
+    "x": 40,
+    "y": 260,
+    "z": 4000,
+    "height": 360,
+    "width": 900,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimUsageDate"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "DimUsageDate.Date",
+              "nativeQueryRef": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimUsageDate"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "DimUsageDate.Year",
+              "nativeQueryRef": "Year"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimUsageDate"
+                    }
+                  },
+                  "Property": "Month Name"
+                }
+              },
+              "queryRef": "DimUsageDate.Month Name",
+              "nativeQueryRef": "Month Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimUsageDate"
+                    }
+                  },
+                  "Property": "Fiscal Year Label"
+                }
+              },
+              "queryRef": "DimUsageDate.Fiscal Year Label",
+              "nativeQueryRef": "Fiscal Year Label"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimUsageDate"
+                    }
+                  },
+                  "Property": "Fiscal Quarter"
+                }
+              },
+              "queryRef": "DimUsageDate.Fiscal Quarter",
+              "nativeQueryRef": "Fiscal Quarter"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'DimUsageDate'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

@@ -1,0 +1,180 @@
+table MaccAuditMeasures
+	lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111200
+
+	measure 'MACC Commitment Amount' = MAX(MaccAgreementStatus[CommitmentAmount])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111201
+
+	measure 'MACC Eligible Spend To Date' = MAX(MaccAgreementStatus[EligibleSpendToDate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111202
+
+	measure 'MACC Remaining Commitment' = MAX(MaccAgreementStatus[RemainingCommitment])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111203
+
+	measure 'MACC Commitment Utilization' = MAX(MaccAgreementStatus[CommitmentUtilizationPercent])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111204
+
+	measure 'MACC Expected Burn To Date' = MAX(MaccAgreementStatus[ExpectedBurnToDate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111205
+
+	measure 'MACC Burn Variance' = MAX(MaccAgreementStatus[BurnVariance])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111206
+
+	measure 'MACC Required Monthly Run Rate' = MAX(MaccAgreementStatus[RequiredMonthlyRunRate])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111207
+
+	measure 'Ledger Actual Cost' = SUM(MaccBenefitLedger[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111208
+
+	measure 'Ledger Retail Equivalent Cost' = SUM(MaccBenefitLedger[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111209
+
+	measure 'Ledger Estimated Savings' = SUM(MaccBenefitLedger[EstimatedSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111210
+
+	measure 'Ledger Savings Rate' = DIVIDE([Ledger Estimated Savings], [Ledger Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111211
+
+	measure 'Ledger Eligible Spend' = SUM(MaccBenefitLedger[EligibleSpend])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111212
+
+	measure 'Ledger Review Spend' = SUM(MaccBenefitLedger[ReviewSpend])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111213
+
+	measure 'Open Exception Count' = COUNTROWS(FILTER(RetailMatchExceptions, RetailMatchExceptions[ReviewStatus] <> "Resolved"))
+		formatString: #,0
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111214
+
+	measure 'Exception Actual Cost' = SUM(RetailMatchExceptions[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111215
+
+	measure 'Audit Retail Match Coverage' = DIVIDE(SUM(DataQualitySnapshot[MatchedActualCost]), SUM(DataQualitySnapshot[ActualCost]))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111216
+
+	measure 'Billing Reconciliation Variance' = SUM(BillingReconciliation[Variance])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111217
+
+	measure 'EA Actual Cost' = SUM(EnterpriseAgreementSavings[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111112201
+
+	measure 'EA Retail Equivalent Cost' = SUM(EnterpriseAgreementSavings[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111112202
+
+	measure 'Estimated EA Savings' = SUM(EnterpriseAgreementSavings[EstimatedEaSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111112203
+
+	measure 'EA Savings Rate' = DIVIDE([Estimated EA Savings], [EA Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111112204
+
+	measure 'EA Match Coverage' = DIVIDE(SUM(EnterpriseAgreementSavings[EligibleSpend]), SUM(EnterpriseAgreementSavings[ActualCost]))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111112205
+
+	measure 'RI/SP Actual Cost' = SUM(ReservationSavingsPlanCoverage[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111113201
+
+	measure 'RI/SP Retail Equivalent Cost' = SUM(ReservationSavingsPlanCoverage[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111113202
+
+	measure 'Estimated RI/SP Rate Savings' = SUM(ReservationSavingsPlanCoverage[EstimatedRateSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111113203
+
+	measure 'RI/SP Savings Rate' = DIVIDE([Estimated RI/SP Rate Savings], [RI/SP Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111113204
+
+	measure 'RI/SP Match Coverage' = DIVIDE(SUM(ReservationSavingsPlanCoverage[MatchedActualCost]), SUM(ReservationSavingsPlanCoverage[ActualCost]))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111113205
+
+	measure 'AHB Opportunity Actual Cost' = SUM(AzureHybridBenefitOpportunities[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111114201
+
+	measure 'AHB Opportunity Retail Equivalent Cost' = SUM(AzureHybridBenefitOpportunities[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111114202
+
+	measure 'Estimated AHB Rate Savings' = SUM(AzureHybridBenefitOpportunities[EstimatedRateSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111114203
+
+	measure 'AHB Opportunity Savings Rate' = DIVIDE([Estimated AHB Rate Savings], [AHB Opportunity Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111114204
+
+	measure 'Spot Opportunity Actual Cost' = SUM(SpotPricingOpportunities[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111115201
+
+	measure 'Spot Retail Equivalent Cost' = SUM(SpotPricingOpportunities[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111115202
+
+	measure 'Estimated Spot Rate Savings' = SUM(SpotPricingOpportunities[EstimatedRateSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111115203
+
+	measure 'Spot Opportunity Savings Rate' = DIVIDE([Estimated Spot Rate Savings], [Spot Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111115204
+
+	measure 'Dev/Test Opportunity Actual Cost' = SUM(DevTestPricingOpportunities[ActualCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111116201
+
+	measure 'Dev/Test Retail Equivalent Cost' = SUM(DevTestPricingOpportunities[RetailEquivalentCost])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111116202
+
+	measure 'Estimated Dev/Test Rate Savings' = SUM(DevTestPricingOpportunities[EstimatedRateSavings])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111116203
+
+	measure 'Dev/Test Opportunity Savings Rate' = DIVIDE([Estimated Dev/Test Rate Savings], [Dev/Test Retail Equivalent Cost])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111116204
+
+	column Measures
+		dataType: string
+		isHidden
+		lineageTag: 4a0e0e30-4d21-4d7f-9da3-111111111218
+		summarizeBy: none
+		sourceColumn: Measures
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MaccAuditMeasures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Measures = text], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

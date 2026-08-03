@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "efabcdefabcdefabcdef",
+  "position": {
+    "x": 40,
+    "y": 730,
+    "z": 13000,
+    "height": 280,
+    "width": 900,
+    "tabOrder": 13000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactRetailPriceMatch"
+                    }
+                  },
+                  "Property": "UsageDate"
+                }
+              },
+              "queryRef": "FactRetailPriceMatch.UsageDate",
+              "nativeQueryRef": "UsageDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactRetailPriceMatch"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "FactRetailPriceMatch.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactRetailPriceMatch"
+                    }
+                  },
+                  "Property": "RetailMatchStatus"
+                }
+              },
+              "queryRef": "FactRetailPriceMatch.RetailMatchStatus",
+              "nativeQueryRef": "RetailMatchStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactRetailPriceMatch"
+                    }
+                  },
+                  "Property": "RetailSkuId"
+                }
+              },
+              "queryRef": "FactRetailPriceMatch.RetailSkuId",
+              "nativeQueryRef": "RetailSkuId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactRetailPriceMatch"
+                    }
+                  },
+                  "Property": "Cost"
+                }
+              },
+              "queryRef": "FactRetailPriceMatch.Cost",
+              "nativeQueryRef": "Cost"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MTD enriched retail match'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

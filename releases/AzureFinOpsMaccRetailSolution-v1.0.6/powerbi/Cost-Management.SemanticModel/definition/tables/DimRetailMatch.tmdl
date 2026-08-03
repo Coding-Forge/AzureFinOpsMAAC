@@ -1,0 +1,31 @@
+table DimRetailMatch
+	lineageTag: f210cd32-b983-4c4d-9f46-77a218120753
+
+	column RetailMatchStatus
+		dataType: string
+		lineageTag: 5c9f78f6-15fa-45ca-8b44-74865de05a52
+		summarizeBy: none
+		sourceColumn: RetailMatchStatus
+
+	partition DimRetailMatch = m
+		mode: import
+		source =
+				let
+				  Source = #table(
+				    type table [RetailMatchStatus = text],
+				    {
+				      {"Matched"},
+				      {"Unmatched"},
+				      {"MultipleCandidates"},
+				      {"NoRetailPrice"},
+				      {"Skipped"}
+				    }
+				  ),
+				  SortedRows = Table.Sort(Source, {{"RetailMatchStatus", Order.Ascending}})
+				in
+				  SortedRows
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

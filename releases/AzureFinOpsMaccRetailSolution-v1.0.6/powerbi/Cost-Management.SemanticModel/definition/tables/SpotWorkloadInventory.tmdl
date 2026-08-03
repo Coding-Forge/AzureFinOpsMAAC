@@ -1,0 +1,97 @@
+table SpotWorkloadInventory
+	lineageTag: 64a4b42e-a4fa-4f1a-9d2d-111111115002
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 7e540d16-d00b-4a80-bf49-b1b91ea2016f
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: d22d5402-a70d-45f1-82ab-a01ae5f69a51
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+	column ResourceId
+		dataType: string
+		lineageTag: 6cecc740-8200-4f76-b297-2715239ebb08
+		summarizeBy: none
+		sourceColumn: ResourceId
+
+	column ResourceName
+		dataType: string
+		lineageTag: 2f35d8f6-e2e3-4dad-9e63-c86b78664cd5
+		summarizeBy: none
+		sourceColumn: ResourceName
+
+	column ServiceName
+		dataType: string
+		lineageTag: da236728-6574-4d22-9a93-611a5407f684
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column WorkloadName
+		dataType: string
+		lineageTag: e06421e5-aee8-4461-b1f4-4fb22a5d604f
+		summarizeBy: none
+		sourceColumn: WorkloadName
+
+	column Interruptible
+		dataType: string
+		lineageTag: 48d65f78-ad46-4902-be12-543a0333fe98
+		summarizeBy: none
+		sourceColumn: Interruptible
+
+	column MaxEvictionRate
+		dataType: string
+		lineageTag: b4472a5a-1347-4243-85bb-a5818b438736
+		summarizeBy: none
+		sourceColumn: MaxEvictionRate
+
+	column SlaRequired
+		dataType: string
+		lineageTag: 4e6f8dc7-97a7-465f-b91d-420d2adb8b47
+		summarizeBy: none
+		sourceColumn: SlaRequired
+
+	column SpotEnabled
+		dataType: string
+		lineageTag: 0ec33b6a-1a20-4551-9fdf-b897eae2afbc
+		summarizeBy: none
+		sourceColumn: SpotEnabled
+
+	column Owner
+		dataType: string
+		lineageTag: b9ca1fc3-06cb-42dd-a3d1-4992b34792d8
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: aff011d9-0db7-4798-a4e1-ebdf75e01c5f
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Notes
+		dataType: string
+		lineageTag: 78de326d-978f-426f-9935-ca7c2283aa0a
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition SpotWorkloadInventory = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("spot-workload-inventory.csv", 13),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"SubscriptionId", "ResourceGroupName", "ResourceId", "ResourceName", "ServiceName", "WorkloadName", "Interruptible", "MaxEvictionRate", "SlaRequired", "SpotEnabled", "Owner", "ReviewStatus", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"SubscriptionId", type text}, {"ResourceGroupName", type text}, {"ResourceId", type text}, {"ResourceName", type text}, {"ServiceName", type text}, {"WorkloadName", type text}, {"Interruptible", type text}, {"MaxEvictionRate", type text}, {"SlaRequired", type text}, {"SpotEnabled", type text}, {"Owner", type text}, {"ReviewStatus", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,38 @@
+table DimAzureCloud
+	lineageTag: 5f6c87f6-fb27-4f4c-84b7-311113010001
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 5f6c87f6-fb27-4f4c-84b7-311113010002
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+	column 'Azure Cloud'
+		dataType: string
+		lineageTag: 5f6c87f6-fb27-4f4c-84b7-311113010003
+		summarizeBy: none
+		sourceColumn: Azure Cloud
+
+	partition DimAzureCloud = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("dim-azure-cloud.csv", 2),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}, {"Azure Cloud", type text}}, [MissingField = MissingField.UseNull]),
+				    ResolveDisplayName = (cloud as nullable any, display as nullable any) as text => let technical = if cloud = null then "" else Text.Trim(Text.From(cloud)), existingDisplay = if display = null then "" else Text.Trim(Text.From(display)) in if existingDisplay <> "" and existingDisplay <> "null" then existingDisplay else if technical = "AzureCloud" then "Azure Commercial" else if technical = "AzureUSGovernment" then "Azure Government" else if technical = "AzureChinaCloud" then "Azure China (21Vianet)" else if technical = "AzureGermanCloud" then "Azure Germany" else technical,
+				    WithResolvedDisplay = Table.AddColumn(Typed, "Azure Cloud Resolved", each ResolveDisplayName([AzureCloud], [#"Azure Cloud"]), type text),
+				    RemoveOriginalDisplay = Table.RemoveColumns(WithResolvedDisplay, {"Azure Cloud"}, MissingField.Ignore),
+				    RenameDisplay = Table.RenameColumns(RemoveOriginalDisplay, {{"Azure Cloud Resolved", "Azure Cloud"}}),
+				    StandardClouds = #table(type table [AzureCloud = text, #"Azure Cloud" = text], {{"AzureCloud", "Azure Commercial"}, {"AzureUSGovernment", "Azure Government"}, {"AzureChinaCloud", "Azure China (21Vianet)"}}),
+				    Combined = Table.Combine({RenameDisplay, StandardClouds}),
+				    NonBlank = Table.SelectRows(Combined, each [AzureCloud] <> null and Text.Trim(Text.From([AzureCloud])) <> ""),
+				    DistinctRows = Table.Distinct(NonBlank, {"AzureCloud"}),
+				    SortedRows = Table.Sort(DistinctRows, {{"Azure Cloud", Order.Ascending}})
+				in
+				    SortedRows
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

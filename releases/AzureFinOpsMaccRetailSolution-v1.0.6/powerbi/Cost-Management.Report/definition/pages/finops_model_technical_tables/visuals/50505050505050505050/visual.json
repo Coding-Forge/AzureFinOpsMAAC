@@ -1,0 +1,117 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "50505050505050505050",
+  "position": {
+    "x": 980,
+    "y": 260,
+    "z": 5000,
+    "height": 360,
+    "width": 900,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimAgreementStartDate"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "DimAgreementStartDate.Date",
+              "nativeQueryRef": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimAgreementStartDate"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "DimAgreementStartDate.Year",
+              "nativeQueryRef": "Year"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimAgreementStartDate"
+                    }
+                  },
+                  "Property": "Month Name"
+                }
+              },
+              "queryRef": "DimAgreementStartDate.Month Name",
+              "nativeQueryRef": "Month Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimAgreementStartDate"
+                    }
+                  },
+                  "Property": "Fiscal Year Label"
+                }
+              },
+              "queryRef": "DimAgreementStartDate.Fiscal Year Label",
+              "nativeQueryRef": "Fiscal Year Label"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimAgreementStartDate"
+                    }
+                  },
+                  "Property": "Fiscal Quarter"
+                }
+              },
+              "queryRef": "DimAgreementStartDate.Fiscal Quarter",
+              "nativeQueryRef": "Fiscal Quarter"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'DimAgreementStartDate'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

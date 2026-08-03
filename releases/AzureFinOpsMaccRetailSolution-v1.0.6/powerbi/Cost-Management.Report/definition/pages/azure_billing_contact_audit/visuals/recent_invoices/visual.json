@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "recent_invoices",
+  "position": {
+    "x": 640,
+    "y": 470,
+    "z": 4000,
+    "height": 205,
+    "width": 600,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "BillingAccountName"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.BillingAccountName",
+              "nativeQueryRef": "BillingAccountName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "BillingProfileName"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.BillingProfileName",
+              "nativeQueryRef": "BillingProfileName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "InvoiceName"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.InvoiceName",
+              "nativeQueryRef": "InvoiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "InvoiceDate"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.InvoiceDate",
+              "nativeQueryRef": "InvoiceDate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "Status"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.Status",
+              "nativeQueryRef": "Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "AmountDue"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.AmountDue",
+              "nativeQueryRef": "AmountDue"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditInvoices"
+                    }
+                  },
+                  "Property": "PoNumber"
+                }
+              },
+              "queryRef": "BillingAuditInvoices.PoNumber",
+              "nativeQueryRef": "PoNumber"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Recent invoices and PO values'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

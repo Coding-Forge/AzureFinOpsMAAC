@@ -1,0 +1,186 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "benefit_by_service",
+  "position": {
+    "x": 650,
+    "y": 80,
+    "z": 1000,
+    "height": 580,
+    "width": 580,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "HistoryMonth"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.HistoryMonth",
+              "nativeQueryRef": "HistoryMonth"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "SubscriptionName"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.SubscriptionName",
+              "nativeQueryRef": "SubscriptionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "ActualCost"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.ActualCost",
+              "nativeQueryRef": "ActualCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "RetailEquivalentCost"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.RetailEquivalentCost",
+              "nativeQueryRef": "RetailEquivalentCost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "EstimatedSavings"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.EstimatedSavings",
+              "nativeQueryRef": "EstimatedSavings"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "EligibleSpend"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.EligibleSpend",
+              "nativeQueryRef": "EligibleSpend"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "ReviewSpend"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.ReviewSpend",
+              "nativeQueryRef": "ReviewSpend"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MaccBenefitLedger"
+                    }
+                  },
+                  "Property": "RetailMatchCoverage"
+                }
+              },
+              "queryRef": "MaccBenefitLedger.RetailMatchCoverage",
+              "nativeQueryRef": "RetailMatchCoverage"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Eligible Spend and Savings by Service'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

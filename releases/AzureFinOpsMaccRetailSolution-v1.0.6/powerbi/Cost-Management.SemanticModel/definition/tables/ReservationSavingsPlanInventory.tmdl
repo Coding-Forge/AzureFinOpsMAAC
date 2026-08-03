@@ -1,0 +1,135 @@
+table ReservationSavingsPlanInventory
+	lineageTag: 7d5f8ce3-6fd0-4f97-b1c0-111111113002
+
+	column BenefitType
+		dataType: string
+		lineageTag: 49861c61-5002-4fd5-b4b4-72eda3147c36
+		summarizeBy: none
+		sourceColumn: BenefitType
+
+	column BenefitId
+		dataType: string
+		lineageTag: 89d69c1a-47ae-4cf9-b1c7-6412882d7f93
+		summarizeBy: none
+		sourceColumn: BenefitId
+
+	column BenefitName
+		dataType: string
+		lineageTag: d886be1e-6182-4e43-89d9-f967592792d9
+		summarizeBy: none
+		sourceColumn: BenefitName
+
+	column Scope
+		dataType: string
+		lineageTag: 38627fd6-4fb3-4653-bdda-8abd164c67c4
+		summarizeBy: none
+		sourceColumn: Scope
+
+	column Region
+		dataType: string
+		lineageTag: 012ce0a4-d59c-4987-9d85-de0393015dd9
+		summarizeBy: none
+		sourceColumn: Region
+
+	column ServiceName
+		dataType: string
+		lineageTag: 9ec97a50-81ce-45d6-b230-a1b8abe102ee
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column SkuName
+		dataType: string
+		lineageTag: 554ddd3e-a27c-4ac7-83ea-5cbe187dbc71
+		summarizeBy: none
+		sourceColumn: SkuName
+
+	column CommitmentTerm
+		dataType: string
+		lineageTag: 698f40b1-9b34-43ea-8d22-3266c1394063
+		summarizeBy: none
+		sourceColumn: CommitmentTerm
+
+	column CommitmentAmount
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b2ecab44-9c28-42aa-aec8-359c4623d8e9
+		summarizeBy: sum
+		sourceColumn: CommitmentAmount
+
+	column HourlyCommitment
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 858e6d00-4c85-475c-95a0-be30ae448680
+		summarizeBy: sum
+		sourceColumn: HourlyCommitment
+
+	column Currency
+		dataType: string
+		lineageTag: fab1d7e9-9309-4d4d-8650-960bd1d2963e
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UtilizationPercent
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: b3d8780a-4dd5-4e6b-923a-380420c6783a
+		summarizeBy: sum
+		sourceColumn: UtilizationPercent
+
+	column CoveragePercent
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: de0f795d-d848-450a-9ec6-392caf0ca179
+		summarizeBy: sum
+		sourceColumn: CoveragePercent
+
+	column Owner
+		dataType: string
+		lineageTag: 51376248-4637-4d9e-a0c9-9c6d6496f474
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column ReviewStatus
+		dataType: string
+		lineageTag: 6ef97e3d-151e-42a0-b4ab-534c0baac07f
+		summarizeBy: none
+		sourceColumn: ReviewStatus
+
+	column Notes
+		dataType: string
+		lineageTag: d92da0fd-3b30-49b4-8aae-5208f7053164
+		summarizeBy: none
+		sourceColumn: Notes
+
+	column StartDate
+		dataType: string
+		lineageTag: a6896113-7619-45dc-a19d-3f8fc26bec7d
+		summarizeBy: none
+		sourceColumn: StartDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDate
+		dataType: string
+		lineageTag: d976441d-51b8-4b73-ae1b-26aea66a4a99
+		summarizeBy: none
+		sourceColumn: EndDate
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ReservationSavingsPlanInventory = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("reservation-savings-plan-inventory.csv", 18),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    RequiredColumns = {"BenefitType", "BenefitId", "BenefitName", "Scope", "Region", "ServiceName", "SkuName", "CommitmentTerm", "CommitmentAmount", "HourlyCommitment", "Currency", "StartDate", "EndDate", "UtilizationPercent", "CoveragePercent", "Owner", "ReviewStatus", "Notes"},
+				    WithRequiredColumns = List.Accumulate(RequiredColumns, Promoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"BenefitType", type text}, {"BenefitId", type text}, {"BenefitName", type text}, {"Scope", type text}, {"Region", type text}, {"ServiceName", type text}, {"SkuName", type text}, {"CommitmentTerm", type text}, {"CommitmentAmount", type number}, {"HourlyCommitment", type number}, {"Currency", type text}, {"StartDate", type text}, {"EndDate", type text}, {"UtilizationPercent", type number}, {"CoveragePercent", type number}, {"Owner", type text}, {"ReviewStatus", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "billing_profiles",
+  "position": {
+    "x": 640,
+    "y": 85,
+    "z": 1000,
+    "height": 170,
+    "width": 600,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "BillingAccountName"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.BillingAccountName",
+              "nativeQueryRef": "BillingAccountName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "BillingProfileName"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.BillingProfileName",
+              "nativeQueryRef": "BillingProfileName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "DisplayName"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.DisplayName",
+              "nativeQueryRef": "DisplayName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "BillTo"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.BillTo",
+              "nativeQueryRef": "BillTo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "PoNumber"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.PoNumber",
+              "nativeQueryRef": "PoNumber"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BillingAuditProfiles"
+                    }
+                  },
+                  "Property": "InvoiceEmailOptIn"
+                }
+              },
+              "queryRef": "BillingAuditProfiles.InvoiceEmailOptIn",
+              "nativeQueryRef": "InvoiceEmailOptIn"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Billing profiles, bill-to, and PO'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

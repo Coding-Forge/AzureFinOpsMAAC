@@ -1,0 +1,163 @@
+table FactCostUsage
+	lineageTag: 4d14fd74-28f9-49aa-a10e-311111110001
+
+	column Period
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110002
+		summarizeBy: none
+		sourceColumn: Period
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110003
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column HistoryMonth
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110018
+		summarizeBy: none
+		sourceColumn: HistoryMonth
+
+	column ExportRunId
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110019
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110020
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+	column SubscriptionName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110004
+		summarizeBy: none
+		sourceColumn: SubscriptionName
+
+	column UsageDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110005
+		summarizeBy: sum
+		sourceColumn: UsageDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column UsageDateAsDate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110006
+		summarizeBy: none
+		sourceColumn: UsageDateAsDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ServiceName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110007
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column ResourceLocation
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110008
+		summarizeBy: none
+		sourceColumn: ResourceLocation
+
+	column ArmRegionName
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110009
+		summarizeBy: none
+		sourceColumn: ArmRegionName
+
+	column MeterKey
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110010
+		summarizeBy: none
+		sourceColumn: MeterKey
+
+	column Meter
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110011
+		summarizeBy: none
+		sourceColumn: Meter
+
+	column Product
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110012
+		summarizeBy: none
+		sourceColumn: Product
+
+	column PartNumber
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110013
+		summarizeBy: none
+		sourceColumn: PartNumber
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110014
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+	column Currency
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110015
+		summarizeBy: none
+		sourceColumn: Currency
+
+	column UsageQuantity
+		dataType: double
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110016
+		summarizeBy: sum
+		sourceColumn: UsageQuantity
+
+	column Cost
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110017
+		summarizeBy: sum
+		sourceColumn: Cost
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110021
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+	column AzureRegionKey
+		dataType: string
+		lineageTag: 4d14fd74-28f9-49aa-a10e-311111110022
+		summarizeBy: none
+		sourceColumn: AzureRegionKey
+
+	partition FactCostUsage = m
+		mode: import
+		source =
+				let
+				    CurrentSource = CsvFromSelectedStorage("fact-cost-usage.csv", 16),
+				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
+				    HistorySource = CsvFromHistoryStorage("fact-cost-usage-history.csv", 19),
+				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				    Combined = if AnalysisMode = "History" then HistoryRows else CurrentRows,
+				    RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc"},
+				    WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"ArmRegionName", type text}, {"MeterKey", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"UsageQuantity", type number}, {"Cost", type number}}, [MissingField = MissingField.UseNull]),
+				    NormalizeArmRegionName = (value as nullable any) as nullable text => let raw = if value = null then null else Text.Lower(Text.Trim(Text.From(value))), parts = if raw = null then {} else List.Select(Text.SplitAny(raw, " -_()"), each _ <> ""), compact = Text.Combine(parts, ""), normalized = if raw = null or raw = "" then null else if raw = "global" then "global" else if compact = "usgovvirginia" then "usgovvirginia" else if compact = "usgovtexas" then "usgovtexas" else if compact = "usgovarizona" then "usgovarizona" else if compact = "usdodcentral" then "usdodcentral" else if compact = "usdodeast" then "usdodeast" else if List.Count(parts) >= 2 and parts{0} = "us" and List.Contains({"east","west","north","south","central"}, parts{1}) then parts{1} & "us" & Text.Combine(List.Skip(parts, 2), "") else compact in normalized,
+				    NormalizedRegions = Table.TransformColumns(Typed, {{"ArmRegionName", each NormalizeArmRegionName(_), type text}}, null, MissingField.Ignore),
+				    AddNormalizedCloud = Table.AddColumn(NormalizedRegions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
+				    RemoveOriginalCloud = Table.RemoveColumns(AddNormalizedCloud, {"AzureCloud"}, MissingField.Ignore),
+				    RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}}),
+				    AzureCloudDisplayName = (cloud as nullable any) as text => let technical = if cloud = null then "" else Text.Trim(Text.From(cloud)) in if technical = "AzureCloud" then "Azure Commercial" else if technical = "AzureUSGovernment" then "Azure Government" else if technical = "AzureChinaCloud" then "Azure China (21Vianet)" else if technical = "AzureGermanCloud" then "Azure Germany" else technical,
+				    AddAzureRegionKey = Table.AddColumn(RenameNormalizedCloud, "AzureRegionKey", each AzureCloudDisplayName([AzureCloud]) & "|" & Text.Trim(Text.From([ArmRegionName])), type text),
+				    AddUsageDateAsDate = Table.AddColumn(AddAzureRegionKey, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date)
+				in
+				    AddUsageDateAsDate
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

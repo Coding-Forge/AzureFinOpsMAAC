@@ -1,0 +1,188 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "405f9b26e67f4cd5a9e6",
+  "position": {
+    "x": 40,
+    "y": 660,
+    "z": 16000,
+    "height": 350,
+    "width": 1840,
+    "tabOrder": 16000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "ServiceName"
+                }
+              },
+              "queryRef": "CostRetailFact.ServiceName",
+              "nativeQueryRef": "ServiceName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "ArmRegionName"
+                }
+              },
+              "queryRef": "CostRetailFact.ArmRegionName",
+              "nativeQueryRef": "ArmRegionName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "Meter"
+                }
+              },
+              "queryRef": "CostRetailFact.Meter",
+              "nativeQueryRef": "Meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "RetailMatchStatus"
+                }
+              },
+              "queryRef": "CostRetailFact.RetailMatchStatus",
+              "nativeQueryRef": "RetailMatchStatus"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CostRetailFact"
+                    }
+                  },
+                  "Property": "RetailSkuId"
+                }
+              },
+              "queryRef": "CostRetailFact.RetailSkuId",
+              "nativeQueryRef": "RetailSkuId"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Actual / MACC Cost"
+                }
+              },
+              "queryRef": "_Measures.Actual / MACC Cost",
+              "nativeQueryRef": "Actual / MACC Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Retail Equivalent Cost"
+                }
+              },
+              "queryRef": "_Measures.Retail Equivalent Cost",
+              "nativeQueryRef": "Retail Equivalent Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Estimated Savings"
+                }
+              },
+              "queryRef": "_Measures.Estimated Savings",
+              "nativeQueryRef": "Estimated Savings"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Retail Match Coverage"
+                }
+              },
+              "queryRef": "_Measures.Retail Match Coverage",
+              "nativeQueryRef": "Retail Match Coverage"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer review action list: savings and mapping gaps'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

@@ -1,0 +1,89 @@
+table OwnershipMapping
+	lineageTag: 7c3b4c5d-8a9b-4c1d-9e2f-111111111109
+
+	column SubscriptionId
+		dataType: string
+		lineageTag: 868cef98-92bc-4dd5-8d37-7027d259d4cc
+		summarizeBy: none
+		sourceColumn: SubscriptionId
+
+	column ResourceGroupName
+		dataType: string
+		lineageTag: 5f18c8ec-4bfc-4d58-ab4e-4cae95f6c772
+		summarizeBy: none
+		sourceColumn: ResourceGroupName
+
+	column ServiceName
+		dataType: string
+		lineageTag: 86bdbe73-2c23-4f88-82b2-9bc6133d082e
+		summarizeBy: none
+		sourceColumn: ServiceName
+
+	column BusinessUnit
+		dataType: string
+		lineageTag: e4d723ee-e12f-4599-8cd0-9dec2adaaeb2
+		summarizeBy: none
+		sourceColumn: BusinessUnit
+
+	column Application
+		dataType: string
+		lineageTag: 69854d5e-3897-450d-bfa9-0004315a8092
+		summarizeBy: none
+		sourceColumn: Application
+
+	column Environment
+		dataType: string
+		lineageTag: a1cb201a-6a1a-4aba-91c4-09cf33b4dd80
+		summarizeBy: none
+		sourceColumn: Environment
+
+	column Owner
+		dataType: string
+		lineageTag: 8c1b918d-7b85-4039-9aa5-789ed3b6cc84
+		summarizeBy: none
+		sourceColumn: Owner
+
+	column CostCenter
+		dataType: string
+		lineageTag: ebec8139-6bc0-493d-8d15-d06fd6d19c4b
+		summarizeBy: none
+		sourceColumn: CostCenter
+
+	column TagKey
+		dataType: string
+		lineageTag: 88d4e255-b9b1-4a70-b9ef-b94c51749282
+		summarizeBy: none
+		sourceColumn: TagKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagValue
+		dataType: string
+		lineageTag: c2e98334-cfd8-4524-9f44-d137b2d35450
+		summarizeBy: none
+		sourceColumn: TagValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column Notes
+		dataType: string
+		lineageTag: 196c0acc-c728-4fd9-91dd-5d3971fce9d6
+		summarizeBy: none
+		sourceColumn: Notes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition OwnershipMapping = m
+		mode: import
+		source =
+				let
+				    Source = CsvFromSelectedStorage("ownership-mapping.csv", 11),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"SubscriptionId", type text}, {"ResourceGroupName", type text}, {"ServiceName", type text}, {"TagKey", type text}, {"TagValue", type text}, {"BusinessUnit", type text}, {"Application", type text}, {"Environment", type text}, {"Owner", type text}, {"CostCenter", type text}, {"Notes", type text}})
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
