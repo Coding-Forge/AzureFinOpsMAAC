@@ -20,70 +20,70 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRetailEffectiveStartDate"
+                      "Entity": "AzureRetail"
                     }
                   },
-                  "Property": "Date"
+                  "Property": "Items.effectiveStartDate"
                 }
               },
-              "queryRef": "DimRetailEffectiveStartDate.Date",
-              "nativeQueryRef": "Date"
+              "queryRef": "AzureRetail.Items.effectiveStartDate",
+              "nativeQueryRef": "Items.effectiveStartDate"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRetailEffectiveStartDate"
+                      "Entity": "AzureRetail"
                     }
                   },
-                  "Property": "Year"
+                  "Property": "Items.effectiveEndDate"
                 }
               },
-              "queryRef": "DimRetailEffectiveStartDate.Year",
-              "nativeQueryRef": "Year"
+              "queryRef": "AzureRetail.Items.effectiveEndDate",
+              "nativeQueryRef": "Items.effectiveEndDate"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRetailEffectiveStartDate"
+                      "Entity": "AzureRetail"
                     }
                   },
-                  "Property": "Month Name"
+                  "Property": "Items.armRegionName"
                 }
               },
-              "queryRef": "DimRetailEffectiveStartDate.Month Name",
-              "nativeQueryRef": "Month Name"
+              "queryRef": "AzureRetail.Items.armRegionName",
+              "nativeQueryRef": "Items.armRegionName"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRetailEffectiveStartDate"
+                      "Entity": "AzureRetail"
                     }
                   },
-                  "Property": "Fiscal Year Label"
+                  "Property": "Items.serviceName"
                 }
               },
-              "queryRef": "DimRetailEffectiveStartDate.Fiscal Year Label",
-              "nativeQueryRef": "Fiscal Year Label"
+              "queryRef": "AzureRetail.Items.serviceName",
+              "nativeQueryRef": "Items.serviceName"
             },
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimRetailEffectiveStartDate"
+                      "Entity": "AzureRetail"
                     }
                   },
-                  "Property": "Fiscal Quarter"
+                  "Property": "Items.meterName"
                 }
               },
-              "queryRef": "DimRetailEffectiveStartDate.Fiscal Quarter",
-              "nativeQueryRef": "Fiscal Quarter"
+              "queryRef": "AzureRetail.Items.meterName",
+              "nativeQueryRef": "Items.meterName"
             }
           ]
         }
@@ -103,7 +103,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'DimRetailEffectiveStartDate'"
+                  "Value": "'AzureRetail effective dates'"
                 }
               }
             }

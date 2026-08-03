@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "These technical tables document the model date dimensions. Role-playing dimensions such as DimAgreementStartDate and DimRetailEffectiveStartDate replace hidden auto-date tables for clearer relationships.",
+                    "value": "These technical tables document the model date dimensions. Role-playing agreement date dimensions replace hidden auto-date tables for clearer relationships. Retail effective dates are shown directly from AzureRetail to avoid refresh cycles on reference-only retail metadata.",
                     "textStyle": {
                       "fontWeight": "normal",
                       "fontFamily": "Segoe UI",

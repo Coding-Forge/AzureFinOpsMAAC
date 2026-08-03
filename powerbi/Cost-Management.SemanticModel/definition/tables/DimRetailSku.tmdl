@@ -61,9 +61,15 @@ table DimRetailSku
 		mode: import
 		source =
 				let
-				    Source = FactRetailPriceMatch,
-				    Keep = Table.SelectColumns(Source, {"RetailSkuKey", "RetailSkuId", "RetailMeterId", "RetailProductId", "RetailArmRegionName", "RetailUnitOfMeasure", "RetailPrice", "RetailUnitPrice", "RetailCurrencyCode"}),
-				    NonBlank = Table.SelectRows(Keep, each [RetailSkuKey] <> null and Text.Trim(Text.From([RetailSkuKey])) <> ""),
+				    CurrentSource = CsvFromSelectedStorage("dim-retail-sku.csv", 9),
+				    CurrentRows = Table.PromoteHeaders(CurrentSource, [PromoteAllScalars = true]),
+				    HistorySource = CsvFromHistoryStorage("fact-retail-price-match-history.csv", 24),
+				    HistoryRows = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				    HistoryRequiredColumns = {"RetailSkuKey", "RetailSkuId", "RetailMeterId", "RetailProductId", "RetailArmRegionName", "RetailUnitOfMeasure", "RetailPrice", "RetailUnitPrice", "RetailCurrencyCode"},
+				    HistoryWithRequiredColumns = List.Accumulate(HistoryRequiredColumns, HistoryRows, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    HistoryKeep = Table.SelectColumns(HistoryWithRequiredColumns, HistoryRequiredColumns),
+				    Combined = Table.Combine({CurrentRows, HistoryKeep}),
+				    NonBlank = Table.SelectRows(Combined, each [RetailSkuKey] <> null and Text.Trim(Text.From([RetailSkuKey])) <> ""),
 				    DistinctRows = Table.Distinct(NonBlank, {"RetailSkuKey"}),
 				    Typed = Table.TransformColumnTypes(DistinctRows, {{"RetailSkuKey", type text}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}, [MissingField = MissingField.UseNull])
 				in

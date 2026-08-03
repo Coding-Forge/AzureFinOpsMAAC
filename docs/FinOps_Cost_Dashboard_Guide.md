@@ -199,6 +199,26 @@ az cloud set --name AzureUSGovernment
 az login --use-device-code --allow-no-subscriptions
 ```
 
+For mixed commercial and government customers, switch Azure CLI clouds before running each export:
+
+```powershell
+# Commercial export
+az cloud set --name AzureCloud
+az login --tenant "<commercial-tenant-id>"
+az account set --subscription "<commercial-subscription-id>"
+
+# Government export
+az cloud set --name AzureUSGovernment
+az login --tenant "<government-tenant-id>"
+az account set --subscription "<government-subscription-id>"
+```
+
+Confirm the active context before extracting data:
+
+```powershell
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+```
+
 Use `https://portal.azure.us` for Azure Government administration and `https://admin.microsoft.us` / `https://portal.office365.us` for Microsoft 365 government administration.
 
 Retail comparison values for Azure Government use public Azure Retail Prices API metadata as an estimated PAYGO/list-price equivalent. Validate whether that data is appropriate for the customer before using savings estimates externally.

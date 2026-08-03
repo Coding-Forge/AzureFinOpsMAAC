@@ -60,6 +60,49 @@ function ConvertTo-FinOpsDecimal {
     return 0D
 }
 
+function Normalize-FinOpsLocationKey {
+    param([string]$Value)
+
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        return ""
+    }
+
+    return ($Value.ToLowerInvariant() -replace "[^a-z0-9]", "")
+}
+
+function ConvertTo-FinOpsCanonicalArmRegionName {
+    param([string]$RegionName)
+
+    if ([string]::IsNullOrWhiteSpace($RegionName)) {
+        return $RegionName
+    }
+
+    $value = $RegionName.Trim().ToLowerInvariant()
+    if ($value -match "^us\s+(?<direction>east|west|north|south|central)(?<suffix>.*)$") {
+        $suffix = ($Matches.suffix -replace "[^a-z0-9]", "")
+        return "$($Matches.direction)us$suffix"
+    }
+
+    if ($value -match "^us\s+gov\s+(?<region>virginia|arizona|texas)$") {
+        return "usgov$($Matches.region)"
+    }
+
+    if ($value -match "^us\s+dod\s+(?<region>central|east)$") {
+        return "usdod$($Matches.region)"
+    }
+
+    $normalized = Normalize-FinOpsLocationKey $value
+    switch ($normalized) {
+        "usgovvirginia" { return "usgovvirginia" }
+        "usgovtexas" { return "usgovtexas" }
+        "usgovarizona" { return "usgovarizona" }
+        "usdodcentral" { return "usdodcentral" }
+        "usdodeast" { return "usdodeast" }
+        "global" { return "global" }
+        default { return $RegionName }
+    }
+}
+
 function Export-FinOpsCsv {
     param(
         [Parameter(Mandatory)]
@@ -112,6 +155,8 @@ function Get-FinOpsCostRows {
             $retailPrice = ConvertTo-FinOpsDecimal $_.RetailPrice
             $retailEquivalent = if ($retailPrice -gt 0 -and $quantity -ne 0) { [math]::Round($quantity * $retailPrice, 6) } else { 0D }
             $estimatedSavings = $retailEquivalent - $cost
+            $armRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.ArmRegionName
+            $retailArmRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.RetailArmRegionName
 
             $service = [string]$_.ServiceName
             $product = [string]$_.Product
@@ -141,7 +186,7 @@ function Get-FinOpsCostRows {
                 UsageDate = $_.UsageDate
                 ServiceName = $_.ServiceName
                 ResourceLocation = $_.ResourceLocation
-                ArmRegionName = $_.ArmRegionName
+                ArmRegionName = $armRegionName
                 Meter = $_.Meter
                 Product = $_.Product
                 PartNumber = $_.PartNumber
@@ -158,7 +203,7 @@ function Get-FinOpsCostRows {
                 RetailProductName = $_.RetailProductName
                 RetailSkuName = $_.RetailSkuName
                 RetailMeterName = $_.RetailMeterName
-                RetailArmRegionName = $_.RetailArmRegionName
+                RetailArmRegionName = $retailArmRegionName
                 RetailUnitOfMeasure = $_.RetailUnitOfMeasure
                 RetailPrice = [double]$retailPrice
                 RetailUnitPrice = [double](ConvertTo-FinOpsDecimal $_.RetailUnitPrice)

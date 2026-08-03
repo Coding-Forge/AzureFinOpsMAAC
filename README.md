@@ -158,6 +158,24 @@ az login --use-device-code --allow-no-subscriptions
 az account set --subscription "<subscription-id>"
 ```
 
+For customers that have both Azure Commercial and Azure Government in the same budget period, switch the Azure CLI cloud before each data pull and log in against the correct tenant:
+
+```powershell
+# Switch to Azure Government
+az cloud set --name AzureUSGovernment
+az login --tenant "<government-tenant-id>"
+az account set --subscription "<government-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+
+# Switch back to Azure Commercial
+az cloud set --name AzureCloud
+az login --tenant "<commercial-tenant-id>"
+az account set --subscription "<commercial-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+```
+
+If access is granted through PIM, activate the role first and then run `az logout` followed by the appropriate `az cloud set` and `az login --tenant ...` commands so Azure CLI gets a fresh token for that cloud and tenant.
+
 Common government cloud portals:
 
 | Purpose | URL |

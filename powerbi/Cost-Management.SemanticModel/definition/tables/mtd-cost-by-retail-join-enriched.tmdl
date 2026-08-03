@@ -219,6 +219,14 @@ table mtd-cost-by-retail-join-enriched
 
 		annotation SummarizationSetBy = Automatic
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 61242396-f7b6-42be-a343-5b5f271f76b0
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
 	partition mtd-cost-by-retail-join-enriched = m
 		mode: import
 		source =

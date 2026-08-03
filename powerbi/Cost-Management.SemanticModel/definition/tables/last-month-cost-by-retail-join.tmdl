@@ -103,6 +103,14 @@ table last-month-cost-by-retail-join
 
 		annotation SummarizationSetBy = Automatic
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 72f005b5-2665-44a0-bde4-76d067d502bc
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
 	partition last-month-cost-by-retail-join = m
 		mode: import
 		source =

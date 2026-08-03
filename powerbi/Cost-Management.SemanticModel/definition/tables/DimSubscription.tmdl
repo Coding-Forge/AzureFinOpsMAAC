@@ -7,17 +7,17 @@ table DimSubscription
 		summarizeBy: none
 		sourceColumn: SubscriptionId
 
-	column AzureCloud
-		dataType: string
-		lineageTag: 7e6f3e96-e503-46ac-b381-311111130004
-		summarizeBy: none
-		sourceColumn: AzureCloud
-
 	column SubscriptionName
 		dataType: string
 		lineageTag: 7e6f3e96-e503-46ac-b381-311111130003
 		summarizeBy: none
 		sourceColumn: SubscriptionName
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 7e6f3e96-e503-46ac-b381-311111130004
+		summarizeBy: none
+		sourceColumn: AzureCloud
 
 	partition DimSubscription = m
 		mode: import
@@ -25,7 +25,19 @@ table DimSubscription
 				let
 				    Source = CsvFromSelectedStorage("dim-subscription.csv", 3),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}}, [MissingField = MissingField.UseNull])
+				    CurrentTyped = Table.TransformColumnTypes(Promoted, {{"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}}, [MissingField = MissingField.UseNull]),
+				    HistorySource = CsvFromHistoryStorage("cost-retail-history.csv", 30),
+				    HistoryPromoted = Table.PromoteHeaders(HistorySource, [PromoteAllScalars = true]),
+				    HistoryRequiredColumns = {"AzureCloud", "SubscriptionId", "SubscriptionName", "ArmRegionName"},
+				    HistoryWithRequiredColumns = List.Accumulate(HistoryRequiredColumns, HistoryPromoted, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
+				    HistoryTyped = Table.TransformColumnTypes(HistoryWithRequiredColumns, {{"AzureCloud", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}}, [MissingField = MissingField.UseNull]),
+				    HistorySubscriptions = Table.SelectColumns(HistoryTyped, {"AzureCloud", "SubscriptionId", "SubscriptionName", "ArmRegionName"}),
+				    HistoryWithCloud = Table.AddColumn(HistorySubscriptions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
+				    HistoryClean = Table.RenameColumns(Table.RemoveColumns(HistoryWithCloud, {"AzureCloud", "ArmRegionName"}, MissingField.Ignore), {{"AzureCloudNormalized", "AzureCloud"}}),
+				    Combined = Table.Combine({CurrentTyped, HistoryClean}),
+				    NonBlank = Table.SelectRows(Combined, each [SubscriptionId] <> null and Text.Trim(Text.From([SubscriptionId])) <> ""),
+				    GroupedRows = Table.Group(NonBlank, {"SubscriptionId"}, {{"AzureCloud", each List.First(List.RemoveNulls([AzureCloud])), type nullable text}, {"SubscriptionName", each List.First(List.RemoveNulls([SubscriptionName])), type nullable text}}),
+				    Typed = Table.Sort(GroupedRows, {{"SubscriptionName", Order.Ascending}, {"SubscriptionId", Order.Ascending}})
 				in
 				    Typed
 

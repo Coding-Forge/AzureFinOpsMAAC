@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "billing_roles",
   "position": {
     "x": 20,
     "y": 470,
-    "z": 1003,
+    "z": 3000,
     "height": 205,
     "width": 600,
-    "tabOrder": 1003
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "tableEx",

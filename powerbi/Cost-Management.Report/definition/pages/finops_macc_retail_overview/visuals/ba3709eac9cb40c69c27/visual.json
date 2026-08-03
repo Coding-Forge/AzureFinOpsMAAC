@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "ba3709eac9cb40c69c27",
   "position": {
     "x": 980,
@@ -14,67 +14,10 @@
     "query": {
       "queryState": {
         "Drillthrough": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CostRetailFact"
-                    }
-                  },
-                  "Property": "ServiceName"
-                }
-              },
-              "queryRef": "CostRetailFact.ServiceName",
-              "nativeQueryRef": "ServiceName"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CostRetailFact"
-                    }
-                  },
-                  "Property": "ArmRegionName"
-                }
-              },
-              "queryRef": "CostRetailFact.ArmRegionName",
-              "nativeQueryRef": "ArmRegionName"
-            }
-          ]
+          "projections": []
         },
         "Values": {
           "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CostRetailFact"
-                    }
-                  },
-                  "Property": "ServiceName"
-                }
-              },
-              "queryRef": "CostRetailFact.ServiceName",
-              "nativeQueryRef": "ServiceName"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CostRetailFact"
-                    }
-                  },
-                  "Property": "ArmRegionName"
-                }
-              },
-              "queryRef": "CostRetailFact.ArmRegionName",
-              "nativeQueryRef": "ArmRegionName"
-            },
             {
               "field": {
                 "Column": {

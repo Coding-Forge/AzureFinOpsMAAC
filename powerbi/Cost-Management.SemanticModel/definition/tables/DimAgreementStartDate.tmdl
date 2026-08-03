@@ -8,11 +8,6 @@ table DimAgreementStartDate
 		summarizeBy: none
 		sourceColumn: Date
 
-		variation Variation
-			isDefault
-			relationship: a5b6252c-7543-443e-b4cb-281e8573a569
-			defaultHierarchy: LocalDateTable_c2b7d299-dc73-4040-910e-c0ef0d09c791.'Date Hierarchy'
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column DateKey
@@ -106,7 +101,25 @@ table DimAgreementStartDate
 		mode: import
 		source =
 				let
-				    Source = datedim
+				    StartDate = #date(2020, 1, 1),
+				    EndDate = #date(2030, 12, 31),
+				    FiscalYearStartMonth = 7,
+				    ValidFiscalMonth = if FiscalYearStartMonth >= 1 and FiscalYearStartMonth <= 12 then FiscalYearStartMonth else error "FiscalYearStartMonth must be a number between 1 and 12.",
+				    DayCount = Duration.Days(EndDate - StartDate) + 1,
+				    DateList = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+				    DateTable = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}),
+				    ChangedType = Table.TransformColumnTypes(DateTable, {{"Date", type date}}),
+				    AddedDateKey = Table.AddColumn(ChangedType, "DateKey", each Date.Year([Date]) * 10000 + Date.Month([Date]) * 100 + Date.Day([Date]), Int64.Type),
+				    AddedYear = Table.AddColumn(AddedDateKey, "Year", each Date.Year([Date]), Int64.Type),
+				    AddedMonth = Table.AddColumn(AddedYear, "Month", each Date.Month([Date]), Int64.Type),
+				    AddedDay = Table.AddColumn(AddedMonth, "Day", each Date.Day([Date]), Int64.Type),
+				    AddedMonthName = Table.AddColumn(AddedDay, "Month Name", each Date.MonthName([Date]), type text),
+				    AddedYearMonth = Table.AddColumn(AddedMonthName, "Year-Month", each Text.From(Date.Year([Date])) & "-" & Text.PadStart(Text.From(Date.Month([Date])), 2, "0"), type text),
+				    AddedYearMonthKey = Table.AddColumn(AddedYearMonth, "YearMonthKey", each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
+				    AddedFiscalYear = Table.AddColumn(AddedYearMonthKey, "Fiscal Year", each if Date.Month([Date]) >= ValidFiscalMonth then Date.Year([Date]) + 1 else Date.Year([Date]), Int64.Type),
+				    AddedFiscalYearLabel = Table.AddColumn(AddedFiscalYear, "Fiscal Year Label", each "FY" & Text.From([Fiscal Year]), type text),
+				    AddedFiscalMonth = Table.AddColumn(AddedFiscalYearLabel, "Fiscal Month", each Number.Mod(Date.Month([Date]) - ValidFiscalMonth, 12) + 1, Int64.Type),
+				    Source = Table.AddColumn(AddedFiscalMonth, "Fiscal Quarter", each "FQ" & Text.From(Number.RoundUp([Fiscal Month] / 3)), type text)
 				in
 				    Source
 

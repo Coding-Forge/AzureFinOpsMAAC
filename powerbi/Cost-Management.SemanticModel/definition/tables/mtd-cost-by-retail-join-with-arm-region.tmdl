@@ -115,8 +115,9 @@ table mtd-cost-by-retail-join-with-arm-region
 		mode: import
 		source =
 				let
-				Source = #"mtd-cost-by-retail-join-enriched",
-				#"Selected columns" = Table.SelectColumns(Source, {"UsageQuantity", "Cost", "UsageDate", "ServiceName", "ResourceLocation", "Meter", "Product", "PartNumber", "UnitOfMeasure", "Currency", "SubscriptionId", "SubscriptionName", "ArmRegionName"}),
+				Source = CsvFromSelectedStorage("mtd-cost-by-retail-join-enriched.csv", 24),
+				#"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				#"Selected columns" = Table.SelectColumns(#"Promoted headers", {"UsageQuantity", "Cost", "UsageDate", "ServiceName", "ResourceLocation", "Meter", "Product", "PartNumber", "UnitOfMeasure", "Currency", "SubscriptionId", "SubscriptionName", "ArmRegionName"}),
 				#"Changed column type" = Table.TransformColumnTypes(#"Selected columns", {{"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"SubscriptionId", type text}, {"SubscriptionName", type text}, {"ArmRegionName", type text}})
 				in
 				#"Changed column type"

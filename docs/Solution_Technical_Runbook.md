@@ -82,6 +82,38 @@ Confirm `az cloud show` reports `AzureUSGovernment` when troubleshooting. If you
 az cloud set --name AzureCloud
 ```
 
+### Switching between commercial and government tenants
+
+Many customers operate Azure Commercial and Azure Government subscriptions during the same budget period. Azure CLI has one active cloud profile at a time, so switch clouds before loading subscriptions or running each export.
+
+```powershell
+# Show the currently selected Azure cloud
+az cloud show --query "{name:name, resourceManager:endpoints.resourceManager, activeDirectory:endpoints.activeDirectory}" --output table
+
+# Commercial Azure
+az cloud set --name AzureCloud
+az login --tenant "<commercial-tenant-id>"
+az account set --subscription "<commercial-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+
+# Azure Government
+az cloud set --name AzureUSGovernment
+az login --tenant "<government-tenant-id>"
+az account set --subscription "<government-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+```
+
+When a PIM role has expired or was activated after a failed attempt, force a fresh token before rerunning the export:
+
+```powershell
+az logout
+az cloud set --name AzureUSGovernment   # or AzureCloud
+az login --tenant "<tenant-id>"
+az account set --subscription "<subscription-id>"
+```
+
+Do not assume the previous Azure CLI token has the newly activated role claims. This is especially important for subscription-scope Cost Management calls that require active RBAC such as `Cost Management Reader`.
+
 Common government cloud URLs:
 
 | Purpose | URL |

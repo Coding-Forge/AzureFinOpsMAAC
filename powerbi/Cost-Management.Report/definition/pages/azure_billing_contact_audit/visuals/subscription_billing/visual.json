@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "subscription_billing",
   "position": {
     "x": 640,
     "y": 280,
-    "z": 1002,
+    "z": 2000,
     "height": 155,
     "width": 600,
-    "tabOrder": 1002
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "tableEx",

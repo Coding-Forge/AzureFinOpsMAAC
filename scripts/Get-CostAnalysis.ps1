@@ -309,6 +309,45 @@ function Convert-CostManagementLocationToArmRegionName {
     return $ResourceLocation
 }
 
+function ConvertTo-FinOpsCanonicalArmRegionName {
+    param([string]$RegionName)
+
+    if ([string]::IsNullOrWhiteSpace($RegionName)) {
+        return $RegionName
+    }
+
+    $converted = Convert-CostManagementLocationToArmRegionName $RegionName
+    $normalized = Normalize-LocationKey $converted
+
+    switch ($normalized) {
+        "usgovvirginia" { return "usgovvirginia" }
+        "usgovtexas" { return "usgovtexas" }
+        "usgovarizona" { return "usgovarizona" }
+        "usdodcentral" { return "usdodcentral" }
+        "usdodeast" { return "usdodeast" }
+        "global" { return "global" }
+        default { return $converted }
+    }
+}
+
+function ConvertTo-FinOpsAzureCloudDisplayName {
+    param([string]$CloudName)
+
+    switch ($CloudName) {
+        "AzureCloud" { return "Azure Commercial" }
+        "AzureUSGovernment" { return "Azure Government" }
+        "AzureChinaCloud" { return "Azure China (21Vianet)" }
+        "AzureGermanCloud" { return "Azure Germany" }
+        default {
+            if ([string]::IsNullOrWhiteSpace($CloudName)) {
+                return ""
+            }
+
+            return $CloudName
+        }
+    }
+}
+
 function Get-FinOpsAzureRegionMap {
     $regionCsv = @'
 Display Name,Azure Region,Azure Cloud
@@ -425,7 +464,8 @@ function Add-ArmRegionName {
     foreach ($row in $Rows) {
         $resourceLocation = [string]$row.ResourceLocation
         $normalized = Normalize-LocationKey $resourceLocation
-        $armRegionName = if ($LocationLookup.ContainsKey($normalized)) { $LocationLookup[$normalized] } else { Convert-CostManagementLocationToArmRegionName $resourceLocation }
+        $lookupRegionName = if ($LocationLookup.ContainsKey($normalized)) { $LocationLookup[$normalized] } else { $resourceLocation }
+        $armRegionName = ConvertTo-FinOpsCanonicalArmRegionName $lookupRegionName
 
         $row | Add-Member -NotePropertyName ArmRegionName -NotePropertyValue $armRegionName -Force
         $row
@@ -1001,6 +1041,7 @@ function New-NormalizedFinOpsModelFiles {
         if (Test-Path $costPath) {
             $costRows += @(Import-Csv $costPath | ForEach-Object {
                 $meterKey = New-FinOpsMeterKey -ServiceName $_.ServiceName -Meter $_.Meter -Product $_.Product -PartNumber $_.PartNumber -UnitOfMeasure $_.UnitOfMeasure
+                $armRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.ArmRegionName
                 [pscustomobject][ordered]@{
                     Period = $periodLabel
                     AzureCloud = $_.AzureCloud
@@ -1009,7 +1050,7 @@ function New-NormalizedFinOpsModelFiles {
                     UsageDate = $_.UsageDate
                     ServiceName = $_.ServiceName
                     ResourceLocation = $_.ResourceLocation
-                    ArmRegionName = $_.ArmRegionName
+                    ArmRegionName = $armRegionName
                     MeterKey = $meterKey
                     Meter = $_.Meter
                     Product = $_.Product
@@ -1026,14 +1067,16 @@ function New-NormalizedFinOpsModelFiles {
         if ($IncludeRetailPriceMatch -and (Test-Path $enrichedPath)) {
             $retailMatchRows += @(Import-Csv $enrichedPath | ForEach-Object {
                 $meterKey = New-FinOpsMeterKey -ServiceName $_.ServiceName -Meter $_.Meter -Product $_.Product -PartNumber $_.PartNumber -UnitOfMeasure $_.UnitOfMeasure
-                $retailSkuKey = New-FinOpsRetailSkuKey -RetailSkuId $_.RetailSkuId -RetailMeterId $_.RetailMeterId -RetailArmRegionName $_.RetailArmRegionName -RetailUnitOfMeasure $_.RetailUnitOfMeasure
+                $armRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.ArmRegionName
+                $retailArmRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.RetailArmRegionName
+                $retailSkuKey = New-FinOpsRetailSkuKey -RetailSkuId $_.RetailSkuId -RetailMeterId $_.RetailMeterId -RetailArmRegionName $retailArmRegionName -RetailUnitOfMeasure $_.RetailUnitOfMeasure
                 [pscustomobject][ordered]@{
                     Period = $periodLabel
                     AzureCloud = $_.AzureCloud
                     SubscriptionId = $_.SubscriptionId
                     UsageDate = $_.UsageDate
                     ServiceName = $_.ServiceName
-                    ArmRegionName = $_.ArmRegionName
+                    ArmRegionName = $armRegionName
                     MeterKey = $meterKey
                     Currency = $_.Currency
                     UsageQuantity = $_.UsageQuantity
@@ -1044,7 +1087,7 @@ function New-NormalizedFinOpsModelFiles {
                     RetailSkuId = $_.RetailSkuId
                     RetailMeterId = $_.RetailMeterId
                     RetailProductId = $_.RetailProductId
-                    RetailArmRegionName = $_.RetailArmRegionName
+                    RetailArmRegionName = $retailArmRegionName
                     RetailUnitOfMeasure = $_.RetailUnitOfMeasure
                     RetailPrice = $_.RetailPrice
                     RetailUnitPrice = $_.RetailUnitPrice
@@ -1057,7 +1100,14 @@ function New-NormalizedFinOpsModelFiles {
     $cloudRows = @(
         $costRows |
             Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.AzureCloud) } |
-            Select-Object AzureCloud -Unique |
+            Group-Object AzureCloud |
+            ForEach-Object {
+                $cloudName = [string]$_.Name
+                [pscustomobject][ordered]@{
+                    AzureCloud = $cloudName
+                    "Azure Cloud" = ConvertTo-FinOpsAzureCloudDisplayName $cloudName
+                }
+            } |
             Sort-Object AzureCloud
     )
 
@@ -1161,7 +1211,7 @@ function New-NormalizedFinOpsModelFiles {
 
     $outputs = @(
         @{ Path = Join-Path $DestinationDir "fact-cost-usage.csv"; Columns = @("Period","AzureCloud","SubscriptionId","SubscriptionName","UsageDate","ServiceName","ResourceLocation","ArmRegionName","MeterKey","Meter","Product","PartNumber","UnitOfMeasure","Currency","UsageQuantity","Cost"); Rows = $costRows },
-        @{ Path = Join-Path $DestinationDir "dim-azure-cloud.csv"; Columns = @("AzureCloud"); Rows = $cloudRows },
+        @{ Path = Join-Path $DestinationDir "dim-azure-cloud.csv"; Columns = @("AzureCloud","Azure Cloud"); Rows = $cloudRows },
         @{ Path = Join-Path $DestinationDir "dim-subscription.csv"; Columns = @("AzureCloud","SubscriptionId","SubscriptionName"); Rows = $subscriptionRows },
         @{ Path = Join-Path $DestinationDir "dim-service.csv"; Columns = @("ServiceName"); Rows = $serviceRows },
         @{ Path = Join-Path $DestinationDir "dim-region.csv"; Columns = @("Display Name","Azure Region","Azure Cloud","ArmRegionName","ResourceLocation"); Rows = $regionRows },

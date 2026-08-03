@@ -7,12 +7,6 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: Period
 
-	column AzureCloud
-		dataType: string
-		lineageTag: ad7c0301-2d91-4de6-b0e0-311113020001
-		summarizeBy: none
-		sourceColumn: AzureCloud
-
 	column UsageQuantity
 		dataType: double
 		lineageTag: 509ca7c7-2bf9-4741-944f-c8e42496f731
@@ -41,11 +35,6 @@ table CostRetailFact
 		lineageTag: 286d23b1-10e0-4c6c-a44f-0cb1b615c8c7
 		summarizeBy: none
 		sourceColumn: UsageDateAsDate
-
-		variation Variation
-			isDefault
-			relationship: 9aaa4e25-bad5-4072-9dd6-f2377e6ad780
-			defaultHierarchy: LocalDateTable_173d19a0-d198-4b6f-b086-34e8c8d2fc86.'Date Hierarchy'
 
 		annotation UnderlyingDateTimeDataType = Date
 
@@ -237,6 +226,12 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: SubscriptionId
 
+	column AzureCloud
+		dataType: string
+		lineageTag: ad7c0301-2d91-4de6-b0e0-311113020001
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
 	partition CostRetailFact = m
 		mode: import
 		source =
@@ -254,7 +249,12 @@ table CostRetailFact
 				RequiredTextColumns = {"HistoryMonth", "ExportRunId", "ExportedUtc", "Period", "AzureCloud", "SubscriptionName", "SubscriptionId"},
 				WithRequiredColumns = List.Accumulate(RequiredTextColumns, Combined, (state, columnName) => if Table.HasColumns(state, columnName) then state else Table.AddColumn(state, columnName, each null, type text)),
 				Typed = Table.TransformColumnTypes(WithRequiredColumns, {{"HistoryMonth", type text}, {"ExportRunId", type text}, {"ExportedUtc", type text}, {"Period", type text}, {"AzureCloud", type text}, {"SubscriptionName", type text}, {"SubscriptionId", type text}, {"UsageQuantity", type number}, {"Cost", type number}, {"UsageDate", Int64.Type}, {"ServiceName", type text}, {"ResourceLocation", type text}, {"Meter", type text}, {"Product", type text}, {"PartNumber", type text}, {"UnitOfMeasure", type text}, {"Currency", type text}, {"ArmRegionName", type text}, {"RetailMatchStatus", type text}, {"RetailCandidateCount", Int64.Type}, {"RetailSkuId", type text}, {"RetailMeterId", type text}, {"RetailProductId", type text}, {"RetailProductName", type text}, {"RetailSkuName", type text}, {"RetailMeterName", type text}, {"RetailArmRegionName", type text}, {"RetailUnitOfMeasure", type text}, {"RetailPrice", type number}, {"RetailUnitPrice", type number}, {"RetailCurrencyCode", type text}}),
-				AddUsageDateAsDate = Table.AddColumn(Typed, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
+				NormalizeArmRegionName = (value as nullable any) as nullable text => let raw = if value = null then null else Text.Lower(Text.Trim(Text.From(value))), parts = if raw = null then {} else List.Select(Text.SplitAny(raw, " -_()"), each _ <> ""), compact = Text.Combine(parts, ""), normalized = if raw = null or raw = "" then null else if raw = "global" then "global" else if compact = "usgovvirginia" then "usgovvirginia" else if compact = "usgovtexas" then "usgovtexas" else if compact = "usgovarizona" then "usgovarizona" else if compact = "usdodcentral" then "usdodcentral" else if compact = "usdodeast" then "usdodeast" else if List.Count(parts) >= 2 and parts{0} = "us" and List.Contains({"east","west","north","south","central"}, parts{1}) then parts{1} & "us" & Text.Combine(List.Skip(parts, 2), "") else compact in normalized,
+				NormalizedRegions = Table.TransformColumns(Typed, {{"ArmRegionName", each NormalizeArmRegionName(_), type text}, {"RetailArmRegionName", each NormalizeArmRegionName(_), type text}}, null, MissingField.Ignore),
+				AddNormalizedCloud = Table.AddColumn(NormalizedRegions, "AzureCloudNormalized", each let cloud = if [AzureCloud] = null then "" else Text.Trim(Text.From([AzureCloud])), region = if [ArmRegionName] = null then "" else Text.Trim(Text.From([ArmRegionName])) in if cloud <> "" and cloud <> "null" then cloud else if Text.StartsWith(region, "usgov") or Text.StartsWith(region, "usdod") then "AzureUSGovernment" else "AzureCloud", type text),
+				RemoveOriginalCloud = Table.RemoveColumns(AddNormalizedCloud, {"AzureCloud"}, MissingField.Ignore),
+				RenameNormalizedCloud = Table.RenameColumns(RemoveOriginalCloud, {{"AzureCloudNormalized", "AzureCloud"}}),
+				AddUsageDateAsDate = Table.AddColumn(RenameNormalizedCloud, "UsageDateAsDate", each let d = Number.From([UsageDate]), y = Number.IntegerDivide(d, 10000), m = Number.IntegerDivide(Number.Mod(d, 10000), 100), day = Number.Mod(d, 100) in #date(y, m, day), type date),
 				AddUsageDateText = Table.AddColumn(AddUsageDateAsDate, "UsageDateFormatted", each Date.ToText([UsageDateAsDate], "yyyy-MM-dd", "en-US"), type text),
 				AddRetailEquivalent = Table.AddColumn(AddUsageDateText, "RetailEquivalentCost", each if [RetailPrice] = null then null else [UsageQuantity] * [RetailPrice], type number),
 				AddSavings = Table.AddColumn(AddRetailEquivalent, "EstimatedSavings", each if [RetailEquivalentCost] = null then null else [RetailEquivalentCost] - [Cost], type number)

@@ -1,8 +1,3 @@
-relationship 9b6dba4f-f2ca-417c-9ce1-f6e3ccd81064
-	joinOnDateBehavior: datePartOnly
-	fromColumn: datedim.Date
-	toColumn: LocalDateTable_8717d329-910a-44d3-b1ab-e6e9aa709430.Date
-
 relationship 9ccb68f6-7c38-44b8-9837-8b3c5075358f
 	fromColumn: CostRetailFact.ServiceName
 	toColumn: DimService.ServiceName
@@ -15,26 +10,13 @@ relationship 9ee1693d-0314-4c7d-ad12-9987bcceeb18
 	fromColumn: CostRetailFact.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
 
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030001
-	fromColumn: CostRetailFact.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
-
-relationship 9aaa4e25-bad5-4072-9dd6-f2377e6ad780
-	joinOnDateBehavior: datePartOnly
-	fromColumn: CostRetailFact.UsageDateAsDate
-	toColumn: LocalDateTable_173d19a0-d198-4b6f-b086-34e8c8d2fc86.Date
-
 relationship fcf68f58-e812-7a83-a2fa-37b649477977
 	fromColumn: CostRetailFact.UsageDate
-	toColumn: datedim.DateKey
+	toColumn: DimUsageDate.DateKey
 
 relationship 8da193e6-5e86-46db-9e96-311111180001
 	fromColumn: FactCostUsage.SubscriptionId
 	toColumn: DimSubscription.SubscriptionId
-
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030002
-	fromColumn: FactCostUsage.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
 
 relationship 8da193e6-5e86-46db-9e96-311111180002
 	fromColumn: FactCostUsage.ServiceName
@@ -42,7 +24,7 @@ relationship 8da193e6-5e86-46db-9e96-311111180002
 
 relationship 8da193e6-5e86-46db-9e96-311111180003
 	fromColumn: FactCostUsage.ArmRegionName
-	toColumn: DimRegionModel.ArmRegionName
+	toColumn: DimRegion.ArmRegionName
 
 relationship 8da193e6-5e86-46db-9e96-311111180004
 	fromColumn: FactCostUsage.MeterKey
@@ -52,17 +34,13 @@ relationship 8da193e6-5e86-46db-9e96-311111180005
 	fromColumn: FactRetailPriceMatch.SubscriptionId
 	toColumn: DimSubscription.SubscriptionId
 
-relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030003
-	fromColumn: FactRetailPriceMatch.AzureCloud
-	toColumn: DimAzureCloud.AzureCloud
-
 relationship 8da193e6-5e86-46db-9e96-311111180006
 	fromColumn: FactRetailPriceMatch.ServiceName
 	toColumn: DimServiceModel.ServiceName
 
 relationship 8da193e6-5e86-46db-9e96-311111180007
 	fromColumn: FactRetailPriceMatch.ArmRegionName
-	toColumn: DimRegionModel.ArmRegionName
+	toColumn: DimRegion.ArmRegionName
 
 relationship 8da193e6-5e86-46db-9e96-311111180008
 	fromColumn: FactRetailPriceMatch.MeterKey
@@ -71,11 +49,6 @@ relationship 8da193e6-5e86-46db-9e96-311111180008
 relationship 8da193e6-5e86-46db-9e96-311111180010
 	fromColumn: FactRetailPriceMatch.RetailMatchStatus
 	toColumn: DimRetailMatch.RetailMatchStatus
-
-relationship 330af3bf-d185-451d-9dc0-7556673529fc
-	joinOnDateBehavior: datePartOnly
-	fromColumn: FactCostUsage.UsageDateAsDate
-	toColumn: LocalDateTable_9a3519e1-e9ef-4a51-a030-20a50a520e75.Date
 
 relationship 18f0a345-c782-43f0-b3c0-311112070001
 	fromColumn: FactCostUsage.UsageDate
@@ -115,43 +88,20 @@ relationship 18f0a345-c782-43f0-b3c0-311112070008
 	fromColumn: MaccAgreementStatus.AsOfDate
 	toColumn: DimAgreementAsOfDate.Date
 
-relationship 18f0a345-c782-43f0-b3c0-311112070009
-	joinOnDateBehavior: datePartOnly
-	fromColumn: AzureRetail.'Items.effectiveStartDate'
-	toColumn: DimRetailEffectiveStartDate.Date
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030001
+	fromColumn: CostRetailFact.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
 
-relationship 18f0a345-c782-43f0-b3c0-311112070010
-	joinOnDateBehavior: datePartOnly
-	fromColumn: AzureRetail.'Items.effectiveEndDate'
-	toColumn: DimRetailEffectiveEndDate.Date
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030002
+	fromColumn: FactCostUsage.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
 
-relationship c798a41f-4d59-43e8-8500-ae4531664e58
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimUsageDate.Date
-	toColumn: LocalDateTable_49fc166b-94d1-4626-aa4e-032e570a1543.Date
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030003
+	fromColumn: FactRetailPriceMatch.AzureCloud
+	toColumn: DimAzureCloud.AzureCloud
 
-relationship a5b6252c-7543-443e-b4cb-281e8573a569
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimAgreementStartDate.Date
-	toColumn: LocalDateTable_c2b7d299-dc73-4040-910e-c0ef0d09c791.Date
-
-relationship 410182b9-d5ad-4de0-a517-cb969fea5266
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimAgreementEndDate.Date
-	toColumn: LocalDateTable_74e6b0e6-7062-4993-9777-53dbe720e596.Date
-
-relationship 16f5916f-8e6f-46fe-ae3f-4ff4d2ace858
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimAgreementAsOfDate.Date
-	toColumn: LocalDateTable_6a7279ad-0f3e-4d62-8f43-ac9cf1f5d2df.Date
-
-relationship fcb8ff03-d6ed-43f1-ab2a-49e48bbf4fc1
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimRetailEffectiveStartDate.Date
-	toColumn: LocalDateTable_8724d77b-4337-4561-ace2-8fe0f794be62.Date
-
-relationship 75876a71-7699-4305-b0d4-ced9516f0686
-	joinOnDateBehavior: datePartOnly
-	fromColumn: DimRetailEffectiveEndDate.Date
-	toColumn: LocalDateTable_fe6b35d8-0937-4d1c-adf6-74a6f25bf8d6.Date
+relationship 1c2fb1a3-ae71-4f6d-b7d4-311113030004
+	isActive: false
+	fromColumn: DimRegion.'Azure Cloud'
+	toColumn: DimAzureCloud.'Azure Cloud'
 

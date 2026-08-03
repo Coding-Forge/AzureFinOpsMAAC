@@ -11,10 +11,17 @@ table DimRetailMatch
 		mode: import
 		source =
 				let
-				  Source = CostRetailFact,
-				  Keep = Table.SelectColumns(Source, {"RetailMatchStatus"}),
-				  DistinctRows = Table.Distinct(Keep),
-				  SortedRows = Table.Sort(DistinctRows, {{"RetailMatchStatus", Order.Ascending}})
+				  Source = #table(
+				    type table [RetailMatchStatus = text],
+				    {
+				      {"Matched"},
+				      {"Unmatched"},
+				      {"MultipleCandidates"},
+				      {"NoRetailPrice"},
+				      {"Skipped"}
+				    }
+				  ),
+				  SortedRows = Table.Sort(Source, {{"RetailMatchStatus", Order.Ascending}})
 				in
 				  SortedRows
 

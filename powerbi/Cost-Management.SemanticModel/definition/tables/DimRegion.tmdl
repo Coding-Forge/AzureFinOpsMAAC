@@ -13,15 +13,33 @@ table DimRegion
 		summarizeBy: none
 		sourceColumn: ResourceLocation
 
+	column 'Display Name'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040001
+		summarizeBy: none
+		sourceColumn: Display Name
+
+	column 'Azure Region'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040002
+		summarizeBy: none
+		sourceColumn: Azure Region
+
+	column 'Azure Cloud'
+		dataType: string
+		lineageTag: 9b0666da-76f7-47a5-9c86-311113040003
+		summarizeBy: none
+		sourceColumn: Azure Cloud
+
 	partition DimRegion = m
 		mode: import
 		source =
 				let
-				  Source = CostRetailFact,
-				  Keep = Table.SelectColumns(Source, {"ArmRegionName", "ResourceLocation"}),
-				  NonBlank = Table.SelectRows(Keep, each [ArmRegionName] <> null and Text.Trim(Text.From([ArmRegionName])) <> ""),
-				  GroupedRows = Table.Group(NonBlank, {"ArmRegionName"}, {{"ResourceLocation", each List.First(List.RemoveNulls([ResourceLocation])), type nullable text}}),
-				  SortedRows = Table.Sort(GroupedRows, {{"ArmRegionName", Order.Ascending}})
+				  Source = CsvFromSelectedStorage("dim-region.csv", 5),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"Display Name", type text}, {"Azure Region", type text}, {"Azure Cloud", type text}, {"ArmRegionName", type text}, {"ResourceLocation", type text}}, [MissingField = MissingField.UseNull]),
+				  NonBlank = Table.SelectRows(Typed, each [ArmRegionName] <> null and Text.Trim(Text.From([ArmRegionName])) <> ""),
+				  SortedRows = Table.Sort(NonBlank, {{"Azure Cloud", Order.Ascending}, {"Azure Region", Order.Ascending}})
 				in
 				  SortedRows
 

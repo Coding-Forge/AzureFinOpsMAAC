@@ -11,9 +11,11 @@ table DimService
 		mode: import
 		source =
 				let
-				  Source = CostRetailFact,
-				  Keep = Table.SelectColumns(Source, {"ServiceName"}),
-				  DistinctRows = Table.Distinct(Keep),
+				  Source = CsvFromSelectedStorage("dim-service.csv", 1),
+				  Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  Typed = Table.TransformColumnTypes(Promoted, {{"ServiceName", type text}}, [MissingField = MissingField.UseNull]),
+				  NonBlank = Table.SelectRows(Typed, each [ServiceName] <> null and Text.Trim(Text.From([ServiceName])) <> ""),
+				  DistinctRows = Table.Distinct(NonBlank, {"ServiceName"}),
 				  SortedRows = Table.Sort(DistinctRows, {{"ServiceName", Order.Ascending}})
 				in
 				  SortedRows

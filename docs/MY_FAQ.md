@@ -74,6 +74,26 @@ az login --use-device-code --allow-no-subscriptions
 az account set --subscription "<subscription-id>"
 ```
 
+## How do I switch Azure CLI between Commercial and Government clouds?
+
+Azure CLI has one active cloud profile at a time. Switch the cloud before loading subscriptions or running the data pull for that customer cloud.
+
+```powershell
+# Azure Commercial
+az cloud set --name AzureCloud
+az login --tenant "<commercial-tenant-id>"
+az account set --subscription "<commercial-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+
+# Azure Government
+az cloud set --name AzureUSGovernment
+az login --tenant "<government-tenant-id>"
+az account set --subscription "<government-subscription-id>"
+az account show --query "{cloud:environmentName, tenant:tenantId, subscription:id, name:name}" --output table
+```
+
+If you use PIM, activate the role first. If you already tried the data pull before activation, run `az logout`, set the cloud again, and log in with `az login --tenant "<tenant-id>"` so the token contains the active role claims.
+
 Useful government cloud URLs:
 
 | Purpose | URL |

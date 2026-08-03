@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CostRetailFact"
+                      "Entity": "DimRegion"
                     }
                   },
-                  "Property": "ArmRegionName"
+                  "Property": "Display Name"
                 }
               },
-              "queryRef": "CostRetailFact.ArmRegionName",
-              "nativeQueryRef": "ArmRegionName",
+              "queryRef": "DimRegion.Display Name",
+              "nativeQueryRef": "Display Name",
               "active": true
             }
           ]
