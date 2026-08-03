@@ -108,6 +108,22 @@ table DataQualitySnapshot
 
 		annotation SummarizationSetBy = Automatic
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 93eec44a-b21e-47ec-9362-8eecf29ebb3a
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: e5dcecff-993a-4570-b836-3b709817ee8c
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
 	partition DataQualitySnapshot = m
 		mode: import
 		source =

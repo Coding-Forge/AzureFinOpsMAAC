@@ -254,6 +254,30 @@ table AgreementPriceAudit
 
 		annotation SummarizationSetBy = Automatic
 
+	column ExportRunId
+		dataType: string
+		lineageTag: f1047459-6c0e-43f8-b73a-80956172438a
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+		annotation SummarizationSetBy = Automatic
+
+	column AzureCloud
+		dataType: string
+		lineageTag: fcd3aa96-0f84-400a-bdf3-49fe68f4b5f9
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: 30f8daa3-cec2-4197-8e7f-0605814d5984
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
 	partition AgreementPriceAudit = m
 		mode: import
 		source =

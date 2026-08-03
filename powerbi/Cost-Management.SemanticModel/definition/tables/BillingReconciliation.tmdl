@@ -74,6 +74,38 @@ table BillingReconciliation
 
 		annotation SummarizationSetBy = Automatic
 
+	column ExportRunId
+		dataType: string
+		lineageTag: 062bf74b-9b7b-403e-af8a-5616c0e99369
+		summarizeBy: none
+		sourceColumn: ExportRunId
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExportedUtc
+		dataType: string
+		lineageTag: 82e9b944-1424-4a2b-bf54-27144617ddee
+		summarizeBy: none
+		sourceColumn: ExportedUtc
+
+		annotation SummarizationSetBy = Automatic
+
+	column AzureCloud
+		dataType: string
+		lineageTag: 0cb77e14-df3e-4a12-980b-4c033f140576
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: 0bdfd8ea-3b22-4093-86b8-d32cf55150d0
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
 	partition BillingReconciliation = m
 		mode: import
 		source =

@@ -35,6 +35,20 @@ This runbook contains the operational and technical details that were previously
 
 The launcher can optionally install Azure CLI with `winget` when selected.
 
+Run the prerequisite checker on new workstations or before a customer handoff:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsPrerequisites.ps1 -AzureCloud AzureCloud -CheckPowerBiDesktop
+```
+
+For Azure Government:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsPrerequisites.ps1 -AzureCloud AzureUSGovernment -TenantId "<tenant-id>" -RequireLogin -CheckPowerBiDesktop
+```
+
+The checker reports pass/warn/fail for required scripts, PowerShell, Azure CLI, active cloud, sign-in context, visible subscriptions, Power BI Desktop process state, and optional writable output/history paths. Use `-AsJson` for automation.
+
 ## Standard run
 
 From the repository root:

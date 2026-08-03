@@ -135,6 +135,10 @@ More detailed operational and technical information has been moved out of this f
 
 ## Important things to watch
 
+- **Run the prerequisite checker first** on a new workstation:
+  ```powershell
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsPrerequisites.ps1 -AzureCloud AzureCloud -CheckPowerBiDesktop
+  ```
 - **Power BI Desktop must be closed** before running the export because the launcher updates PBIP project files.
 - **Azure permissions matter.** The runner needs at least `Cost Management Reader` RBAC for Cost Management exports. Billing data and storage uploads may require additional permissions.
 - **Azure Government / GCC High requires extra validation.** Choose `AzureUSGovernment` in the launcher, use government portal URLs, and validate API availability for Cost Management, Billing, and Retail Prices before relying on outputs.

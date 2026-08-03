@@ -120,6 +120,14 @@ table ExportRunManifest
 
 		annotation SummarizationSetBy = Automatic
 
+	column AzureCloud
+		dataType: string
+		lineageTag: 912e6fe5-6e35-4441-9f0f-125ed2bca431
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
 	partition ExportRunManifest = m
 		mode: import
 		source =

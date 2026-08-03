@@ -126,6 +126,22 @@ table RetailMatchExceptions
 
 		annotation SummarizationSetBy = Automatic
 
+	column AzureCloud
+		dataType: string
+		lineageTag: e7fa2954-aab4-4613-bbcf-4ec6e52eaa4c
+		summarizeBy: none
+		sourceColumn: AzureCloud
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenantId
+		dataType: string
+		lineageTag: 2f6f00d9-b2fa-401b-b976-43d1b2809c90
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
 	partition RetailMatchExceptions = m
 		mode: import
 		source =

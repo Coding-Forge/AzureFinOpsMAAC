@@ -44,6 +44,22 @@ Cost Management Reader
 
 Assign it at the subscription, management group, or billing scope being analyzed. Billing contact audit, invoice details, role assignments, and storage uploads may require additional billing or storage permissions.
 
+## How do I check whether my machine is ready to run the solution?
+
+Run the prerequisite checker from the repository root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsPrerequisites.ps1 -AzureCloud AzureCloud -CheckPowerBiDesktop
+```
+
+For Azure Government:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsPrerequisites.ps1 -AzureCloud AzureUSGovernment -TenantId "<tenant-id>" -RequireLogin -CheckPowerBiDesktop
+```
+
+The checker reports whether required scripts, PowerShell, Azure CLI, active cloud, sign-in, subscription visibility, Power BI Desktop state, and optional output/history paths are ready.
+
 ## Why does the data pull still fail after I activate PIM?
 
 If you attempted the data pull before your PIM role was active, Azure CLI may have cached an access token that does not include the newly activated role. Activating PIM does not always update an already-issued token.

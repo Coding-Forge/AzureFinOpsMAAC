@@ -238,6 +238,14 @@ table CostRetailFact
 		summarizeBy: none
 		sourceColumn: AzureRegionKey
 
+	column TenantId
+		dataType: string
+		lineageTag: 5f251d13-fa0b-43f3-8a0a-a945e82121b5
+		summarizeBy: none
+		sourceColumn: TenantId
+
+		annotation SummarizationSetBy = Automatic
+
 	partition CostRetailFact = m
 		mode: import
 		source =
