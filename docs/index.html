@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Azure FinOps MACC vs Retail Solution</title>
+  <meta name="description" content="Azure FinOps solution for analyzing actual Azure cost, public retail estimates, MACC pacing, billing evidence, and operational freshness.">
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --brand: #0b4f8c;
+      --brand-2: #2563eb;
+      --accent: #0f766e;
+      --warn: #92400e;
+      --border: #d8e0ea;
+      --code: #0f172a;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--brand-2);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.25), transparent 36rem),
+        linear-gradient(135deg, #082f49 0%, #0b4f8c 48%, #123c69 100%);
+      color: #ffffff;
+      padding: 4.5rem 1.5rem 4rem;
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      color: #dbeafe;
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 0 0 1rem;
+      max-width: 880px;
+      font-size: clamp(2.25rem, 5vw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-copy {
+      max-width: 780px;
+      margin: 0 0 1.7rem;
+      color: #d8e8ff;
+      font-size: 1.2rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.7rem;
+      background: #ffffff;
+      color: var(--brand);
+      font-weight: 650;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: none;
+    }
+
+    main {
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .notice {
+      margin: -3.4rem auto 2rem;
+      max-width: 1120px;
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-left: 0.45rem solid #fbbf24;
+      border-radius: 0.9rem;
+      background: #fff7ed;
+      color: #5c3412;
+      box-shadow: var(--shadow);
+    }
+
+    section {
+      margin: 2rem 0;
+      padding: 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: var(--panel);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 0.8rem;
+      color: #0f2742;
+      font-size: 1.7rem;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 1.4rem 0 0.45rem;
+      color: #16324f;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0.65rem 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.85rem;
+      background: #fbfdff;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: #102a43;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    ul, ol {
+      padding-left: 1.25rem;
+    }
+
+    li {
+      margin: 0.4rem 0;
+    }
+
+    code, pre {
+      font-family: Consolas, "SFMono-Regular", Menlo, Monaco, "Liberation Mono", monospace;
+    }
+
+    code {
+      padding: 0.13rem 0.3rem;
+      border-radius: 0.3rem;
+      background: #eef3f9;
+      color: #102a43;
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 1rem;
+      border-radius: 0.8rem;
+      background: var(--code);
+      color: #e5edf8;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 0.8rem;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef5ff;
+      color: #123c69;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    footer {
+      padding: 2rem 1.5rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <span class="eyebrow">Azure FinOps reference implementation</span>
+      <h1>Azure FinOps MACC vs Retail Solution</h1>
+      <p class="hero-copy">
+        A practical toolkit for collecting Azure cost and billing evidence, comparing actual cost to public retail estimates, monitoring MACC pacing, and preparing Power BI-ready FinOps review artifacts.
+      </p>
+      <div class="actions">
+        <a class="button" href="../README.md">Read the project README</a>
+        <a class="button secondary" href="Solution_Technical_Runbook.md">Technical runbook</a>
+        <a class="button secondary" href="Release_Process.md">Release process</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Work in progress:</strong> this project is evolving from a local FinOps/PBI accelerator into a more enterprise-ready reference architecture. Expect changes to scripts, Bicep, Power BI packaging, and deployment guidance. Check back regularly for updates, releases, and documentation improvements.
+    </div>
+
+    <div class="wrap">
+      <section>
+        <h2>What this solution does</h2>
+        <p>
+          Azure cost conversations often require data from Cost Management, Billing, subscriptions, resource metadata, public retail prices, customer agreement context, and Power BI. This solution brings those signals together so teams can inspect spend, explain cost drivers, estimate retail-equivalent pricing, and review MACC consumption in one repeatable workflow.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <strong>Cost and usage extraction</strong>
+            Pulls Azure Cost Management data by subscription, service, resource group, region, meter, product, and usage date.
+          </div>
+          <div class="card">
+            <strong>Retail price comparison</strong>
+            Matches usage to Azure Retail Prices API metadata to estimate retail-equivalent cost and potential savings.
+          </div>
+          <div class="card">
+            <strong>MACC pacing</strong>
+            Produces agreement status, benefit ledger, commitment pacing, and exception artifacts for review.
+          </div>
+          <div class="card">
+            <strong>Billing evidence</strong>
+            Exports billing account, profile, invoice section, subscription billing property, invoice, and billing-role evidence where permissions allow.
+          </div>
+          <div class="card">
+            <strong>Multi-cloud support</strong>
+            Tracks Azure Commercial and Azure Government data with cloud-aware history, subscriptions, and region dimensions.
+          </div>
+          <div class="card">
+            <strong>Operational monitoring</strong>
+            Supports Azure SQL durable-store views for ingestion freshness, row counts, retail match coverage, and run health.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who it is for</h2>
+        <p>
+          The project is intended for cloud solution architects, FinOps practitioners, account teams, and technical owners who need a repeatable way to collect and discuss Azure cost evidence. It is also useful as a starting point for enterprise teams that want to operationalize cost ingestion into Azure SQL and Power BI.
+        </p>
+        <p class="muted">
+          This is not a replacement for official invoices, contract systems, or Microsoft billing portals. Treat retail-equivalent pricing and savings as directional analysis that should be validated before customer-facing commitments.
+        </p>
+      </section>
+
+      <section>
+        <h2>Use it locally</h2>
+        <p>
+          The local workflow is designed for development, proof of concept, or one-off analysis from a workstation with PowerShell, Azure CLI, and Power BI Desktop.
+        </p>
+        <ol>
+          <li>Clone the repository.</li>
+          <li>Sign in to the target Azure tenant with appropriate read permissions.</li>
+          <li>Run the prerequisite checker.</li>
+          <li>Start the launcher and select subscriptions, analysis mode, agreement details, and output location.</li>
+          <li>Open the generated Power BI template and provide the generated parameter values.</li>
+        </ol>
+        <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File .\scripts\Test-FinOpsPrerequisites.ps1 `
+  -AzureCloud AzureCloud `
+  -CheckPowerBiDesktop
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File .\scripts\Start-FinOpsDataPull.ps1</code></pre>
+        <p>
+          Each run creates a timestamped output folder with logs, CSV/JSON outputs, audit artifacts, and a <code>powerbi-storage-settings.json</code> file that tells Power BI which parameters to use.
+        </p>
+      </section>
+
+      <section>
+        <h2>Use it as an enterprise solution</h2>
+        <p>
+          The enterprise path keeps local scripts available for development and proof of concept, but moves the system of record and scheduled operations into Azure.
+        </p>
+        <div class="split">
+          <div>
+            <h3>Reference architecture</h3>
+            <ul>
+              <li>Azure Function App for scheduled ingestion.</li>
+              <li>Managed identity as the preferred production authentication mode.</li>
+              <li>Azure SQL Database as a governed durable store.</li>
+              <li>Optional Azure SQL private endpoint and Function VNet integration.</li>
+              <li>Optional Key Vault references for service-principal secrets when managed identity is not possible.</li>
+              <li>Application Insights and Azure Monitor alerts for failed or missed runs.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Deployment building blocks</h3>
+            <ul>
+              <li><code>infra\bicep\main.bicep</code> deploys core Azure resources.</li>
+              <li><code>infra\bicep\role-assignments.bicep</code> assigns subscription-scope RBAC to the Function identity.</li>
+              <li><code>scripts\Deploy-FinOpsSqlSchema.ps1</code> deploys SQL tables and monitoring views.</li>
+              <li><code>scripts\Import-FinOpsSqlData.ps1</code> loads durable history into SQL.</li>
+              <li><code>functionapp\</code> contains the timer-triggered ingestion scaffold.</li>
+            </ul>
+          </div>
+        </div>
+        <pre><code>az deployment group create `
+  --resource-group "&lt;resource-group&gt;" `
+  --template-file .\infra\bicep\main.bicep `
+  --parameters .\infra\bicep\main.parameters.json</code></pre>
+        <p>
+          For private-network deployments, run SQL schema deployment and SQL smoke tests from a Bastion-accessed jump box, VPN/ExpressRoute-connected workstation, or self-hosted deployment agent inside the VNet.
+        </p>
+      </section>
+
+      <section>
+        <h2>Local versus enterprise mode</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Local / POC</th>
+              <th>Enterprise-ready path</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Execution</td>
+              <td>PowerShell launcher on a workstation.</td>
+              <td>Azure Function timer trigger using native Az.Accounts and REST calls.</td>
+            </tr>
+            <tr>
+              <td>Authentication</td>
+              <td>Interactive Azure CLI or existing local context.</td>
+              <td>Managed identity by default; Key Vault-backed service principal if required.</td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td>Local run folders and durable CSV history.</td>
+              <td>Azure SQL durable store with monitoring views and optional private endpoint.</td>
+            </tr>
+            <tr>
+              <td>Reporting</td>
+              <td>Power BI template reading generated files.</td>
+              <td>Power BI template plus optional SQL-backed operational freshness page.</td>
+            </tr>
+            <tr>
+              <td>Operations</td>
+              <td>Manual review of logs and output files.</td>
+              <td>Application Insights status markers and Azure Monitor alerts.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Important notes</h2>
+        <ul>
+          <li>Generated exports can contain sensitive billing, subscription, and tenant information. Do not commit generated outputs.</li>
+          <li>PBIP source projects are intended for local development and are not included in the public repository.</li>
+          <li>Public releases should use a sanitized PBIT template that prompts for parameters instead of embedding local paths or customer data.</li>
+          <li>Azure Government and GCC High scenarios require validation of Cost Management, Billing, Retail Prices, storage, and Power BI behavior for the target tenant.</li>
+          <li>Retail price matching is directional and may not represent contracted, discounted, or government-specific pricing.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Learn more</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Technical runbook</strong>
+            <p><a href="Solution_Technical_Runbook.md">Architecture, scripts, Azure SQL, Function App, monitoring, and private-network operations.</a></p>
+          </div>
+          <div class="card">
+            <strong>Power BI guide</strong>
+            <p><a href="FinOps_Cost_Dashboard_Guide.md">Model, reporting, measures, data-quality guidance, and review flow.</a></p>
+          </div>
+          <div class="card">
+            <strong>Release process</strong>
+            <p><a href="Release_Process.md">How to produce public-safe release packages and sanitized PBIT artifacts.</a></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Azure FinOps MACC vs Retail Solution. This project is provided as a work-in-progress reference implementation.</p>
+    </div>
+  </footer>
+</body>
+</html>
