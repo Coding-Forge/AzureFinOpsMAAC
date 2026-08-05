@@ -1,0 +1,22 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Local/private Power BI source projects. Keep PBIP locally for development;
+# publish sanitized PBIT/release artifacts separately.
+powerbi/**
+
+# Locally exported Power BI templates may contain parameter defaults; export a
+# clean PBIT intentionally for release instead of committing binary templates.
+template/*.pbit
+*.pbix
+
+# Generated exports, release packages, and local deployment parameters.
+scripts/exports/**
+releases/**
+infra/bicep/main.json
+infra/bicep/role-assignments.json
+infra/bicep/main.parameters.json
+infra/bicep/role-assignments.parameters.json
+
+# Internal development notes are not part of the public solution.
+internal-docs/**

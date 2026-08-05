@@ -1,0 +1,20 @@
+workload_name       = "finops"
+environment_name   = "prod"
+location           = "westus3"
+resource_group_name = "<resource-group>"
+
+finops_azure_cloud    = "AzureCloud"
+finops_tenant_id      = "<tenant-id>"
+finops_subscription_ids = "<subscription-id-1>,<subscription-id-2>"
+finops_timer_schedule = "0 0 6 * * *"
+
+sql_server_name                = "<globally-unique-sql-server-name>"
+sql_database_name              = "FinOpsMaccRetail"
+sql_schema_name                = "finops"
+sql_sku_name                   = "GP_S_Gen5_1"
+sql_max_size_gb                = 10
+sql_public_network_access_enabled = true
+sql_allowed_client_ip          = ""
+
+sql_entra_admin_login     = "<admin-upn-or-group-name>"
+sql_entra_admin_object_id = "<admin-object-id>"

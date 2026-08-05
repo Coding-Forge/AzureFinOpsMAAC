@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "functionPrincipalId": {
+      "value": "<function-managed-identity-principal-id>"
+    },
+    "roleDefinitionIds": {
+      "value": [
+        "72fafb9e-0641-4937-9268-a91bfd8191a3"
+      ]
+    }
+  }
+}

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Azure FinOps MACC Retail Solution FAQ</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+    }
+    a { color: var(--cp-link); }
+    code, pre { font-family: Consolas, "Courier New", Courier, monospace; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 32px; }
+    header {
+      background: var(--cp-bg-elevated);
+      border-bottom: 1px solid var(--cp-border);
+      padding: 28px 32px;
+    }
+    header > div { max-width: 1120px; margin: 0 auto; }
+    .brand {
+      font-size: 14px;
+      color: var(--cp-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 34px; line-height: 1.1; margin: 0 0 12px; }
+    h2 { font-size: 22px; margin: 32px 0 12px; }
+    details {
+      background: var(--cp-surface);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+      padding: 14px 16px;
+      margin: 12px 0;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--cp-text);
+    }
+    details p, details ul, details ol { color: var(--cp-text-muted); }
+    pre {
+      background: var(--cp-surface-soft);
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 12px;
+      overflow: auto;
+    }
+    .callout {
+      border-left: 4px solid var(--cp-accent);
+      background: var(--cp-accent-soft);
+      border-radius: 0.625rem;
+      padding: 14px 16px;
+      margin: 18px 0;
+    }
+    .links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .button {
+      display: inline-block;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 0.625rem;
+      font-weight: 700;
+    }
+    .button.secondary {
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      border: 1px solid var(--cp-border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand">Azure FinOps MACC Retail Solution</div>
+      <h1>FAQ and Troubleshooting</h1>
+      <p>Answers to common setup, export, Power BI refresh, MACC audit, and data quality questions.</p>
+      <div class="links">
+        <a class="button" href="index.html">Open user guide</a>
+        <a class="button secondary" href="../Report_Pages_Preview.md">Report pages reference</a>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section>
+      <h2>Getting started</h2>
+      <details open>
+        <summary>What should I run first?</summary>
+        <p>Run <code>scripts\Start-FinOpsDataPull.ps1</code>. Use the launcher to select subscriptions, set output/history locations, enter agreement metadata, and start the export.</p>
+      </details>
+      <details>
+        <summary>What permissions do I need?</summary>
+        <p>The signed-in Azure CLI identity needs access to list subscriptions, read resource groups, and query Azure Cost Management for selected subscriptions. Cloud uploads require data-plane write permissions to the selected Blob container or ADLS Gen2 file system.</p>
+      </details>
+      <details>
+        <summary>Do I need Azure CLI?</summary>
+        <p>Yes. The launcher uses Azure CLI for sign-in, subscription discovery, resource group export, and cloud uploads. The launcher can help install it if <code>winget</code> is available.</p>
+      </details>
+    </section>
+
+    <section>
+      <h2>Output and history</h2>
+      <details>
+        <summary>What is OutputRoot?</summary>
+        <p><code>OutputRoot</code> is the timestamped run folder for one export, such as <code>&lt;output-root&gt;\run-YYYYMMDD-HHMMSS</code>. Power BI's <code>LocalDataRoot</code> should point to a completed run folder.</p>
+      </details>
+      <details>
+        <summary>What is HistoryRoot?</summary>
+        <p><code>HistoryRoot</code> is the durable folder shared across runs, such as <code>&lt;output-root&gt;\history</code>. It stores long-term files such as <code>cost-retail-history.csv</code> and <code>macc-benefit-ledger.csv</code>.</p>
+      </details>
+      <details>
+        <summary>Why are some tables blank?</summary>
+        <p>Blank tables usually mean Power BI is pointed at a failed or header-only run folder, or the table is a customer-maintained template. Rerun the export successfully and update Power BI parameters to the completed run folder. <code>BillingReconciliation</code> and <code>OwnershipMapping</code> stay blank until users fill their CSV files.</p>
+      </details>
+    </section>
+
+    <section>
+      <h2>Power BI refresh</h2>
+      <details>
+        <summary>Which file tells me the Power BI parameter values?</summary>
+        <p>Open <code>powerbi-storage-settings.json</code> in the run folder. Copy its values into the Power BI parameters for <code>StorageLocation</code>, <code>LocalDataRoot</code>, <code>HistoryDataRoot</code>, and any cloud root values that apply.</p>
+      </details>
+      <details>
+        <summary>Why do I get missing CSV errors?</summary>
+        <p>The selected run folder does not contain the expected generated files. This often happens after an export failure, timeout, or when Power BI points to the parent output folder instead of a timestamped run folder.</p>
+      </details>
+      <details>
+        <summary>Why do I see schema or TMDL errors?</summary>
+        <p>Use the latest solution files and reopen the PBIP after pulling changes. Generated report pages must follow the enhanced PBIP JSON schema, and model expressions must stay in valid TMDL format.</p>
+      </details>
+    </section>
+
+    <section>
+      <h2>MACC audit and reporting</h2>
+      <details>
+        <summary>Which pages should executives use?</summary>
+        <p>Start with <strong>MACC Commitment Overview</strong> for utilization, remaining commitment, pacing, and required monthly run rate. Use <strong>MACC Benefit Ledger</strong> for long-term savings trends.</p>
+      </details>
+      <details>
+        <summary>Which page explains how savings were calculated?</summary>
+        <p>Use <strong>Agreement Price Audit</strong>. It shows actual cost, effective unit cost, retail price, retail equivalent cost, estimated savings, match status, and retail SKU/meter evidence.</p>
+      </details>
+      <details>
+        <summary>How should I handle unmatched retail rows?</summary>
+        <p>Use <strong>Coverage and Exceptions</strong>. Review rows with high actual cost first, then update <code>retail-match-exceptions.csv</code> with owner, review status, resolution, and notes if you want dispositions to round-trip into Power BI.</p>
+      </details>
+      <details>
+        <summary>Does this retrieve the official MACC balance?</summary>
+        <p>No. Commitment burn-down is calculated from customer-provided agreement metadata and exported cost data. Treat it as governance analysis and reconcile it with official billing/agreement records.</p>
+      </details>
+    </section>
+
+    <section>
+      <h2>Troubleshooting commands</h2>
+      <div class="callout">
+        Run these from the solution root when troubleshooting script or release packaging issues.
+      </div>
+      <pre>Set-Location 'C:\Projects\Fabric\AzureFinOpsMaccRetailSolution'
+
+# Parse the launcher
+$tokens = $null
+$errors = $null
+[System.Management.Automation.Language.Parser]::ParseFile(
+  (Resolve-Path 'scripts\Start-FinOpsDataPull.ps1'),
+  [ref]$tokens,
+  [ref]$errors
+) | Out-Null
+$errors
+
+# Build a local smoke release without zip
+.\build-release.ps1 -Version dev-smoke -Force -NoZip</pre>
+    </section>
+  </main>
+</body>
+</html>
+
