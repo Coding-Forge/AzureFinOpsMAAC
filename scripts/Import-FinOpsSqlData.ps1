@@ -21,15 +21,32 @@ param(
 
     [string]$CurrentRunRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) "data\latest-run"),
 
+    [ValidateSet("AzureCloud", "AzureUSGovernment")]
+    [string]$AzureCloud = $(if ($env:FINOPS_AZURE_CLOUD) { $env:FINOPS_AZURE_CLOUD } else { "AzureCloud" }),
+
     [switch]$Replace
 )
 
 $ErrorActionPreference = "Stop"
 
+Import-Module (Join-Path $PSScriptRoot "FinOpsNativeAuth.psm1") -Force
+
 function Get-AzureSqlAccessToken {
+    # Prefer the native Az.Accounts token path (works with the current context,
+    # including managed identity in Azure Functions). Fall back to Azure CLI
+    # for local/POC usage where Az.Accounts may not be signed in.
+    if (Get-Module -ListAvailable -Name Az.Accounts) {
+        try {
+            return Get-FinOpsAccessToken -AzureCloud $AzureCloud -Resource Sql
+        }
+        catch {
+            Write-Warning "Az.Accounts token acquisition failed, falling back to Azure CLI: $($_.Exception.Message)"
+        }
+    }
+
     $token = az account get-access-token --resource "https://database.windows.net/" --query accessToken --output tsv 2>&1
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($token)) {
-        throw "Could not get Azure SQL access token from Azure CLI. Run az login first. Details: $token"
+        throw "Could not get Azure SQL access token from Azure CLI or Az.Accounts. Run az login or Connect-AzAccount first. Details: $token"
     }
 
     return [string]$token

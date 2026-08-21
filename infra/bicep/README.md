@@ -9,7 +9,8 @@ It deploys:
 - Azure SQL logical server
 - Azure SQL database
 - optional SQL firewall rule
-- optional VNet, Function VNet integration, Azure SQL private endpoint, and SQL private DNS zone/link
+- optional VNet, NAT Gateway (fixed Function outbound egress IP), Function App private endpoint, and `privatelink.azurewebsites.net` private DNS zone/link
+- optional jump box VM plus Azure Bastion for private administrative access to the Function App once it is behind a private endpoint
 - PowerShell Azure Function App with system-assigned managed identity
 - Function app settings for native FinOps ingestion
 - optional RBAC-enabled Azure Key Vault for service-principal secrets
@@ -44,11 +45,15 @@ az deployment group create `
     finOpsSubscriptionIds="<subscription-id>" `
     functionPlanSkuName="EP1" `
     enablePrivateNetworking=true `
-    sqlPublicNetworkAccessEnabled=false `
+    sqlAllowedClientIp="<your-workstation-public-ip>" `
+    enableJumpBox=true `
+    jumpBoxSshPublicKey="ssh-ed25519 AAAA...your-public-key..." `
     enableKeyVault=true `
     enableMonitoringAlerts=true `
     alertNotificationEmail="finops-ops@example.com"
 ```
+
+This example keeps Azure SQL on public networking, firewalled to your workstation IP (`sqlAllowedClientIp`) plus the Function's fixed NAT Gateway egress IP (added automatically). The Function App itself runs behind a VNet and is reachable only through its private endpoint; the jump box + Bastion give you a private path to it.
 
 `sqlServerName` is a parameter. To target an existing SQL server, pass its logical server name:
 
@@ -137,8 +142,10 @@ If the customer already has a governed Key Vault, leave `enableKeyVault=false`, 
 ## Notes
 
 - The default SQL SKU is `GP_S_Gen5_1`, suitable for small/pilot deployments. This baseline keeps SQL database properties portable across SKUs; tune serverless auto-pause/min-capacity settings later if the customer standardizes on serverless.
-- Set `enablePrivateNetworking=true` and `sqlPublicNetworkAccessEnabled=false` when the customer requires SQL private endpoint access. This creates a VNet, delegated Function integration subnet, SQL private endpoint subnet, `privatelink.database.windows.net` private DNS zone, and DNS zone link.
-- Function VNet integration requires a Function plan that supports regional VNet integration. Use `functionPlanSkuName="EP1"` or another approved Premium/Dedicated SKU when `enablePrivateNetworking=true`; classic `Y1` consumption is for public-network/local-dev baselines.
+- Set `enablePrivateNetworking=true` when you want the Function App to run behind a VNet: this creates a VNet, a delegated Function integration subnet with a NAT Gateway (fixed outbound IP), a Function App private endpoint subnet, and a `privatelink.azurewebsites.net` private DNS zone/link. Azure SQL stays on public networking (`sqlPublicNetworkAccessEnabled=true`) and is firewalled by IP instead of given its own private endpoint — pass your workstation IP via `sqlAllowedClientIp`. The Function's NAT Gateway public IP is added to the SQL firewall automatically (rule `AllowFunctionNatGateway`), so no manual step is needed there.
+- Set `enableJumpBox=true` (requires `enablePrivateNetworking=true`) to deploy a small Linux jump box VM plus Azure Bastion (Basic SKU) so you can privately reach the Function App once `publicNetworkAccess` is disabled on it. Provide `jumpBoxSshPublicKey` with your SSH public key. Connect via **Azure Portal > Bastion > Connect** using that key, then browse `https://<functionAppName>.scm.azurewebsites.net` from the jump box to view Kudu/logs, or use `curl`/`Invoke-RestMethod` to test connectivity — the private DNS zone resolves these hostnames to the private endpoint from inside the VNet.
+- Function VNet integration requires a Function plan that supports regional VNet integration. Use `functionPlanSkuName="EP1"` or another approved Premium/Dedicated SKU when `enablePrivateNetworking=true`; classic `Y1` consumption is for public-network/local-dev baselines (private endpoints and VNet integration are not supported on `Y1`).
+- When `enablePrivateNetworking=true`, `publicNetworkAccess` on the Function App is set to `Disabled`. This also blocks the public deployment/SCM path. Deploy the `functionapp` package either temporarily with `enablePrivateNetworking=false` for the first deploy, from a CI/CD agent placed inside the VNet, or from the jump box.
 - Bicep deployment can still run from your laptop because it is ARM control-plane deployment. SQL schema/data scripts must run from a private-network path after public SQL access is disabled.
 - If you use Azure Bastion, deploy/prepare a jump box VM in the VNet or a peered VNet, connect through Bastion, clone/copy this repository, and run `Deploy-FinOpsSqlSchema.ps1` from that VM.
 - The Function App defaults to `FINOPS_EXTRACTION_MODE=Native` and `FINOPS_AUTH_MODE=ManagedIdentity`.

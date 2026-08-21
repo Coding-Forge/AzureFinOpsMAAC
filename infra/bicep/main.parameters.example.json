@@ -80,6 +80,24 @@
     "privateEndpointSubnetPrefix": {
       "value": "10.40.2.0/24"
     },
+    "enableJumpBox": {
+      "value": false
+    },
+    "jumpBoxAdminUsername": {
+      "value": "azureuser"
+    },
+    "jumpBoxSshPublicKey": {
+      "value": ""
+    },
+    "jumpBoxVmSize": {
+      "value": "Standard_B2s_v2"
+    },
+    "jumpBoxSubnetPrefix": {
+      "value": "10.40.3.0/24"
+    },
+    "bastionSubnetPrefix": {
+      "value": "10.40.4.0/26"
+    },
     "enableKeyVault": {
       "value": false
     },

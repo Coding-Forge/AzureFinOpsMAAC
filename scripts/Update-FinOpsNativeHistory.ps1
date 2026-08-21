@@ -76,6 +76,16 @@ function New-FinOpsMeterKey {
     return @($ServiceName, $Meter, $Product, $PartNumber, $UnitOfMeasure) -join "|"
 }
 
+function ConvertTo-FinOpsDecimal {
+    param([AllowNull()]$Value)
+    if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) { return 0D }
+    $parsed = 0D
+    if ([decimal]::TryParse([string]$Value, [System.Globalization.NumberStyles]::Any, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$parsed)) {
+        return $parsed
+    }
+    return 0D
+}
+
 function Export-FinOpsCsv {
     param([string]$Path, [string[]]$Columns, [object[]]$Rows = @())
     New-Item -ItemType Directory -Path (Split-Path -Parent $Path) -Force | Out-Null
@@ -272,6 +282,73 @@ $retailHistoryRows = @($retailRows | ForEach-Object {
 $retailHistoryPath = Join-Path $OutputRoot "fact-retail-price-match-history.csv"
 Export-FinOpsCsv -Path $retailHistoryPath -Columns @("HistoryMonth","ExportRunId","ExportedUtc","TenantId","Period","AzureCloud","SubscriptionId","UsageDate","ServiceName","ArmRegionName","MeterKey","Currency","UsageQuantity","Cost","RetailSkuKey","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode") -Rows $retailHistoryRows
 Update-HistoryFile -CurrentPath $retailHistoryPath -HistoryFileName "fact-retail-price-match-history.csv" -KeyColumns @("AzureCloud","TenantId","SubscriptionId","HistoryMonth","Period")
+
+# CostRetailFact / cost-retail-history.csv: full cost-vs-retail detail (RetailEquivalentCost, EstimatedSavings)
+# built directly from the enriched retail-join CSVs so the SQL-loaded finops.CostRetailFact table is populated
+# by the serverless/native pipeline the same way the legacy GUI (Start-FinOpsDataPull.ps1) does.
+$costRetailRows = @()
+foreach ($prefix in $periods) {
+    $enrichedPath = Join-Path $OutputRoot "$prefix-cost-by-retail-join-enriched.csv"
+    if (-not (Test-Path $enrichedPath)) { continue }
+    $periodLabel = switch ($prefix) { "mtd" { "MTD" } "last-month" { "Last Month" } default { "Custom" } }
+    $costRetailRows += @(Import-Csv $enrichedPath | ForEach-Object {
+        $armRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.ArmRegionName
+        $retailArmRegionName = ConvertTo-FinOpsCanonicalArmRegionName $_.RetailArmRegionName
+        $usageText = [string]$_.UsageDate
+        $historyMonth = if ($usageText.Length -ge 6) { "$($usageText.Substring(0, 4))-$($usageText.Substring(4, 2))" } else { "" }
+        $cost = ConvertTo-FinOpsDecimal $_.Cost
+        $quantity = ConvertTo-FinOpsDecimal $_.UsageQuantity
+        $retailPrice = ConvertTo-FinOpsDecimal $_.RetailPrice
+        $retailEquivalent = if ($retailPrice -gt 0 -and $quantity -ne 0) { [math]::Round($quantity * $retailPrice, 6) } else { 0D }
+        $estimatedSavings = $retailEquivalent - $cost
+        [pscustomobject][ordered]@{
+            HistoryMonth = $historyMonth
+            Period = $periodLabel
+            ExportRunId = $runId
+            ExportedUtc = $exportedUtc
+            AzureCloud = $AzureCloud
+            TenantId = $TenantId
+            SubscriptionName = $_.SubscriptionName
+            SubscriptionId = $_.SubscriptionId
+            UsageQuantity = $_.UsageQuantity
+            Cost = $_.Cost
+            UsageDate = $_.UsageDate
+            ServiceName = $_.ServiceName
+            ResourceLocation = $_.ResourceLocation
+            ArmRegionName = $armRegionName
+            Meter = $_.Meter
+            Product = $_.Product
+            PartNumber = $_.PartNumber
+            UnitOfMeasure = $_.UnitOfMeasure
+            Currency = $_.Currency
+            RetailMatchStatus = $_.RetailMatchStatus
+            RetailCandidateCount = $_.RetailCandidateCount
+            RetailSkuId = $_.RetailSkuId
+            RetailMeterId = $_.RetailMeterId
+            RetailProductId = $_.RetailProductId
+            RetailProductName = $_.RetailProductName
+            RetailSkuName = $_.RetailSkuName
+            RetailMeterName = $_.RetailMeterName
+            RetailArmRegionName = $retailArmRegionName
+            RetailUnitOfMeasure = $_.RetailUnitOfMeasure
+            RetailPrice = $_.RetailPrice
+            RetailUnitPrice = $_.RetailUnitPrice
+            RetailCurrencyCode = $_.RetailCurrencyCode
+            RetailEquivalentCost = [math]::Round([decimal]$retailEquivalent, 4)
+            EstimatedSavings = [math]::Round([decimal]$estimatedSavings, 4)
+        }
+    })
+}
+
+$costRetailHistoryPath = Join-Path $HistoryRoot "cost-retail-history.csv"
+$costRetailColumns = @("HistoryMonth","Period","ExportRunId","ExportedUtc","AzureCloud","TenantId","SubscriptionName","SubscriptionId","UsageQuantity","Cost","UsageDate","ServiceName","ResourceLocation","ArmRegionName","Meter","Product","PartNumber","UnitOfMeasure","Currency","RetailMatchStatus","RetailCandidateCount","RetailSkuId","RetailMeterId","RetailProductId","RetailProductName","RetailSkuName","RetailMeterName","RetailArmRegionName","RetailUnitOfMeasure","RetailPrice","RetailUnitPrice","RetailCurrencyCode","RetailEquivalentCost","EstimatedSavings")
+$existingCostRetailRows = if (Test-Path $costRetailHistoryPath) { @(Import-Csv $costRetailHistoryPath) } else { @() }
+$costRetailReplaceKeys = @{}
+foreach ($row in $costRetailRows) { $costRetailReplaceKeys[(Get-ReplaceKey -Row $row -Columns @("AzureCloud","TenantId","SubscriptionId","HistoryMonth","Period"))] = $true }
+$keptCostRetailRows = @($existingCostRetailRows | Where-Object { -not $costRetailReplaceKeys.ContainsKey((Get-ReplaceKey -Row $_ -Columns @("AzureCloud","TenantId","SubscriptionId","HistoryMonth","Period"))) })
+Export-FinOpsCsv -Path $costRetailHistoryPath -Columns $costRetailColumns -Rows (@($keptCostRetailRows) + @($costRetailRows))
+Copy-Item -Path $costRetailHistoryPath -Destination (Join-Path $OutputRoot "cost-retail-history.csv") -Force
+Write-Host "Updated durable history: $costRetailHistoryPath"
 
 $manifestRows = @([pscustomobject]@{
     ExportRunId = $runId

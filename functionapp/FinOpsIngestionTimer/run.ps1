@@ -3,8 +3,7 @@ param($Timer)
 $ErrorActionPreference = "Stop"
 
 $functionRoot = Split-Path -Parent $PSScriptRoot
-$solutionRoot = Split-Path -Parent $functionRoot
-$runnerPath = Join-Path $solutionRoot "scripts\Invoke-FinOpsServerlessRun.ps1"
+$runnerPath = Join-Path $functionRoot "scripts\Invoke-FinOpsServerlessRun.ps1"
 
 if (-not (Test-Path $runnerPath)) {
     throw "FinOps serverless runner was not found: $runnerPath"

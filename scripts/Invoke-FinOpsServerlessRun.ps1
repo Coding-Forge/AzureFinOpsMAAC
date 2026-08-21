@@ -219,7 +219,8 @@ try {
                 -DatabaseName $AzureSqlDatabaseName `
                 -SchemaName $AzureSqlSchemaName `
                 -HistoryRoot $HistoryRoot `
-                -CurrentRunRoot $runRoot
+                -CurrentRunRoot $runRoot `
+                -AzureCloud $AzureCloud
         }
     }
     else {
@@ -273,7 +274,8 @@ try {
                 -DatabaseName $AzureSqlDatabaseName `
                 -SchemaName $AzureSqlSchemaName `
                 -HistoryRoot $HistoryRoot `
-                -CurrentRunRoot $runRoot
+                -CurrentRunRoot $runRoot `
+                -AzureCloud $AzureCloud
         }
     }
 

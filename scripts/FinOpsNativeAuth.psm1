@@ -177,7 +177,25 @@ function Invoke-FinOpsArmRest {
                 throw
             }
 
-            Start-Sleep -Seconds ([Math]::Min(60, [Math]::Pow(2, $attempt)))
+            $retryAfterSeconds = $null
+            $retryAfterValues = $null
+            if ($_.Exception.Response -and $_.Exception.Response.Headers.TryGetValues("Retry-After", [ref]$retryAfterValues)) {
+                $retryAfterValue = @($retryAfterValues)[0]
+                [int]$parsedRetryAfter = 0
+                if ($retryAfterValue -and [int]::TryParse([string]$retryAfterValue, [ref]$parsedRetryAfter)) {
+                    $retryAfterSeconds = $parsedRetryAfter
+                }
+            }
+
+            $backoffSeconds = if ($null -ne $retryAfterSeconds) {
+                [Math]::Min(120, $retryAfterSeconds)
+            }
+            else {
+                [Math]::Min(60, [Math]::Pow(2, $attempt))
+            }
+
+            Write-Host "Request to $uri returned $statusCode; retrying in $backoffSeconds second(s) (attempt $attempt of $MaxAttempts)."
+            Start-Sleep -Seconds $backoffSeconds
         }
     }
 }

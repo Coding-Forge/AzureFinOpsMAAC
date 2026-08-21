@@ -75,7 +75,7 @@ param sqlEntraAdminObjectId string = ''
 param functionPlanSkuName string = 'Y1'
 
 @description('Function runtime PowerShell version.')
-param functionPowerShellVersion string = '7.4'
+param functionPowerShellVersion string = '7.6'
 
 @description('Application Insights retention in days.')
 param appInsightsRetentionDays int = 90
@@ -95,23 +95,44 @@ param alertWindowSize string = 'PT15M'
 @description('How many hours without a successful FinOps run should trigger the missed-run alert.')
 param missedRunAlertWindowHours int = 36
 
-@description('Create VNet integration, SQL private endpoint, private DNS zone/link, and route Function outbound traffic through the VNet. Requires a Function plan that supports regional VNet integration, such as EP1.')
+@description('Create a VNet, a NAT Gateway for static Function outbound egress, a Function App private endpoint (inbound lockdown), and route Function outbound traffic through the VNet. Requires a Function plan that supports regional VNet integration, such as EP1. Azure SQL stays on public networking and is firewalled by IP (see sqlAllowedClientIp) rather than given a private endpoint.')
 param enablePrivateNetworking bool = false
 
 @description('Virtual network address prefix used when private networking is enabled.')
 param vnetAddressPrefix string = '10.40.0.0/16'
 
-@description('Subnet prefix for Function regional VNet integration. This subnet is delegated to Microsoft.Web/serverFarms.')
+@description('Subnet prefix for Function regional VNet integration. This subnet is delegated to Microsoft.Web/serverFarms and egresses through the NAT Gateway.')
 param functionIntegrationSubnetPrefix string = '10.40.1.0/24'
 
-@description('Subnet prefix for SQL private endpoints.')
+@description('Subnet prefix for the Function App private endpoint (inbound).')
 param privateEndpointSubnetPrefix string = '10.40.2.0/24'
 
 @description('Name of the Function integration subnet.')
 param functionIntegrationSubnetName string = 'snet-functions-integration'
 
-@description('Name of the private endpoint subnet.')
+@description('Name of the Function App private endpoint subnet.')
 param privateEndpointSubnetName string = 'snet-private-endpoints'
+
+@description('Deploy a jump box VM plus Azure Bastion so you can privately reach the Function App (SCM/Kudu, diagnostics) once it is behind a private endpoint. Requires enablePrivateNetworking=true.')
+param enableJumpBox bool = false
+
+@description('Jump box VM admin username.')
+param jumpBoxAdminUsername string = 'azureuser'
+
+@description('SSH public key (ssh-rsa/ssh-ed25519 ...) for the jump box admin user. Required when enableJumpBox=true.')
+param jumpBoxSshPublicKey string = ''
+
+@description('Jump box VM size.')
+param jumpBoxVmSize string = 'Standard_B2s_v2'
+
+@description('Name of the jump box subnet.')
+param jumpBoxSubnetName string = 'snet-jumpbox'
+
+@description('Subnet prefix for the jump box VM.')
+param jumpBoxSubnetPrefix string = '10.40.3.0/24'
+
+@description('Subnet prefix for Azure Bastion. Must be /26 or larger; the subnet is always named AzureBastionSubnet.')
+param bastionSubnetPrefix string = '10.40.4.0/26'
 
 @description('Create an RBAC-enabled Key Vault for customer-managed FinOps secrets. The template does not create secret values.')
 param enableKeyVault bool = false
@@ -121,6 +142,9 @@ param keyVaultName string = ''
 
 @description('Secret name expected to hold the service principal client secret when using the Key Vault created by this template.')
 param finOpsClientSecretName string = 'finops-client-secret'
+
+@description('Client IP address (no CIDR) allowed to reach the Key Vault over its public endpoint firewall, for example to store/retrieve the jump box SSH private key from your workstation. Leave blank to leave the vault\'s network ACL default-deny with no client IP allowed.')
+param keyVaultAllowedClientIp string = ''
 
 var normalizedWorkload = toLower(replace(replace(workloadName, '_', ''), '-', ''))
 var normalizedEnvironment = toLower(replace(replace(environmentName, '_', ''), '-', ''))
@@ -132,8 +156,26 @@ var appInsightsName = '${workloadName}-${environmentName}-appi'
 var planName = '${workloadName}-${environmentName}-plan'
 var functionAppName = '${workloadName}-${environmentName}-${suffix}-func'
 var vnetName = '${workloadName}-${environmentName}-vnet'
+var functionPrivateEndpointName = '${workloadName}-${environmentName}-func-pe'
+var functionPrivateDnsZoneName = 'privatelink.azurewebsites.net'
 var sqlPrivateEndpointName = '${workloadName}-${environmentName}-sql-pe'
 var sqlPrivateDnsZoneName = replace('privatelink.${environment().suffixes.sqlServerHostname}', '..', '.')
+var storageBlobPrivateEndpointName = '${workloadName}-${environmentName}-stblob-pe'
+var storageQueuePrivateEndpointName = '${workloadName}-${environmentName}-stqueue-pe'
+var storageTablePrivateEndpointName = '${workloadName}-${environmentName}-sttable-pe'
+var storageBlobPrivateDnsZoneName = 'privatelink.blob.${environment().suffixes.storage}'
+var storageQueuePrivateDnsZoneName = 'privatelink.queue.${environment().suffixes.storage}'
+var storageTablePrivateDnsZoneName = 'privatelink.table.${environment().suffixes.storage}'
+var keyVaultPrivateEndpointName = '${workloadName}-${environmentName}-kv-pe'
+var keyVaultPrivateDnsZoneName = replace('privatelink.${environment().suffixes.keyvaultDns}', '..', '.')
+var natGatewayName = '${workloadName}-${environmentName}-natgw'
+var natPublicIpName = '${workloadName}-${environmentName}-natgw-pip'
+var bastionName = '${workloadName}-${environmentName}-bastion'
+var bastionPublicIpName = '${workloadName}-${environmentName}-bastion-pip'
+var bastionNsgName = '${workloadName}-${environmentName}-bastion-nsg'
+var jumpBoxNsgName = '${workloadName}-${environmentName}-jumpbox-nsg'
+var jumpBoxNicName = '${workloadName}-${environmentName}-jumpbox-nic'
+var jumpBoxVmName = '${workloadName}-${environmentName}-jumpbox'
 var actionGroupName = '${workloadName}-${environmentName}-finops-alerts'
 var alertActionGroups = enableMonitoringAlerts && !empty(alertNotificationEmail) ? [
   actionGroup.id
@@ -161,6 +203,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
     allowBlobPublicAccess: false
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
+    publicNetworkAccess: enablePrivateNetworking ? 'Disabled' : 'Enabled'
   }
 }
 
@@ -188,6 +231,75 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = if (enableKeyVault) {
     softDeleteRetentionInDays: 90
     enabledForTemplateDeployment: false
     publicNetworkAccess: 'Enabled'
+    networkAcls: {
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'
+      ipRules: !empty(keyVaultAllowedClientIp) ? [
+        {
+          value: keyVaultAllowedClientIp
+        }
+      ] : []
+    }
+  }
+}
+
+// Some tenants enforce private-only Key Vault via Azure Policy regardless of publicNetworkAccess
+// and networkAcls (observed: publicNetworkAccess is forced to Disabled and public IP-rule access
+// is rejected outright), so give it a private endpoint too. This keeps the vault reachable from
+// the jump box and the Function App over the VNet even when the public IP allowlist is overridden.
+resource keyVaultPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enableKeyVault && enablePrivateNetworking) {
+  name: keyVaultPrivateDnsZoneName
+  location: 'global'
+}
+
+resource keyVaultPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enableKeyVault && enablePrivateNetworking) {
+  name: '${vnetName}-kv-link'
+  parent: keyVaultPrivateDnsZone
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
+  }
+}
+
+resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enableKeyVault && enablePrivateNetworking) {
+  name: keyVaultPrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${keyVaultPrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: keyVault.id
+          groupIds: [
+            'vault'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource keyVaultPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enableKeyVault && enablePrivateNetworking) {
+  name: 'default'
+  parent: keyVaultPrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'vault'
+        properties: {
+          privateDnsZoneId: keyVaultPrivateDnsZone.id
+        }
+      }
+    ]
   }
 }
 
@@ -195,7 +307,9 @@ resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
   name: sqlServerName
   location: location
   properties: {
-    publicNetworkAccess: sqlPublicNetworkAccessEnabled ? 'Enabled' : 'Disabled'
+    // Some tenants enforce private-only SQL via Azure Policy regardless of this value; when enablePrivateNetworking=true
+    // this template also creates a SQL private endpoint (sqlPrivateEndpoint) so connectivity works either way.
+    publicNetworkAccess: enablePrivateNetworking ? 'Disabled' : (sqlPublicNetworkAccessEnabled ? 'Enabled' : 'Disabled')
     administrators: empty(sqlEntraAdminLogin) || empty(sqlEntraAdminObjectId) ? null : {
       administratorType: 'ActiveDirectory'
       login: sqlEntraAdminLogin
@@ -219,7 +333,7 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-08-01-preview' = {
   }
 }
 
-resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2023-08-01-preview' = if (sqlPublicNetworkAccessEnabled && !empty(sqlAllowedClientIp)) {
+resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2023-08-01-preview' = if (!enablePrivateNetworking && sqlPublicNetworkAccessEnabled && !empty(sqlAllowedClientIp)) {
   name: 'AllowDeploymentClient'
   parent: sqlServer
   properties: {
@@ -228,6 +342,60 @@ resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2023-08-01-preview
   }
 }
 
+resource natPublicIp 'Microsoft.Network/publicIPAddresses@2023-09-01' = if (enablePrivateNetworking) {
+  name: natPublicIpName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+}
+
+// Gives the Function App a single fixed egress IP so Azure SQL can be firewalled to it while staying on public networking.
+resource natGateway 'Microsoft.Network/natGateways@2023-09-01' = if (enablePrivateNetworking) {
+  name: natGatewayName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIpAddresses: [
+      {
+        id: natPublicIp.id
+      }
+    ]
+  }
+}
+
+var jumpBoxSubnetsInline = enableJumpBox ? [
+  {
+    name: 'AzureBastionSubnet'
+    properties: {
+      addressPrefix: bastionSubnetPrefix
+      privateEndpointNetworkPolicies: 'Disabled'
+      networkSecurityGroup: {
+        id: bastionNsg.id
+      }
+    }
+  }
+  {
+    name: jumpBoxSubnetName
+    properties: {
+      addressPrefix: jumpBoxSubnetPrefix
+      privateEndpointNetworkPolicies: 'Disabled'
+      networkSecurityGroup: {
+        id: jumpBoxNsg.id
+      }
+    }
+  }
+] : []
+
+// Subnets are declared inline on the VNet resource (rather than as separate Microsoft.Network/virtualNetworks/subnets
+// child resources) because ARM PUTs the parent VNet's full subnet collection on every deployment; declaring subnets
+// as separate resources causes the parent VNet update to attempt to remove subnets currently in use (e.g. by the
+// jump box NIC), which fails deployment.
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-09-01' = if (enablePrivateNetworking) {
   name: vnetName
   location: location
@@ -237,47 +405,549 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-09-01' = if (ena
         vnetAddressPrefix
       ]
     }
-  }
-}
-
-resource functionIntegrationSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-09-01' = if (enablePrivateNetworking) {
-  name: functionIntegrationSubnetName
-  parent: virtualNetwork
-  properties: {
-    addressPrefix: functionIntegrationSubnetPrefix
-    delegations: [
+    subnets: concat([
       {
-        name: 'Microsoft.Web.serverFarms'
+        name: functionIntegrationSubnetName
         properties: {
-          serviceName: 'Microsoft.Web/serverFarms'
+          addressPrefix: functionIntegrationSubnetPrefix
+          privateEndpointNetworkPolicies: 'Disabled'
+          delegations: [
+            {
+              name: 'Microsoft.Web.serverFarms'
+              properties: {
+                serviceName: 'Microsoft.Web/serverFarms'
+              }
+            }
+          ]
+          natGateway: {
+            id: natGateway.id
+          }
         }
       }
-    ]
+      {
+        name: privateEndpointSubnetName
+        properties: {
+          addressPrefix: privateEndpointSubnetPrefix
+          privateEndpointNetworkPolicies: 'Disabled'
+        }
+      }
+    ], jumpBoxSubnetsInline)
   }
 }
 
-resource privateEndpointSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-09-01' = if (enablePrivateNetworking) {
-  name: privateEndpointSubnetName
-  parent: virtualNetwork
+var functionIntegrationSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, functionIntegrationSubnetName)
+var privateEndpointSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, privateEndpointSubnetName)
+var bastionSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, 'AzureBastionSubnet')
+var jumpBoxSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, jumpBoxSubnetName)
+
+resource functionPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enablePrivateNetworking) {
+  name: functionPrivateDnsZoneName
+  location: 'global'
+}
+
+resource functionPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enablePrivateNetworking) {
+  name: '${vnetName}-link'
+  parent: functionPrivateDnsZone
+  location: 'global'
   properties: {
-    addressPrefix: privateEndpointSubnetPrefix
-    privateEndpointNetworkPolicies: 'Disabled'
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
   }
 }
 
+// Some tenants enforce private-only SQL via Azure Policy; this private endpoint keeps SQL reachable
+// from the Function App (via VNet integration) and the jump box even when public access is forced off.
 resource sqlPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enablePrivateNetworking) {
   name: sqlPrivateDnsZoneName
   location: 'global'
 }
 
 resource sqlPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enablePrivateNetworking) {
-  name: '${vnetName}-link'
+  name: '${vnetName}-sql-link'
   parent: sqlPrivateDnsZone
   location: 'global'
   properties: {
     registrationEnabled: false
     virtualNetwork: {
       id: virtualNetwork.id
+    }
+  }
+}
+
+resource sqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
+  name: sqlPrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${sqlPrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: sqlServer.id
+          groupIds: [
+            'sqlServer'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource sqlPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
+  name: 'default'
+  parent: sqlPrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'sql'
+        properties: {
+          privateDnsZoneId: sqlPrivateDnsZone.id
+        }
+      }
+    ]
+  }
+}
+
+// Storage account also has publicNetworkAccess forced off by tenant policy; the Functions host
+// needs blob/queue/table access for AzureWebJobsStorage (triggers, leases, bindings), so each
+// sub-resource gets its own private endpoint + private DNS zone.
+resource storageBlobPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enablePrivateNetworking) {
+  name: storageBlobPrivateDnsZoneName
+  location: 'global'
+}
+
+resource storageBlobPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enablePrivateNetworking) {
+  name: '${vnetName}-stblob-link'
+  parent: storageBlobPrivateDnsZone
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
+  }
+}
+
+resource storageBlobPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
+  name: storageBlobPrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${storageBlobPrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: storageAccount.id
+          groupIds: [
+            'blob'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource storageBlobPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
+  name: 'default'
+  parent: storageBlobPrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'blob'
+        properties: {
+          privateDnsZoneId: storageBlobPrivateDnsZone.id
+        }
+      }
+    ]
+  }
+}
+
+resource storageQueuePrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enablePrivateNetworking) {
+  name: storageQueuePrivateDnsZoneName
+  location: 'global'
+}
+
+resource storageQueuePrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enablePrivateNetworking) {
+  name: '${vnetName}-stqueue-link'
+  parent: storageQueuePrivateDnsZone
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
+  }
+}
+
+resource storageQueuePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
+  name: storageQueuePrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${storageQueuePrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: storageAccount.id
+          groupIds: [
+            'queue'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource storageQueuePrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
+  name: 'default'
+  parent: storageQueuePrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'queue'
+        properties: {
+          privateDnsZoneId: storageQueuePrivateDnsZone.id
+        }
+      }
+    ]
+  }
+}
+
+resource storageTablePrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (enablePrivateNetworking) {
+  name: storageTablePrivateDnsZoneName
+  location: 'global'
+}
+
+resource storageTablePrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (enablePrivateNetworking) {
+  name: '${vnetName}-sttable-link'
+  parent: storageTablePrivateDnsZone
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
+  }
+}
+
+resource storageTablePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
+  name: storageTablePrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${storageTablePrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: storageAccount.id
+          groupIds: [
+            'table'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource storageTablePrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
+  name: 'default'
+  parent: storageTablePrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'table'
+        properties: {
+          privateDnsZoneId: storageTablePrivateDnsZone.id
+        }
+      }
+    ]
+  }
+}
+
+// --- Jump box + Azure Bastion: private admin access to the Function App private endpoint ---
+
+resource bastionNsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = if (enableJumpBox) {
+  name: bastionNsgName
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowHttpsInbound'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: 'Internet'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'AllowGatewayManagerInbound'
+        properties: {
+          priority: 110
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: 'GatewayManager'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'AllowAzureLoadBalancerInbound'
+        properties: {
+          priority: 120
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: 'AzureLoadBalancer'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'AllowBastionHostCommunicationInbound'
+        properties: {
+          priority: 130
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+          destinationPortRanges: [
+            '8080'
+            '5701'
+          ]
+        }
+      }
+      {
+        name: 'AllowSshRdpOutbound'
+        properties: {
+          priority: 100
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+          destinationPortRanges: [
+            '22'
+            '3389'
+          ]
+        }
+      }
+      {
+        name: 'AllowAzureCloudOutbound'
+        properties: {
+          priority: 110
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzureCloud'
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'AllowBastionCommunicationOutbound'
+        properties: {
+          priority: 120
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+          destinationPortRanges: [
+            '8080'
+            '5701'
+          ]
+        }
+      }
+      {
+        name: 'AllowHttpOutbound'
+        properties: {
+          priority: 130
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'Internet'
+          destinationPortRange: '80'
+        }
+      }
+    ]
+  }
+}
+
+resource jumpBoxNsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = if (enableJumpBox) {
+  name: jumpBoxNsgName
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowSshFromBastionSubnet'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: bastionSubnetPrefix
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '22'
+        }
+      }
+      {
+        name: 'DenyAllOtherInbound'
+        properties: {
+          priority: 4096
+          direction: 'Inbound'
+          access: 'Deny'
+          protocol: '*'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+        }
+      }
+    ]
+  }
+}
+
+resource bastionPublicIp 'Microsoft.Network/publicIPAddresses@2023-09-01' = if (enableJumpBox) {
+  name: bastionPublicIpName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+}
+
+resource bastionHost 'Microsoft.Network/bastionHosts@2023-09-01' = if (enableJumpBox) {
+  name: bastionName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    enableTunneling: true
+    enableIpConnect: true
+    ipConfigurations: [
+      {
+        name: 'bastionIpConfig'
+        properties: {
+          subnet: {
+            id: bastionSubnetId
+          }
+          publicIPAddress: {
+            id: bastionPublicIp.id
+          }
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource jumpBoxNic 'Microsoft.Network/networkInterfaces@2023-09-01' = if (enableJumpBox) {
+  name: jumpBoxNicName
+  location: location
+  properties: {
+    ipConfigurations: [
+      {
+        name: 'ipconfig1'
+        properties: {
+          subnet: {
+            id: jumpBoxSubnetId
+          }
+          privateIPAllocationMethod: 'Dynamic'
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+// No public IP: reachable only through Azure Bastion.
+resource jumpBoxVm 'Microsoft.Compute/virtualMachines@2023-09-01' = if (enableJumpBox) {
+  name: jumpBoxVmName
+  location: location
+  properties: {
+    hardwareProfile: {
+      vmSize: jumpBoxVmSize
+    }
+    osProfile: {
+      computerName: jumpBoxVmName
+      adminUsername: jumpBoxAdminUsername
+      linuxConfiguration: {
+        disablePasswordAuthentication: true
+        ssh: {
+          publicKeys: [
+            {
+              path: '/home/${jumpBoxAdminUsername}/.ssh/authorized_keys'
+              keyData: jumpBoxSshPublicKey
+            }
+          ]
+        }
+      }
+    }
+    storageProfile: {
+      imageReference: {
+        publisher: 'Canonical'
+        offer: '0001-com-ubuntu-server-jammy'
+        sku: '22_04-lts-gen2'
+        version: 'latest'
+      }
+      osDisk: {
+        createOption: 'FromImage'
+        managedDisk: {
+          storageAccountType: 'Standard_LRS'
+        }
+      }
+    }
+    networkProfile: {
+      networkInterfaces: [
+        {
+          id: jumpBoxNic.id
+        }
+      ]
     }
   }
 }
@@ -304,14 +974,22 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: functionPlan.id
     httpsOnly: true
+    // When private networking is enabled, the site is reachable only via its private endpoint (see functionPrivateEndpoint).
+    publicNetworkAccess: enablePrivateNetworking ? 'Disabled' : 'Enabled'
     siteConfig: {
       minTlsVersion: '1.2'
       ftpsState: 'Disabled'
       vnetRouteAllEnabled: enablePrivateNetworking
+      powerShellVersion: functionPowerShellVersion
+      use32BitWorkerProcess: false
       appSettings: concat([
         {
-          name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
+          name: 'AzureWebJobsStorage__accountName'
+          value: storageAccount.name
+        }
+        {
+          name: 'AzureWebJobsStorage__credential'
+          value: 'managedidentity'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -392,45 +1070,96 @@ resource keyVaultSecretsUserAssignment 'Microsoft.Authorization/roleAssignments@
   }
 }
 
+// Grants the SQL Entra admin (typically the deploying engineer) rights to create/read
+// secrets in Key Vault, for example to store the jump box SSH private key so it can be
+// retrieved instead of re-generated after local cleanup.
+resource keyVaultSecretsOfficerAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (enableKeyVault && !empty(sqlEntraAdminObjectId)) {
+  name: guid(keyVault.id, sqlEntraAdminObjectId, 'KeyVaultSecretsOfficer')
+  scope: keyVault
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7')
+    principalId: sqlEntraAdminObjectId
+    principalType: 'User'
+  }
+}
+
+// AzureWebJobsStorage now uses identity-based auth (no storage account keys), so the
+// Function App's managed identity needs data-plane RBAC on blobs, queues, and tables.
+resource storageBlobDataOwnerAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionAppName, 'StorageBlobDataOwner')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource storageQueueDataContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionAppName, 'StorageQueueDataContributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88')
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource storageTableDataContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionAppName, 'StorageTableDataContributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3')
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 resource functionVnetIntegration 'Microsoft.Web/sites/networkConfig@2023-12-01' = if (enablePrivateNetworking) {
   name: 'virtualNetwork'
   parent: functionApp
   properties: {
-    subnetResourceId: functionIntegrationSubnet.id
+    subnetResourceId: functionIntegrationSubnetId
     swiftSupported: true
   }
+  dependsOn: [
+    virtualNetwork
+  ]
 }
 
-resource sqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
-  name: sqlPrivateEndpointName
+resource functionPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (enablePrivateNetworking) {
+  name: functionPrivateEndpointName
   location: location
   properties: {
     subnet: {
-      id: privateEndpointSubnet.id
+      id: privateEndpointSubnetId
     }
     privateLinkServiceConnections: [
       {
-        name: '${sqlPrivateEndpointName}-connection'
+        name: '${functionPrivateEndpointName}-connection'
         properties: {
-          privateLinkServiceId: sqlServer.id
+          privateLinkServiceId: functionApp.id
           groupIds: [
-            'sqlServer'
+            'sites'
           ]
         }
       }
     ]
   }
+  dependsOn: [
+    virtualNetwork
+  ]
 }
 
-resource sqlPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
+resource functionPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (enablePrivateNetworking) {
   name: 'default'
-  parent: sqlPrivateEndpoint
+  parent: functionPrivateEndpoint
   properties: {
     privateDnsZoneConfigs: [
       {
-        name: 'sql'
+        name: 'sites'
         properties: {
-          privateDnsZoneId: sqlPrivateDnsZone.id
+          privateDnsZoneId: functionPrivateDnsZone.id
         }
       }
     ]
@@ -534,12 +1263,20 @@ output applicationInsightsName string = appInsights.name
 output monitoringAlertsEnabled bool = enableMonitoringAlerts
 output privateNetworkingEnabled bool = enablePrivateNetworking
 output virtualNetworkName string = enablePrivateNetworking ? virtualNetwork.name : ''
+output functionPrivateEndpointName string = enablePrivateNetworking ? functionPrivateEndpoint.name : ''
 output sqlPrivateEndpointName string = enablePrivateNetworking ? sqlPrivateEndpoint.name : ''
+output natGatewayPublicIpAddress string = enablePrivateNetworking ? natPublicIp.properties.ipAddress : ''
+output jumpBoxEnabled bool = enableJumpBox
+output jumpBoxVmName string = enableJumpBox ? jumpBoxVm.name : ''
+output bastionHostName string = enableJumpBox ? bastionHost.name : ''
 output keyVaultName string = enableKeyVault ? keyVault.name : ''
+output keyVaultPrivateEndpointName string = enableKeyVault && enablePrivateNetworking ? keyVaultPrivateEndpoint.name : ''
 output finOpsClientSecretKeyVaultReference string = finOpsAuthMode == 'ServicePrincipal' ? effectiveClientSecretUri : ''
 output nextSteps array = [
   'Grant the Function managed identity Cost Management Reader on target subscriptions or billing scopes.'
   'Grant the Function managed identity SQL access in the database, for example CREATE USER [<function-name>] FROM EXTERNAL PROVIDER and appropriate role grants.'
-  'Deploy the functionapp folder as the Function App package.'
-  'Run scripts/Deploy-FinOpsSqlSchema.ps1 or include schema deployment in a controlled release pipeline.'
+  'When enablePrivateNetworking=true, SQL is given a private endpoint (sqlPrivateEndpointName output) and is reachable from the Function App and the jump box over the VNet. If your tenant policy allows public SQL access instead, set enablePrivateNetworking=false and sqlPublicNetworkAccessEnabled=true with sqlAllowedClientIp set.'
+  'When enablePrivateNetworking=true, the Function App is reachable only via its private endpoint. Deploy the functionapp folder either temporarily with enablePrivateNetworking=false for the first deploy, from a CI/CD agent inside the VNet, or from the jump box.'
+  'When enableJumpBox=true, connect via Azure Bastion (Azure Portal > Bastion > Connect) using the jump box SSH key to browse https://<functionAppName>.scm.azurewebsites.net and to run sqlcmd against the SQL private endpoint privately.'
+  'Run scripts/Deploy-FinOpsSqlSchema.ps1 (from the jump box, since SQL is private) or include schema deployment in a controlled release pipeline.'
 ]

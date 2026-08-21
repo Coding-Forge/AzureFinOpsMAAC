@@ -1,5 +1,9 @@
 {
   "version": "2.0",
+  "managedDependency": {
+    "enabled": true
+  },
+  "functionTimeout": "00:15:00",
   "logging": {
     "applicationInsights": {
       "samplingSettings": {
