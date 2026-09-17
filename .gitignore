@@ -5,6 +5,12 @@
 # publish sanitized PBIT/release artifacts separately.
 powerbi/**
 
+
+# powerbi/ is a nested, remote-less local git repo (powerbi/.git) used for
+# full local development history with the agent. It is intentionally never
+# tracked or pushed by this outer repo. Share finished work only via
+# template/*.pbit (see exception below).
+
 # Locally exported Power BI templates may contain parameter defaults; export a
 # clean PBIT intentionally for release instead of committing binary templates.
 template/*.pbit
