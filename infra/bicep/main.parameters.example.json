@@ -71,6 +71,12 @@
     "enablePrivateNetworking": {
       "value": false
     },
+    "enableArmPrivateLink": {
+      "value": false
+    },
+    "resourceManagementPrivateLinkId": {
+      "value": ""
+    },
     "vnetAddressPrefix": {
       "value": "10.40.0.0/16"
     },

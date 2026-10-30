@@ -6,7 +6,7 @@
 
 ## Executive decision
 
-The existing Private Link guide provides a sound conditional approach for testing Azure Resource Manager (ARM) Private Link with the Cost Management query used by this solution. It is not an implementation package, a validated customer architecture, or a guarantee that every solution communication can use a private endpoint.
+The existing Private Link guide and Bicep templates provide a conditional implementation path for testing Azure Resource Manager (ARM) Private Link with the Cost Management query used by this solution. The feature remains disabled by default. It is not a validated customer architecture or a guarantee that every solution communication can use a private endpoint.
 
 The customer must own the remaining architecture, development, deployment, validation, security approval, and operations. The solution author can explain the current application behavior and provide advisory guidance, but should not select or implement the customer's tenant-wide ARM Private Link, DNS, firewall, Bastion, monitoring, Power BI, or operational design.
 
@@ -26,7 +26,7 @@ When the Bicep private-networking option is enabled with a compatible Function p
 - Managed identity for Cost Management access and identity-based host-storage access.
 - Disabled public access for the Function, SQL, and runtime Storage in the Bicep private-networking path.
 
-These controls do not create the ARM resource-management private link, enforce deny-by-default outbound access, privatize Azure Monitor, establish a private Power BI refresh path, or resolve the Bastion and ARM private DNS conflict.
+When explicitly enabled, the Bicep platform templates create the ARM resource-management private link and root-management-group association, and the workload template creates the ARM private endpoint and DNS configuration. These controls do not enforce deny-by-default outbound access, privatize Azure Monitor, establish a private Power BI refresh path, or resolve the Bastion and ARM private DNS conflict.
 
 The Terraform baseline does not currently provide equivalent private-networking coverage and should not be represented as a production private deployment without customer development.
 
@@ -34,7 +34,7 @@ The Terraform baseline does not currently provide equivalent private-networking 
 
 | Area | Current gap | Customer-owned decision or development |
 |---|---|---|
-| Cost Management and Billing | ARM Private Link is not deployed or validated for the exact operations. | Obtain support confirmation, deploy or reuse the tenant-scoped resource-management private link and association, create the endpoint, and run an authorized proof of concept. |
+| Cost Management and Billing | ARM Private Link is available as opt-in Bicep but is not deployed by default or validated for the exact customer operations. | Obtain support confirmation, deploy or reuse the tenant-scoped resource-management private link and association, enable the workload endpoint, and run an authorized proof of concept. |
 | Outbound enforcement | The current VNet design uses a NAT Gateway and has no deny-by-default firewall or route-table enforcement. | Route all Function traffic through an approved inspection point such as Azure Firewall and deny public ARM access. |
 | Function configuration traffic | Legacy route-all settings do not provide the strongest auditable statement for all current application and configuration traffic. | Use and validate `outboundVnetRouting.allTraffic=true`, including managed-identity, content, deployment, and other configuration traffic. |
 | Microsoft Entra and platform dependencies | Managed-identity token acquisition, certificate validation, and some platform functions can require Microsoft public service endpoints. | Determine the minimum required destinations, approve them as explicit exceptions, and enforce and log the allowlist. |

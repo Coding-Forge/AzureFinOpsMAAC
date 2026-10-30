@@ -2,9 +2,11 @@
 
 ## Purpose and support status
 
+For step-by-step customer deployment instructions without Bastion, use the [ARM Private Link customer walkthrough](ARM_Private_Link_Customer_Walkthrough.md).
+
 This guide describes the changes needed to evaluate and configure private connectivity from the Azure FinOps solution's Azure Function to the Azure Cost Management API in **Azure Commercial**.
 
-The proposed path uses **Azure Resource Manager (ARM) Private Link**, not a dedicated Cost Management private endpoint. The current solution does not deploy this ARM Private Link configuration.
+The proposed path uses **Azure Resource Manager (ARM) Private Link**, not a dedicated Cost Management private endpoint. The Bicep implementation now provides opt-in platform templates plus workload private-endpoint and DNS wiring. It remains disabled by default and must be approved and validated by the customer.
 
 > **Prerequisite: confirm API compatibility before implementation.** Microsoft documents ARM Private Link, but the general documentation does not explicitly confirm the exact Cost Management operation used by this solution. Obtain confirmation from Microsoft for the operation, API version, and subscription scopes below, then validate them in an approved test environment. This guide is conditional implementation guidance, not a statement that the integration has been proven to work.
 
@@ -79,7 +81,7 @@ enablePrivateNetworking=true
 
 If the approved design requires a different VNet to preserve Bastion, adapt the template to use that network rather than enabling the shared-network design unchanged.
 
-For Terraform, add outbound VNet integration and the approved subnet inputs; the current Terraform baseline does not include that wiring.
+For Terraform, add outbound VNet integration and the approved subnet inputs; the current Terraform baseline does not include that wiring. The implemented ARM Private Link path is Bicep-only.
 
 A private endpoint on the Function itself is an **inbound** control. It does not enable private outbound Cost Management calls.
 
@@ -159,7 +161,9 @@ Use the portal for an approved proof of concept if appropriate, then reconcile t
 
 | Files | Required adaptation |
 |---|---|
-| `infra/bicep/main.bicep` and `main.parameters.example.json` | Add opt-in ARM Private Link ID, private endpoint, DNS zone-group/link or existing-zone inputs, and approved network integration options. Preserve the template's inline subnet declarations. |
+| `infra/bicep/arm-private-link-resource.bicep` | Creates the resource-management private link in the approved platform subscription. |
+| `infra/bicep/arm-private-link-association.bicep` | Associates the resource-management private link with the tenant root management group. |
+| `infra/bicep/main.bicep` and `main.arm-private-link.parameters.example.json` | Opt-in Function VNet integration, ARM private endpoint, private DNS zone/group/link, compatibility validation, and outputs. |
 | `infra/terraform/main.tf`, `variables.tf`, `outputs.tf`, and `terraform.tfvars.example` | Add opt-in Function VNet integration, ARM private endpoint, approved network/DNS inputs, validation, and endpoint outputs. |
 | Separate platform deployment | Manage the resource-management private link and root-management-group association independently of workload deployments. |
 | Infrastructure documentation | Record permissions, DNS/Bastion restrictions, egress enforcement, validation evidence, and rollback. |
@@ -171,6 +175,8 @@ Terraform currently uses AzureRM `~> 3.115`; verify resource support before impl
 ## Validation and acceptance
 
 Perform validation from the **Function execution environment**, not only from an administrator's laptop or a jump box.
+
+Use `scripts/Test-FinOpsArmPrivateLink.ps1` for the DNS, subscription-read, and bounded authorized query checks. Supply the approved ARM endpoint NIC's IP addresses with `-ExpectedPrivateIpAddress` and the target subscriptions with `-SubscriptionId`. The script defaults to managed identity and does not print costs or tokens. See the [Bicep deployment instructions](../infra/bicep/README.md#validate-the-path) for the commands and limitations.
 
 | Check | Required evidence |
 |---|---|

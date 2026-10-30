@@ -46,6 +46,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-FinOpsNat
 
 ## Required app settings
 
+For private outbound Cost Management connectivity in Azure Commercial, use the opt-in [Bicep ARM Private Link deployment](../infra/bicep/README.md#deploy-arm-private-link). It requires an Elastic Premium plan, VNet integration, private ARM DNS, and a separately approved tenant-root association. Keep the existing ARM URL and managed identity authentication unchanged. ARM Private Link does not privatize Retail Prices or enforce public-egress denial; validate the actual Function path with the documented diagnostic and network evidence.
+
 | Setting | Example | Notes |
 | --- | --- | --- |
 | `FINOPS_TIMER_SCHEDULE` | `0 0 6 * * *` | NCRONTAB schedule. |

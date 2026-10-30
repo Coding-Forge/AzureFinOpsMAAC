@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workloadName": {
+      "value": "finops"
+    },
+    "environmentName": {
+      "value": "poc"
+    },
+    "location": {
+      "value": "westus3"
+    },
+    "finOpsAzureCloud": {
+      "value": "AzureCloud"
+    },
+    "finOpsAuthMode": {
+      "value": "ManagedIdentity"
+    },
+    "finOpsTenantId": {
+      "value": "<tenant-id>"
+    },
+    "finOpsSubscriptionIds": {
+      "value": "<subscription-id-1>,<subscription-id-2>"
+    },
+    "sqlServerName": {
+      "value": "<globally-unique-sql-server-name>"
+    },
+    "functionPlanSkuName": {
+      "value": "EP1"
+    },
+    "enablePrivateNetworking": {
+      "value": true
+    },
+    "enableArmPrivateLink": {
+      "value": true
+    },
+    "resourceManagementPrivateLinkId": {
+      "value": "/subscriptions/<platform-subscription-id>/resourceGroups/rg-arm-private-link/providers/Microsoft.Authorization/resourceManagementPrivateLinks/arm-private-link"
+    },
+    "enableJumpBox": {
+      "value": false
+    }
+  }
+}

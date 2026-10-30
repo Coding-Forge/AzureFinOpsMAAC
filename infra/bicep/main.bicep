@@ -71,7 +71,13 @@ param sqlEntraAdminLogin string = ''
 @description('Optional Microsoft Entra SQL admin object ID.')
 param sqlEntraAdminObjectId string = ''
 
-@description('Function App service plan SKU. Y1 is classic consumption. Use EP1 or another Premium/Dedicated SKU when enablePrivateNetworking=true.')
+@description('Function App service plan SKU. Y1 is classic consumption. Use an Elastic Premium SKU when enablePrivateNetworking=true.')
+@allowed([
+  'Y1'
+  'EP1'
+  'EP2'
+  'EP3'
+])
 param functionPlanSkuName string = 'Y1'
 
 @description('Function runtime PowerShell version.')
@@ -95,8 +101,14 @@ param alertWindowSize string = 'PT15M'
 @description('How many hours without a successful FinOps run should trigger the missed-run alert.')
 param missedRunAlertWindowHours int = 36
 
-@description('Create a VNet, a NAT Gateway for static Function outbound egress, a Function App private endpoint (inbound lockdown), and route Function outbound traffic through the VNet. Requires a Function plan that supports regional VNet integration, such as EP1. Azure SQL stays on public networking and is firewalled by IP (see sqlAllowedClientIp) rather than given a private endpoint.')
+@description('Create a VNet, NAT Gateway, and private endpoints for Function inbound access, SQL, and runtime Storage, and route Function application traffic through the VNet. Requires an Elastic Premium Function plan. Public access to the Function, SQL, and runtime Storage is disabled.')
 param enablePrivateNetworking bool = false
+
+@description('Create an ARM private endpoint and private DNS configuration for outbound Cost Management and Microsoft.Billing calls. Requires enablePrivateNetworking=true, an Elastic Premium Function plan, and a resource-management private link associated with the tenant root management group.')
+param enableArmPrivateLink bool = false
+
+@description('Resource ID of the approved Microsoft.Authorization/resourceManagementPrivateLinks resource. Create and associate it with the tenant root management group by using the separate ARM Private Link platform templates before enabling this option.')
+param resourceManagementPrivateLinkId string = ''
 
 @description('Virtual network address prefix used when private networking is enabled.')
 param vnetAddressPrefix string = '10.40.0.0/16'
@@ -146,6 +158,23 @@ param finOpsClientSecretName string = 'finops-client-secret'
 @description('Client IP address (no CIDR) allowed to reach the Key Vault over its public endpoint firewall, for example to store/retrieve the jump box SSH private key from your workstation. Leave blank to leave the vault\'s network ACL default-deny with no client IP allowed.')
 param keyVaultAllowedClientIp string = ''
 
+var validatedPrivateNetworkingEnabled = !enablePrivateNetworking
+  ? false
+  : functionPlanSkuName == 'Y1'
+    ? fail('enablePrivateNetworking requires an Elastic Premium Function plan; Y1 does not support regional VNet integration.')
+    : true
+var validatedArmPrivateLinkEnabled = !enableArmPrivateLink
+  ? false
+  : !validatedPrivateNetworkingEnabled
+    ? fail('enableArmPrivateLink requires enablePrivateNetworking=true.')
+    : empty(trim(resourceManagementPrivateLinkId))
+      ? fail('enableArmPrivateLink requires resourceManagementPrivateLinkId.')
+      : finOpsAzureCloud != 'AzureCloud' || environment().name != 'AzureCloud'
+        ? fail('This ARM Private Link implementation is limited to Azure Commercial until support for another cloud is validated.')
+        : enableJumpBox
+          ? fail('ARM Private Link private DNS must not be linked to the VNet that hosts Azure Bastion. Use a dedicated Function workload VNet and keep enableJumpBox=false.')
+          : true
+
 var normalizedWorkload = toLower(replace(replace(workloadName, '_', ''), '-', ''))
 var normalizedEnvironment = toLower(replace(replace(environmentName, '_', ''), '-', ''))
 var suffix = uniqueString(resourceGroup().id, workloadName, environmentName)
@@ -158,6 +187,8 @@ var functionAppName = '${workloadName}-${environmentName}-${suffix}-func'
 var vnetName = '${workloadName}-${environmentName}-vnet'
 var functionPrivateEndpointName = '${workloadName}-${environmentName}-func-pe'
 var functionPrivateDnsZoneName = 'privatelink.azurewebsites.net'
+var armPrivateEndpointName = '${workloadName}-${environmentName}-arm-pe'
+var armPrivateDnsZoneName = 'privatelink.azure.com'
 var sqlPrivateEndpointName = '${workloadName}-${environmentName}-sql-pe'
 var sqlPrivateDnsZoneName = replace('privatelink.${environment().suffixes.sqlServerHostname}', '..', '.')
 var storageBlobPrivateEndpointName = '${workloadName}-${environmentName}-stblob-pe'
@@ -454,6 +485,62 @@ resource functionPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNe
     virtualNetwork: {
       id: virtualNetwork.id
     }
+  }
+}
+
+resource armPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = if (validatedArmPrivateLinkEnabled) {
+  name: armPrivateDnsZoneName
+  location: 'global'
+}
+
+resource armPrivateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = if (validatedArmPrivateLinkEnabled) {
+  name: '${vnetName}-arm-link'
+  parent: armPrivateDnsZone
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
+    }
+  }
+}
+
+resource armPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = if (validatedArmPrivateLinkEnabled) {
+  name: armPrivateEndpointName
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${armPrivateEndpointName}-connection'
+        properties: {
+          privateLinkServiceId: resourceManagementPrivateLinkId
+          groupIds: [
+            'ResourceManagement'
+          ]
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
+
+resource armPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-09-01' = if (validatedArmPrivateLinkEnabled) {
+  name: 'default'
+  parent: armPrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'resourceManagement'
+        properties: {
+          privateDnsZoneId: armPrivateDnsZone.id
+        }
+      }
+    ]
   }
 }
 
@@ -957,7 +1044,7 @@ resource functionPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   location: location
   sku: {
     name: functionPlanSkuName
-    tier: functionPlanSkuName == 'Y1' ? 'Dynamic' : 'ElasticPremium'
+    tier: validatedPrivateNetworkingEnabled ? 'ElasticPremium' : (functionPlanSkuName == 'Y1' ? 'Dynamic' : 'ElasticPremium')
   }
   properties: {
     reserved: false
@@ -1262,8 +1349,12 @@ output storageAccount string = storageAccount.name
 output applicationInsightsName string = appInsights.name
 output monitoringAlertsEnabled bool = enableMonitoringAlerts
 output privateNetworkingEnabled bool = enablePrivateNetworking
+output armPrivateLinkEnabled bool = validatedArmPrivateLinkEnabled
 output virtualNetworkName string = enablePrivateNetworking ? virtualNetwork.name : ''
 output functionPrivateEndpointName string = enablePrivateNetworking ? functionPrivateEndpoint.name : ''
+output armPrivateEndpointName string = validatedArmPrivateLinkEnabled ? armPrivateEndpoint.name : ''
+output armPrivateEndpointId string = validatedArmPrivateLinkEnabled ? armPrivateEndpoint.id : ''
+output armPrivateDnsZoneName string = validatedArmPrivateLinkEnabled ? armPrivateDnsZone.name : ''
 output sqlPrivateEndpointName string = enablePrivateNetworking ? sqlPrivateEndpoint.name : ''
 output natGatewayPublicIpAddress string = enablePrivateNetworking ? natPublicIp.properties.ipAddress : ''
 output jumpBoxEnabled bool = enableJumpBox
@@ -1277,6 +1368,7 @@ output nextSteps array = [
   'Grant the Function managed identity SQL access in the database, for example CREATE USER [<function-name>] FROM EXTERNAL PROVIDER and appropriate role grants.'
   'When enablePrivateNetworking=true, SQL is given a private endpoint (sqlPrivateEndpointName output) and is reachable from the Function App and the jump box over the VNet. If your tenant policy allows public SQL access instead, set enablePrivateNetworking=false and sqlPublicNetworkAccessEnabled=true with sqlAllowedClientIp set.'
   'When enablePrivateNetworking=true, the Function App is reachable only via its private endpoint. Deploy the functionapp folder either temporarily with enablePrivateNetworking=false for the first deploy, from a CI/CD agent inside the VNet, or from the jump box.'
+  'When enableArmPrivateLink=true, verify from the Function execution environment that the Azure Resource Manager hostname resolves to the ARM private endpoint and that the authorized Cost Management query succeeds. The public ARM endpoint remains available unless customer egress controls deny it.'
   'When enableJumpBox=true, connect via Azure Bastion (Azure Portal > Bastion > Connect) using the jump box SSH key to browse https://<functionAppName>.scm.azurewebsites.net and to run sqlcmd against the SQL private endpoint privately.'
   'Run scripts/Deploy-FinOpsSqlSchema.ps1 (from the jump box, since SQL is private) or include schema deployment in a controlled release pipeline.'
 ]
